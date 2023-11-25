@@ -5,10 +5,13 @@ import { useNavigate } from "react-router-dom";
 import wyraiApi from "../api/wyraiApi";
 import { AuthContext } from "../Contexts/authContext";
 import { getAuthToken } from "../Utils/authUtils";
+import { userGloabalContext } from "../UserContext";
 
 const Login = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { setAuth } = useContext(AuthContext);
+
+  const { getUserInformation } = userGloabalContext();
 
   const [formData, setFormData] = useState({
     email: "minion1@yopmail.com",
@@ -29,17 +32,20 @@ const Login = () => {
       .post(`/api/login`, formData)
       .then((res) => {
         setAuth(res.data.token);
-        navigate("/dashboard");
+        // navigate("/dashboard");
+      })
+      .then(() => {
+        getUserInformation();
       })
       .catch((err) => {
         console.log(err);
       });
   };
-  useEffect(()=>{
-    if(getAuthToken()) {
-      navigate("/dashboard");
-    }
-  },[])
+  // useEffect(()=>{
+  //   if(getAuthToken()) {
+  //     navigate("/dashboard");
+  //   }
+  // },[])
   return (
     <>
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
