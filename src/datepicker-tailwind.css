@@ -1,0 +1,41 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer components {
+  .custom-calendar {
+    @apply bg-blue-100 rounded-lg p-4 shadow-lg;
+  }
+
+  .custom-calendar .react-datepicker__header {
+    @apply bg-blue-500 text-white;
+  }
+
+  .custom-calendar .react-datepicker__day-name,
+  .custom-calendar .react-datepicker__day,
+  .custom-calendar .react-datepicker__time-name {
+    @apply text-blue-900;
+  }
+
+  .custom-calendar .react-datepicker__day--selected,
+  .custom-calendar .react-datepicker__day--keyboard-selected {
+    @apply bg-blue-600 text-white;
+  }
+
+  .custom-calendar .react-datepicker__day--in-range,
+  .custom-calendar .react-datepicker__day--in-selecting-range,
+  .custom-calendar .react-datepicker__day--selecting-range-start,
+  .custom-calendar .react-datepicker__day--selecting-range-end {
+    @apply bg-blue-200;
+  }
+
+  .custom-calendar .react-datepicker__day--disabled {
+    @apply bg-gray-300 text-gray-500;
+  }
+
+  .custom-calendar .react-datepicker__day--outside-month {
+    @apply text-gray-400;
+  }
+
+  /* Add more custom styles as needed */
+}
