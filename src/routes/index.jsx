@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import SignUp from "../pages/SignUp";
 import SignUpRole from "../pages/SignUpRole";
@@ -27,7 +27,7 @@ const CustomRoutes = () => {
       <Route path="/signUp/:clickedRole" element={<SignUpRole />} />
       <Route path="/login" element={<Login />} />
       <Route path="/resetPassword/:token/:email" element={<ResetPassword />} />
-      <Route path="/test" element={<Dialog/>} />
+      <Route path="/test" element={<Dialog />} />
 
       <Route
         path="/*"

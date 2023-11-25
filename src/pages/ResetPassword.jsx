@@ -34,7 +34,7 @@ const ResetPassword = () => {
   return (
     <>
       <div className="bg-[#f8fcfe] h-screen flex flex-col justify-center">
-        <div className="w-4/12 mx-auto shadow-md h-6/12 p-5 rounded-lg text-center">
+        <div className="w-4/12 mx-auto shadow-md h-6/12 p-5 rounded-lg text-center bg-white">
           <img src={logo} alt="logo" width="200px" className="mx-auto mb-6" />
           <h1 className="text-center text-2xl font-bold mb-6">
             Reset account password
