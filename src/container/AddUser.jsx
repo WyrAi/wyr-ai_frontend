@@ -32,8 +32,6 @@ const AddUser = () => {
 	} = userGloabalContext();
 	const navigate = useNavigate();
 
-	// const navigate = useNavigate();
-	console.log(branchData);
 
 	const [photos, setPhotos] = useState(null);
 	const [popupRole, setPopupRole] = useState(false);

@@ -10,7 +10,7 @@ const userContext = createContext();
 
 export const UserContextProvider = ({ children }) => {
   const navigate = useNavigate();
-
+  const [branchData, setBranchData] = useState(null);
   const [comments, setComments] = useState([]);
   const [productList, setProductList] = useState({
     styleId: "",
@@ -178,6 +178,7 @@ export const UserContextProvider = ({ children }) => {
           imagesFiles,
           startTime,
           endTime,
+          branchData,
           setStartTime,
           setEndTime,
           setImagesFiles,
@@ -193,6 +194,7 @@ export const UserContextProvider = ({ children }) => {
           fetchData,
           fetchRole,
           // handleBranchChange,
+          setBranchData,
           setCheckedItems,
           userInformation,
         }}
