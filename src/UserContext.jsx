@@ -138,6 +138,7 @@ export const UserContextProvider = ({ children }) => {
       fetchRole();
     }
   }, [companyId]);
+  console.log(userInformation);
 
   return (
     <>
