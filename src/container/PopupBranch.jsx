@@ -1,32 +1,30 @@
 /* eslint-disable react/prop-types */
 // import {useNavigate} from 'react-router-dom';
-import { useState } from 'react';
-import { userGloabalContext } from '../UserContext';
-import wyraiApi from '../api/wyraiApi';
-import InputField from './InputField';
+import { useState } from "react";
+import { userGloabalContext } from "../UserContext";
+import wyraiApi from "../api/wyraiApi";
+import InputField from "./InputField";
 
 // eslint-disable-next-line react/prop-types
 const PopupBranch = (props) => {
-  const { getBranches,closeAddBranchPopUp } = props;
-  const { userInformation } = userGloabalContext();
+  const { getBranches, closeAddBranchPopUp } = props;
+  const { companyId } = userGloabalContext();
 
   const [branchInfo, setBranchInfo] = useState({
-    location: '',
-    branchName: '',
-    country: '',
-    city: '',
-    pincode: '',
+    location: "",
+    branchName: "",
+    country: "",
+    city: "",
+    pincode: "",
   });
   const setChange = (e) => {
     setBranchInfo({ ...branchInfo, [e.target.name]: e.target.value });
   };
 
-  const handelBranchSubmit = async () => {
-    const id = userInformation?.companyId?._id;
-    console.log({ branchInfo, userInformation });
-
+  const handelBranchSubmit = () => {
+    console.log(companyId);
     wyraiApi
-      .post(`/api/branch`, { branchInfo, id })
+      .post(`/api/branch`, { branchInfo, id: companyId })
       .then((res) => {
         console.log(res);
         closeAddBranchPopUp();
@@ -48,8 +46,8 @@ const PopupBranch = (props) => {
               type="text"
               value={branchInfo.name}
               onChange={setChange}
-              placeholder={'Branch Name'}
-              labelColor={'bg-white'}
+              placeholder={"Branch Name"}
+              labelColor={"bg-white"}
             />
           </div>
           <div className="w-4/5 mx-auto">
@@ -59,8 +57,8 @@ const PopupBranch = (props) => {
               type="text"
               value={branchInfo.address}
               onChange={setChange}
-              placeholder={'Enter the address of the branch'}
-              labelColor={'bg-white'}
+              placeholder={"Enter the address of the branch"}
+              labelColor={"bg-white"}
             />
           </div>
           <div className="w-4/5 mx-auto">
@@ -70,8 +68,8 @@ const PopupBranch = (props) => {
               type="text"
               value={branchInfo.country}
               onChange={setChange}
-              placeholder={'Country'}
-              labelColor={'bg-white'}
+              placeholder={"Country"}
+              labelColor={"bg-white"}
             />
           </div>
           <div className=" w-[80%] mx-auto flex justify-center gap-5  ">
@@ -82,8 +80,8 @@ const PopupBranch = (props) => {
                 type="text"
                 value={branchInfo.city}
                 onChange={setChange}
-                placeholder={'City'}
-                labelColor={'bg-white'}
+                placeholder={"City"}
+                labelColor={"bg-white"}
               />
             </div>
             <div className="flex-1">
@@ -93,8 +91,8 @@ const PopupBranch = (props) => {
                 type="text"
                 value={branchInfo.pincode}
                 onChange={setChange}
-                placeholder={'Pincode'}
-                labelColor={'bg-white'}
+                placeholder={"Pincode"}
+                labelColor={"bg-white"}
               />
             </div>
           </div>
