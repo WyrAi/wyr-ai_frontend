@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/prop-types */
-import { useContext, createContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import wyraiApi from './api/wyraiApi';
-import { getAuthToken } from './Utils/authUtils';
+import { useContext, createContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import wyraiApi from "./api/wyraiApi";
+import { getAuthToken } from "./Utils/authUtils";
 
 const userContext = createContext();
 
@@ -13,19 +13,19 @@ export const UserContextProvider = ({ children }) => {
 
   const [comments, setComments] = useState([]);
   const [productList, setProductList] = useState({
-    styleId: '',
-    styleName: '',
-    quantity: '',
-    color: '',
-    weight: '',
-    weightTolerance: '',
-    length: '',
-    lengthTolerance: '',
-    width: '',
-    widthTolerance: '',
-    height: '',
-    heightTolerance: '',
-    aql: '',
+    styleId: "",
+    styleName: "",
+    quantity: "",
+    color: "",
+    weight: "",
+    weightTolerance: "",
+    length: "",
+    lengthTolerance: "",
+    width: "",
+    widthTolerance: "",
+    height: "",
+    heightTolerance: "",
+    aql: "",
     comments: [], //this can have many comments so, when sent as Array of comments
   });
   // ----------------------------------------------------------------
@@ -38,12 +38,12 @@ export const UserContextProvider = ({ children }) => {
     }
   }, [token]);
 
-
-
   const [userData, setUserData] = useState(null);
   const [checkedItems, setCheckedItems] = useState([]);
   const [editData, setEditData] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false);
+
+  console.log(userInformation);
 
   const companyId = userInformation?.companyId?._id;
 
@@ -52,20 +52,22 @@ export const UserContextProvider = ({ children }) => {
   const [imagesFiles, setImagesFiles] = useState([]);
 
   //time setter
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
 
   const [formData, setFormData] = useState({
-    name: '',
-    employeeId: '',
-    email: '',
-    phone: '',
-    role: '',
-    officeBranch: '',
+    name: "",
+    employeeId: "",
+    email: "",
+    phone: "",
+    role: "",
+    officeBranch: "",
   });
 
   const clearFieldData = () => {
-    const clearedData = Object.fromEntries(Object.keys(formData).map((key) => [key, '']));
+    const clearedData = Object.fromEntries(
+      Object.keys(formData).map((key) => [key, ""])
+    );
     setFormData(clearedData);
   };
 
@@ -74,7 +76,7 @@ export const UserContextProvider = ({ children }) => {
     // const response = await MyAPI.getData(someId);
     const id = userInformation?.UserInfo?.company._id;
     const resp = await fetch(
-      import.meta.env.VITE_BASE_URL + `/api/getAllEmployess/${id}`,
+      import.meta.env.VITE_BASE_URL + `/api/getAllEmployess/${id}`
     );
     const data = await resp.json();
 
@@ -109,19 +111,38 @@ export const UserContextProvider = ({ children }) => {
         });
         setCheckedItems([]);
         setIsEditMode(!isEditMode);
-        navigate('/add');
+        navigate("/add");
       }
     });
   };
 
   // PurchaseOrder
-  
 
-  const getUserInformation = async () => {
+  const companyCreatorEntity = [
+    "Buyer",
+    "Factory",
+    "QC Agency",
+    "Buying Agency",
+  ].map((e) => e.toLowerCase());
+
+  const getUserInformation = () => {
     wyraiApi
       .get(`/api/UserInformation`)
       .then((res) => {
-        setUserInformation(res.data.UserInfo);
+        const userInformation = res.data.UserInfo;
+        setUserInformation(userInformation);
+        console.log(userInformation);
+        const companyId = userInformation?.companyId?._id;
+        if (
+          !companyId &&
+          companyCreatorEntity.includes(
+            userInformation?.role?.name.toLowerCase()
+          )
+        ) {
+          navigate("/companyDetails");
+        } else {
+          navigate("/dashboard");
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -183,3 +204,4 @@ export const UserContextProvider = ({ children }) => {
 };
 
 export const userGloabalContext = () => useContext(userContext);
+export default userGloabalContext;

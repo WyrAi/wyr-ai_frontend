@@ -6,7 +6,6 @@ import ProtectedRoutes from "./ProtectedRoutes";
 import Login from "../pages/Login";
 import { AuthContext } from "../Contexts/authContext";
 import { getAuthToken } from "../Utils/authUtils";
-import Dialog from "../Components/Dialog";
 const RequiredAuth = (props) => {
   const { auth } = useContext(AuthContext);
   const { children } = props;
@@ -24,7 +23,6 @@ const CustomRoutes = () => {
       <Route path="/signUp" index exact element={<SignUp />}></Route>
       <Route path="/signUp/:clickedRole" element={<SignUpRole />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/test" element={<Dialog/>} />
 
       <Route
         path="/*"
