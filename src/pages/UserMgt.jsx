@@ -26,6 +26,8 @@ const UserMgt = () => {
     fetchData,
     edit,
     checkedItems,
+    setBranchData,
+    branchData,
     setCheckedItems,
     userInformation,
   } = userGloabalContext();
@@ -92,7 +94,6 @@ const UserMgt = () => {
   }, []);
 
   // const branchData = [];
-  const [branchData, setBranchData] = useState(null);
   const getBranches = async () => {
     wyraiApi
       .get(`/api/getAllBranches/${companyId}`)

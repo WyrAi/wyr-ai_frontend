@@ -20,6 +20,7 @@ const AddUser = () => {
 		handleBranchChange,
 		formData,
 		branchData,
+		setBranchData,
 		setFormData,
 		clearFieldData,
 		setIsEditMode,
@@ -32,6 +33,7 @@ const AddUser = () => {
 	const navigate = useNavigate();
 
 	// const navigate = useNavigate();
+	console.log(branchData);
 
 	const [photos, setPhotos] = useState(null);
 	const [popupRole, setPopupRole] = useState(false);
@@ -54,14 +56,7 @@ const AddUser = () => {
 		};
 	}, []); // The empty dependency array ensures that the effect runs only once when the component mounts
 
-	// const initialValues = {
-	// 	name: '',
-	// 	email: '',
-	// 	assignRole: '',
-	// 	employeeID: '',
-	// 	phone: '',
-	// 	addOfficeBranch: '',
-	// };
+	
 	const initialValues = {
 		name: formData.name,
 		email: formData.email,

@@ -19,6 +19,7 @@ const DropdownSelect = ({
 }) => {
 	const [visible, setVisible] = useState(false);
 	const [field, setField] = useState('');
+	console.log(data)
 	// console.log(error);
 	// console.log(data, 'data');
 	return (

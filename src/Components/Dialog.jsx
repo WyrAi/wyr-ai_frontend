@@ -31,23 +31,23 @@ const Dialog = (props) => {
       return isDialogOpen ? (
         <>
           <div
-            className={`${ROOT}__container ${className ? `${className}` : ''}`}
+            className={``   `__container ${className ? `${className}` : ''}`}
             style={zIndex ? { zIndex: zIndex, ...commonStyles } : commonStyles}
           >
             {title ? (
-              <div className={`${ROOT}__header-container`}>
-                <div className={`${ROOT}__header-title`}>{title}</div>
-                <button className={`${ROOT}__header-close-btn`} onClick={onCancel}>
+              <div className={``    `__header-container`}>
+                <div className={``  `__header-title`}>{title}</div>
+                <button className={``   `__header-close-btn`} onClick={onCancel}>
                   &times;
                 </button>
               </div>
             ) : null}
-            <div className={`${ROOT}__content`}>tests</div>
-            {/* <div className={`${ROOT}__content`}>{children}</div> */}
-            {footer && <div className={`${ROOT}__footer`}>{footer}</div>}
+            <div className={``  `__content`}>tests</div>
+            {/* <div className={``  `__content`}>{children}</div> */}
+            {footer && <div className={``   `__footer`}>{footer}</div>}
           </div>
           <div
-            className={`${ROOT}_overlay ${ROOT}_overlay-ative`}
+            className={``   `_overlay ` `_overlay-ative`}
             style={zIndex ? { zIndex: zIndex - 1 } : {}}
           ></div>
         </>
