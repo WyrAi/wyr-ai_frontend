@@ -220,8 +220,10 @@ const AddUser = () => {
 							className="hidden"
 							onChange={(e) => handleFiles(e)}
 						/>
-
-						<img src={profile} className="w-54 h-54 " alt="" />
+						<div className="w-56 h-56 rounded-full"> 
+							<img src={photos?.[0] || profile} className='w-full h-full object-cover rounded-full' alt="" />
+						</div>
+						
 						<div className=" absolute bottom-0 right-[20%]  bg-blue w-10 h-10 rounded-full p-3">
 							<img src={camera} alt="camera" />
 						</div>
@@ -353,7 +355,7 @@ const AddUser = () => {
 			{popupRole && <PopupRoles setPopupRole={setPopupRole} />}
 			{popupBranch && (
 				<PopupBranch
-					branchInfo={branchInfo}
+					// branchInfo={branchInfo}
 					setChange={handleBranchChange}
 					setPopup={setPopupBranch}
 				/>

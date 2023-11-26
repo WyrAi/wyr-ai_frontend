@@ -26,7 +26,7 @@ const DropdownSelectRole = ({
 
 	return (
 		<>
-			<div className="flex flex-col">
+			<div className=" relative flex flex-col">
 				<div className=" relative w-full mb-6 md:mb-0">
 					<div
 						className={`mt-1 indent-2 hover:opacity-95 block w-full  ${
@@ -57,7 +57,7 @@ const DropdownSelectRole = ({
 					{error && <p className="text-red-500 text-xs pl-6 ">{error}</p>}
 				</div>
 				{visible && (
-					<div className="shadow mt-2">
+					<div className=" absolute w-full bg-white top-[98%] shadow mt-2">
 						<button
 							className="flex justify-start items-center cursor-pointer pl-6 w-full gap-1 py-3 outline-none "
 							onClick={() => setPopup(!popup)}

@@ -44,8 +44,8 @@ function PurchaseOrder() {
 	const [slotOfProducts, setSlotOfProducts] = useState([]);
 	const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
-	const openCalendar = () => {
-		setIsCalendarOpen(true);
+	const toggleCalendar = () => {
+		setIsCalendarOpen(!isCalendarOpen);
 	};
 
 	const [popup, setPopup] = useState({
@@ -455,8 +455,8 @@ function PurchaseOrder() {
 									className={
 										'form-input border border-gray-400 mt-1 pl-4 py-4 pr-10  rounded-md w-full outline-none'
 									}
-									onClickOutside={() => setIsCalendarOpen(false)} // Close the calendar when clicking outside
-									calendarClassName={isCalendarOpen ? 'open' : ''}
+									onClickOutside={toggleCalendar} // Close the calendar when clicking outside
+									open={isCalendarOpen}
 								/>
 								<label
 									className={`block absolute top-[-24%]  left-[8%] md:top-[-25%] md:left-[10%] text-gray-500  tracking-tighter  py-1 px-3  ${'text-base'} mb-2 bg-white`}
@@ -467,7 +467,7 @@ function PurchaseOrder() {
 
 								<HiOutlineCalendar
 									className=" absolute top-[18%] right-[3%] h-8 w-8 cursor-pointer"
-									onClick={openCalendar}
+									onClick={toggleCalendar}
 								/>
 							</div>
 						</div>
