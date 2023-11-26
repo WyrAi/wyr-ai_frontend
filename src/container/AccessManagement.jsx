@@ -8,7 +8,7 @@ import { userGloabalContext } from "../UserContext";
 
 const AccessManagement = (props) => {
   const { userInformation } = userGloabalContext();
-  const { accessGranted, setAccessGranted } = props;
+  const { accessGranted, setAccessGranted } = props; 
 
   /* useEffect(() => {
     const selectedAccessToSend = Object.entries(selectAccess).reduce(
@@ -124,7 +124,6 @@ const AccessManagement = (props) => {
   const PermissionAccordian = (props) => {
     const { e: currentPermission } = props;
     const [collapse, setCollapse] = useState(false);
-
     return (
       <div className=" relative bg-gray-100">
         <div className="flex items-center">
@@ -169,9 +168,9 @@ const AccessManagement = (props) => {
 
         {!collapse ? (
           <div className="grid grid-cols-3 px-7 py-2 text-xs gap-1">
-            {currentPermission.access.map((f) => {
+            {currentPermission?.access?.map((f, index) => {
               return (
-                <div className="">
+                <div className="" key={index}>
                   <label className="flex gap-2 items-center">
                     <input
                       type="checkbox"
@@ -209,8 +208,8 @@ const AccessManagement = (props) => {
 
   return (
     <div className="overflow-auto  w-full flex flex-col gap-4 mb-5">
-      {Object.keys(currentAccessPermissions).map((e) => {
-        return <PermissionAccordian e={currentAccessPermissions[e]} />;
+      {Object.keys(currentAccessPermissions).map((e, index) => {
+        return <PermissionAccordian key={index} e={currentAccessPermissions[e]} />;
       })}
     </div>
   );
