@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import { ResetPasswordSchema } from "../validationSchemas/resetPasswordSchema";
 import logo from "../assets/logo.svg";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import wyraiApi from "../api/wyraiApi";
 
 const FormData = [
   {
@@ -19,6 +22,7 @@ const FormData = [
 ];
 
 const ResetPassword = () => {
+  const { token } = useParams();
   const [initialValues] = useState({
     Password: "",
     ConfirmPassword: "",
@@ -28,13 +32,28 @@ const ResetPassword = () => {
     useFormik({
       initialValues,
       validationSchema: ResetPasswordSchema,
-      onSubmit: async (values) => {},
+      onSubmit: async (values) => {
+        wyraiApi  
+          .post(`api/userPassword`, {
+            token,
+            Password: values.Password,
+            ConfirmPassword: values.ConfirmPassword,
+          })
+          .then((res) => {
+            if (res.status === 200) {
+              alert("Password reset successfully");
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      },
     });
 
   return (
     <>
       <div className="bg-[#f8fcfe] h-screen flex flex-col justify-center">
-        <div className="w-4/12 mx-auto shadow-md h-6/12 p-5 rounded-lg text-center">
+        <div className="w-4/12 mx-auto shadow-md h-6/12 p-5 rounded-lg text-center bg-white">
           <img src={logo} alt="logo" width="200px" className="mx-auto mb-6" />
           <h1 className="text-center text-2xl font-bold mb-6">
             Reset account password
