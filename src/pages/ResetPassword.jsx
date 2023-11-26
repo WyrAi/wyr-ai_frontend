@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import { ResetPasswordSchema } from "../validationSchemas/resetPasswordSchema";
 import logo from "../assets/logo.svg";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import wyraiApi from "../api/wyraiApi";
 
 const FormData = [
   {
@@ -19,6 +22,7 @@ const FormData = [
 ];
 
 const ResetPassword = () => {
+  const { token } = useParams();
   const [initialValues] = useState({
     Password: "",
     ConfirmPassword: "",
@@ -28,7 +32,22 @@ const ResetPassword = () => {
     useFormik({
       initialValues,
       validationSchema: ResetPasswordSchema,
-      onSubmit: async (values) => {},
+      onSubmit: async (values) => {
+        wyraiApi  
+          .post(`api/userPassword`, {
+            token,
+            Password: values.Password,
+            ConfirmPassword: values.ConfirmPassword,
+          })
+          .then((res) => {
+            if (res.status === 200) {
+              alert("Password reset successfully");
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      },
     });
 
   return (
