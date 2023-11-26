@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { AllRoles, SelectAccess } from '../assets/data/CustomRoles';
-import checked from '../assets/checked.svg';
-import unchecked from '../assets/unchecked.svg';
-import down from '../assets/mingcute_up-fill (1).svg';
-import up from '../assets/mingcute_up-fill.svg';
-import { userGloabalContext } from '../UserContext';
+import React, { useEffect, useState } from "react";
+import { AllRoles, SelectAccess } from "../assets/data/CustomRoles";
+import checked from "../assets/checked.svg";
+import unchecked from "../assets/unchecked.svg";
+import down from "../assets/mingcute_up-fill (1).svg";
+import up from "../assets/mingcute_up-fill.svg";
+import { userGloabalContext } from "../UserContext";
 
 const AccessManagement = (props) => {
   const { userInformation } = userGloabalContext();
@@ -57,7 +57,7 @@ const AccessManagement = (props) => {
   const currentAccessPermissions = React.useMemo(() => {
     const permissionsFromBE = userInformation?.role?.SelectAccess;
     const currentUserPermissions = Object.keys(permissionsFromBE)
-      .map((e) => {
+      ?.map((e) => {
         if (permissionsFromBE[e].length) {
           return {
             [e]: permissionsFromBE[e],
@@ -79,7 +79,10 @@ const AccessManagement = (props) => {
 
   const handleAccordianCheckBox = (e, currentPermission) => {
     if (e.target.checked) {
-      const p = currentPermission.access.reduce((a, b) => ({ ...a, [b]: true }), {});
+      const p = currentPermission.access.reduce(
+        (a, b) => ({ ...a, [b]: true }),
+        {}
+      );
       setAccessGranted({ ...accessGranted, [currentPermission.value]: p });
     } else {
       const tempAccess = { ...accessGranted };
@@ -105,14 +108,14 @@ const AccessManagement = (props) => {
             [f]: false,
           },
         };
-        const isEmpty = Object.keys(newAccess?.[currentPermission.value] || {})?.filter(
-          (e) => {
-            return newAccess?.[currentPermission.value]?.[e];
-          },
-        ).length;
+        const isEmpty = Object.keys(
+          newAccess?.[currentPermission.value] || {}
+        )?.filter((e) => {
+          return newAccess?.[currentPermission.value]?.[e];
+        }).length;
         if (!isEmpty) {
           delete newAccess?.[currentPermission.value];
-        }	
+        }
         return newAccess;
       });
     }
@@ -137,7 +140,11 @@ const AccessManagement = (props) => {
               {!!accessGranted?.[currentPermission.value] ? (
                 <img src={checked} className="cursor-pointer" alt="checked" />
               ) : (
-                <img src={unchecked} className="cursor-pointer" alt="unchecked" />
+                <img
+                  src={unchecked}
+                  className="cursor-pointer"
+                  alt="unchecked"
+                />
               )}
             </span>
             {currentPermission.name}
@@ -176,9 +183,17 @@ const AccessManagement = (props) => {
                     />
                     <span className="flex items-center gap-2" id="select">
                       {!!accessGranted?.[currentPermission.value]?.[f] ? (
-                        <img src={checked} className="cursor-pointer" alt="checked" />
+                        <img
+                          src={checked}
+                          className="cursor-pointer"
+                          alt="checked"
+                        />
                       ) : (
-                        <img src={unchecked} className="cursor-pointer" alt="unchecked" />
+                        <img
+                          src={unchecked}
+                          className="cursor-pointer"
+                          alt="unchecked"
+                        />
                       )}
                     </span>
                     <span>{f}</span>

@@ -8,6 +8,7 @@ import PurchaseOrder from "../Components/PurchaseOrder";
 import Inspection from "../pages/Inspection";
 import UserMgt from "../pages/UserMgt";
 import AddUser from "../container/AddUser";
+import RelationShip from "../pages/RelationShip";
 
 const ProtectedRoutes = () => {
   return (
@@ -21,7 +22,7 @@ const ProtectedRoutes = () => {
         <Route path="/inspection" element={<Inspection />} />
         <Route path="/user" element={<UserMgt />} />
         <Route path="/user/add" element={<AddUser />} />
-
+        <Route path="/relationShip" element={<RelationShip />} />
       </Route>
     </Routes>
   );
