@@ -28,7 +28,7 @@ const CustomRoutes = () => {
       <Route path="/signUp/:clickedRole" element={<SignUpRole />} />
       <Route path="/login" element={<Login />} />
       <Route path="/resetPassword/:token/:email" element={<ResetPassword />} />
-      <Route path="/test" element={<Inspection/>} />
+      <Route path="/test" element={<Dialog />} />
 
       <Route
         path="/*"

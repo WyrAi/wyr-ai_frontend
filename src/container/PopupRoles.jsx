@@ -12,10 +12,10 @@ import { useNavigate } from 'react-router-dom';
 
 const PopupRoles = (props) => {
   const { setPopupRole } = props;
-  const { fetchRole, userInformation } = userGloabalContext();
+          const { fetchRole, userInformation ,companyId} = userGloabalContext();
   const navigate = useNavigate();
 
-  const companyId = userInformation.companyId._id;
+  // const companyId = userInformation.companyId._id;
 
   const [accessGranted, setAccessGranted] = useState(null);
 
