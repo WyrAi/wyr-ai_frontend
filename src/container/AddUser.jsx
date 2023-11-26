@@ -32,7 +32,6 @@ const AddUser = () => {
 	} = userGloabalContext();
 	const navigate = useNavigate();
 
-
 	const [photos, setPhotos] = useState(null);
 	const [popupRole, setPopupRole] = useState(false);
 	const [popupBranch, setPopupBranch] = useState(false);
@@ -119,16 +118,18 @@ const AddUser = () => {
 		const reader = new FileReader();
 		reader.onload = (e) => {
 			// Use reader.result
-			console.log(e.target.result);
+			// console.log(e.target.result);
 			setPhotos([e.target.result]);
 			// onDrop(e.target.result);
 		};
 		reader.readAsDataURL(imgFile);
 		// console.log(imgFile);
 	}
-
+	
 	const handleSubmit = async (values) => {
-		const id = userInformation?.UserInfo?.company._id;
+		 const id = userInformation?.companyId?._id;
+		console.log()
+		console.log(userInformation)
 		const branchId = branchData.find(
 			(item) => item.branchName === values.addOfficeBranch
 		)._id;
@@ -182,11 +183,11 @@ const AddUser = () => {
 					},
 					body: JSON.stringify({
 						...values,
-						roleId: roleId,
-						branchId: branchId,
+						role: roleId,
+						officeBranch: branchId,
 						profileImage: photos,
-						CompanyID: id,
-						role,
+						companyId: id,
+				
 					}),
 				}
 			);

@@ -6,6 +6,7 @@ import live from "../noun-live-2146916 1.svg";
 import payment from "../noun-payment-6223435 1.svg";
 import profile from "../noun-profile-1543074.svg";
 import user from "../UserSettings.svg";
+import { LuPackageSearch } from "react-icons/lu";
 
 // import {GrUserSettings} from 'react-icons';
 // import {FaHandshake} from 'react-icons/fa'
@@ -13,42 +14,47 @@ import user from "../UserSettings.svg";
 
 export const sideBarData = [
   {
-    icon: dash,
+    icon: <img src={dash} className="" alt="" />,
     heading: "DashBoard",
     link: "/dashboard",
   },
   {
-    icon: cart,
+    icon: <img src={cart} className="" alt="" />,
     heading: "Purachase Orders",
     link: "/purchase/",
   },
   {
-    icon: relation,
+    icon:<LuPackageSearch className="text-3xl text-darkGray hover:text-white" />,
+    heading: "Inspection",
+    link: "/purchase/",
+  },
+  {
+    icon: <img src={relation} className="" alt="" />,
     heading: "Relationship Mgt.",
     link: "#",
   },
   {
-    icon: user,
+    icon: <img src={user} className="" alt="" />,
     heading: "User Management.",
     link: "/user",
   },
   {
-    icon: reports,
+    icon: <img src={reports} className="" alt="" />,
     heading: "Reports",
     link: "#",
   },
   {
-    icon: live,
+    icon: <img src={live} className="" alt="" />,
     heading: "Live",
     link: "#",
   },
   {
-    icon: payment,
+    icon: <img src={payment} className="" alt="" />,
     heading: "Payments",
     link: "#",
   },
   {
-    icon: profile,
+    icon: <img src={profile} className="" alt="" />,
     heading: "Profile",
     link: "#",
   },

@@ -74,11 +74,12 @@ export const UserContextProvider = ({ children }) => {
   async function fetchData() {
     // You can await here
     // const response = await MyAPI.getData(someId);
-    const id = userInformation?.UserInfo?.company._id;
+    const id = userInformation?.companyId._id;
     const resp = await fetch(
       import.meta.env.VITE_BASE_URL + `/api/getAllEmployess/${id}`
     );
     const data = await resp.json();
+    console.log(data);
 
     setUserData([...data]);
   }

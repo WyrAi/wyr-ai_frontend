@@ -48,7 +48,10 @@ const UserMgt = () => {
 
     fetchData();
   };
-  useEffect(() => {}, [userData]);
+  useEffect(() => {
+    fetchData();
+  }, []);
+  console.log(userData);
 
   const handleBranchClick = async (id) => {
     // setSelectedBranch(selectedBranch);

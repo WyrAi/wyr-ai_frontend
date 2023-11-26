@@ -20,7 +20,7 @@ const Nav = () => {
               key={index}
               className="flex items-center gap-3 py-3 h-14 w-[100%] hover:bg-blue hover:text-white rounded-xl pl-7 pr-5 "
             >
-              <img src={item.icon} className="" alt="" />
+              {item.icon}
               <span>{item.heading}</span>
             </Link>
           ))}
