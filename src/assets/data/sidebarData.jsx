@@ -24,14 +24,16 @@ export const sideBarData = [
     link: "/purchase/",
   },
   {
-    icon:<LuPackageSearch className="text-3xl text-darkGray hover:text-white" />,
+    icon: (
+      <LuPackageSearch className="text-3xl text-darkGray hover:text-white" />
+    ),
     heading: "Inspection",
     link: "/purchase/",
   },
   {
     icon: <img src={relation} className="" alt="" />,
     heading: "Relationship Mgt.",
-    link: "#",
+    link: "/relationShip",
   },
   {
     icon: <img src={user} className="" alt="" />,
