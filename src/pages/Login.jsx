@@ -10,13 +10,7 @@ import { userGloabalContext } from "../UserContext";
 const Login = () => {
   // const navigate = useNavigate();
   const { setAuth } = useContext(AuthContext);
-<<<<<<< HEAD
-
-  const { getUserInformation } = userGloabalContext();
-  // console.log(getUserInformation);
-=======
   const { setToken } = userGloabalContext();
->>>>>>> 1d9e93ff5b8121cbcb1340287f71b0bdac875dfb
 
   const [formData, setFormData] = useState({
     email: "minion@yopmail.com",
@@ -36,20 +30,9 @@ const Login = () => {
     wyraiApi
       .post(`/api/login`, formData)
       .then((res) => {
-<<<<<<< HEAD
-        console.log(res.data.token);
-        setAuth(res.data.token);
-        // navigate("/dashboard");
-        const getAuth = getAuthToken();
-        console.log(getAuth);
-      })
-      .then(() => {
-        getUserInformation();
-=======
         console.log("got token");
         setToken(res.data.token);
         setAuth(res.data.token);
->>>>>>> 1d9e93ff5b8121cbcb1340287f71b0bdac875dfb
       })
       .catch((err) => {
         console.log(err);
