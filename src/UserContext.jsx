@@ -32,18 +32,11 @@ export const UserContextProvider = ({ children }) => {
   const [roleData, setRoleData] = useState([]);
   const [userInformation, setUserInformation] = useState();
   const [token, setToken] = useState(getAuthToken());
-  useEffect(() => {
-    if (!token) {
-      setToken(getAuthToken());
-    }
-  }, [token]);
 
   const [userData, setUserData] = useState(null);
   const [checkedItems, setCheckedItems] = useState([]);
   const [editData, setEditData] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false);
-
-  console.log(userInformation);
 
   const companyId = userInformation?.companyId?._id;
   const role = userInformation?.role?.name;
@@ -151,6 +144,7 @@ export const UserContextProvider = ({ children }) => {
         console.log(err);
       });
   };
+
   useEffect(() => {
     if (token && !userData) {
       getUserInformation();
@@ -162,12 +156,13 @@ export const UserContextProvider = ({ children }) => {
       fetchRole();
     }
   }, [companyId]);
-  console.log(userInformation);
 
   return (
     <>
       <userContext.Provider
         value={{
+          token,
+          setToken,
           companyId,
           roleData,
           userData,

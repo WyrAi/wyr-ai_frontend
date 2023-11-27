@@ -4,18 +4,22 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import wyraiApi from "../api/wyraiApi";
 import { AuthContext } from "../Contexts/authContext";
-import { getAuthToken } from "../Utils/authUtils";
+// import { getAuthToken, setAuthToken } from "../Utils/authUtils";
 import { userGloabalContext } from "../UserContext";
 
 const Login = () => {
   // const navigate = useNavigate();
   const { setAuth } = useContext(AuthContext);
+<<<<<<< HEAD
 
   const { getUserInformation } = userGloabalContext();
   // console.log(getUserInformation);
+=======
+  const { setToken } = userGloabalContext();
+>>>>>>> 1d9e93ff5b8121cbcb1340287f71b0bdac875dfb
 
   const [formData, setFormData] = useState({
-    email: "minion1@yopmail.com",
+    email: "minion@yopmail.com",
     password: "test1234",
   });
 
@@ -32,6 +36,7 @@ const Login = () => {
     wyraiApi
       .post(`/api/login`, formData)
       .then((res) => {
+<<<<<<< HEAD
         console.log(res.data.token);
         setAuth(res.data.token);
         // navigate("/dashboard");
@@ -40,16 +45,16 @@ const Login = () => {
       })
       .then(() => {
         getUserInformation();
+=======
+        console.log("got token");
+        setToken(res.data.token);
+        setAuth(res.data.token);
+>>>>>>> 1d9e93ff5b8121cbcb1340287f71b0bdac875dfb
       })
       .catch((err) => {
         console.log(err);
       });
   };
-  // useEffect(()=>{
-  //   if(getAuthToken()) {
-  //     navigate("/dashboard");
-  //   }
-  // },[])
   return (
     <>
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

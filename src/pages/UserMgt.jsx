@@ -1,17 +1,17 @@
-import work from '../assets/noun-work-5949579.svg';
-import select from '../assets/noun-select-all-4671270 1.svg';
-import plus from '../assets/typcn_plus.svg';
-import gps from '../assets/ion_location-outline.svg';
-import UserCard from '../container/UserCard'; //change the name of the file later
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import PopupBranch from '../container/PopupBranch';
-import { userGloabalContext } from '../UserContext';
-import Menu from '../container/Menu';
-import { MdOutlineModeEditOutline } from 'react-icons/md';
-import { FaRegTrashAlt } from 'react-icons/fa';
-import axios from 'axios';
-import wyraiApi from '../api/wyraiApi';
+import work from "../assets/noun-work-5949579.svg";
+import select from "../assets/noun-select-all-4671270 1.svg";
+import plus from "../assets/typcn_plus.svg";
+import gps from "../assets/ion_location-outline.svg";
+import UserCard from "../container/UserCard"; //change the name of the file later
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import PopupBranch from "../container/PopupBranch";
+import { userGloabalContext } from "../UserContext";
+import Menu from "../container/Menu";
+import { MdOutlineModeEditOutline } from "react-icons/md";
+import { FaRegTrashAlt } from "react-icons/fa";
+import axios from "axios";
+import wyraiApi from "../api/wyraiApi";
 
 // *** there is filter to be added on when click button there is remove of id from array State ***
 
@@ -30,21 +30,26 @@ const UserMgt = () => {
     branchData,
     setCheckedItems,
     userInformation,
+    companyId,
   } = userGloabalContext();
-  const companyId = userInformation?.companyId?._id;
+  // const companyId = userInformation?.companyId?._id;
+  console.log(userData);
 
   const [addBranchPopUp, setAddBranchPopUp] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState(null);
 
   const handleDelete = async () => {
     console.log(checkedItems);
-    const resp = await fetch(import.meta.env.VITE_BASE_URL + '/api/deleteEmploye', {
-      method: 'Delete',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ userIds: checkedItems }),
-    });
+    const resp = await fetch(
+      import.meta.env.VITE_BASE_URL + "/api/deleteEmploye",
+      {
+        method: "Delete",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userIds: checkedItems }),
+      }
+    );
 
     fetchData();
   };
@@ -58,23 +63,27 @@ const UserMgt = () => {
     // id = userInformation.UserInfo.
     console.log(id);
     const { data } = await axios(
-      import.meta.env.VITE_BASE_URL + `/api/getAllEmployessWithBranch/${id}`,
+      import.meta.env.VITE_BASE_URL + `/api/getAllEmployessWithBranch/${id}`
     );
-    console.log('te', data);
+    console.log("te", data);
     setUserData(data);
   };
 
   const handleAlluserClick = () => {
     setSelectedBranch(null);
+    fetchData();
   };
 
   const filteredUsers =
     selectedBranch !== null
-      ? userData.filter((user) => user.addOfficeBranch === selectedBranch.branchName)
+      ? userData.filter(
+          (user) => user.addOfficeBranch === selectedBranch.branchName
+        )
       : userData;
+  console.log(filteredUsers);
 
   const handleEscKeyPress = (event) => {
-    if (event.key === 'Escape') {
+    if (event.key === "Escape") {
       // Do something when the Esc key is pressed
       setAddBranchPopUp(false);
     }
@@ -85,14 +94,14 @@ const UserMgt = () => {
   };
 
   useEffect(() => {
-    document.addEventListener('keydown', handleEscKeyPress);
+    document.addEventListener("keydown", handleEscKeyPress);
 
-    window.addEventListener('click', handleClickOutside);
+    window.addEventListener("click", handleClickOutside);
 
     // Cleanup: remove event listener when the component unmounts
     return () => {
-      document.removeEventListener('keydown', handleEscKeyPress);
-      window.removeEventListener('click', handleClickOutside);
+      document.removeEventListener("keydown", handleEscKeyPress);
+      window.removeEventListener("click", handleClickOutside);
     };
   }, []);
 
@@ -145,7 +154,7 @@ const UserMgt = () => {
           </div>
           <div className="">
             <Link
-              to={'/user/add'}
+              to={"/user/add"}
               className="bg-[#1B9BEF] text-white font-bold px-11 py-3 rounded-md "
             >
               Add New User
@@ -160,7 +169,7 @@ const UserMgt = () => {
                 <span>Branch</span>
               </div>
               <div
-                className="flex hover:bg-[#1B9BEF14] pl-6 gap-1 py-3"
+                className="flex hover:bg-[#1B9BEF14] pl-6 gap-1 py-3 cursor-pointer"
                 onClick={handleAlluserClick}
               >
                 <img src={select} alt="branch" />
@@ -171,7 +180,7 @@ const UserMgt = () => {
                   branchData?.map((item, index) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between pl-5 py-3 h-14 hover:bg-[#1B9BEF14] "
+                      className="flex items-center justify-between pl-5 py-3 h-14 hover:bg-[#1B9BEF14] cursor-pointer "
                       onClick={() => {
                         handleBranchClick(item._id);
                       }}
