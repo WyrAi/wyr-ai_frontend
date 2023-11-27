@@ -27,7 +27,7 @@ const CustomRoutes = () => {
       <Route path="/signUp" index exact element={<SignUp />}></Route>
       <Route path="/signUp/:clickedRole" element={<SignUpRole />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/resetPassword/:token/:email" element={<ResetPassword />} />
+      <Route path="/resetPassword/:token" element={<ResetPassword />} />
       <Route path="/test" element={<Dialog />} />
 
       <Route

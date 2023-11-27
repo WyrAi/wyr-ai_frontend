@@ -4,7 +4,8 @@ import { ResetPasswordSchema } from "../validationSchemas/resetPasswordSchema";
 import logo from "../assets/logo.svg";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import wyraiApi from "../api/wyraiApi";
+import { useNavigate } from "react-router-dom";
+import Loader from "../components/Loader";
 
 const FormData = [
   {
@@ -27,21 +28,24 @@ const ResetPassword = () => {
     Password: "",
     ConfirmPassword: "",
   });
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const { values, handleBlur, handleChange, handleSubmit, errors, touched } =
     useFormik({
       initialValues,
       validationSchema: ResetPasswordSchema,
       onSubmit: async (values) => {
-        wyraiApi  
-          .post(`api/userPassword`, {
+        await axios
+          .post(`${import.meta.env.VITE_BASE_URL}/api/userPassword`, {
             token,
             Password: values.Password,
-            ConfirmPassword: values.ConfirmPassword,
+            confirmPassword: values.ConfirmPassword,
           })
           .then((res) => {
             if (res.status === 200) {
               alert("Password reset successfully");
+              navigate("/login");
             }
           })
           .catch((err) => {
@@ -93,9 +97,12 @@ const ResetPassword = () => {
           })}
           <button
             className="mt-6 border py-3 text-xl font-medium bg-[#1B9BEF] rounded-md w-5/12 text-white "
-            onClick={handleSubmit}
+            onClick={() => {
+              handleSubmit();
+              setLoading(true);
+            }}
           >
-            Submit
+            {loading ? <Loader /> : "Submit"}
           </button>
         </div>
       </div>
