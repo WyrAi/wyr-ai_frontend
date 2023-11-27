@@ -6,7 +6,7 @@ import search from '../assets/Search.svg';
 
 const Header = () => {
 	return (
-		<header className="bg-gray-100 h-[10%] ">
+		<header className="bg-white h-[10%] mb-5 ">
 			<div className="max-w-7xl  mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="grid grid-cols-[1fr_1fr] items-center pt-2 md:justify-start md:space-x-10">
 					<div className="w-full">

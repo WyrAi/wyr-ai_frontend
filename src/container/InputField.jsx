@@ -14,7 +14,6 @@ const InputField = ({
 	type,
 	disable,
 }) => {
-	// console.log(error);
 	return (
 		<>
 			<div className=" relative  mb-4 ">

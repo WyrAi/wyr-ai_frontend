@@ -25,13 +25,14 @@ const SortFilter = ({ filters, selectedFilter, setSelectedFilter }) => {
           borderWidth: "2px",
           borderStyle: "solid",
         }}
-        className={`p-2 px-3 rounded-md cursor-pointer ${
+        className={`p-2 px-3 rounded-md cursor-pointer flex items-center gap-2 ${
           isFilterActive ? "active-filter" : ""
         }`}
         key={filter.text}
         onClick={() => setSelectedFilter(filter)}
       >
-        {filter.icon && <i className={`icon ${filter.icon}`} />}
+        {filter.icon && filter.icon}
+        {/* {filter.icon && <i className={`icon ${filter.icon}`} />} */}
         <span style={{ color: filter.color }}>{filter.text}</span>
       </div>
     );

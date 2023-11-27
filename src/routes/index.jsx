@@ -7,8 +7,9 @@ import Login from "../pages/Login";
 import { AuthContext } from "../Contexts/authContext";
 import { getAuthToken } from "../Utils/authUtils";
 import ResetPassword from "../pages/ResetPassword";
-import Dialog from "../Components/Dialog";
-import Inspection from "../pages/Inspection";
+import SuccessRelation from "../container/SuccessRelation";
+// import Dialog from "../Components/Dialog";
+// import Inspection from "../pages/Inspection";
 
 const RequiredAuth = (props) => {
   const { auth } = useContext(AuthContext);
@@ -28,7 +29,7 @@ const CustomRoutes = () => {
       <Route path="/signUp/:clickedRole" element={<SignUpRole />} />
       <Route path="/login" element={<Login />} />
       <Route path="/resetPassword/:token" element={<ResetPassword />} />
-      <Route path="/test" element={<Dialog />} />
+      <Route path="/test" element={<SuccessRelation />} />
 
       <Route
         path="/*"

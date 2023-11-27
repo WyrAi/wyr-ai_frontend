@@ -46,6 +46,8 @@ export const UserContextProvider = ({ children }) => {
   console.log(userInformation);
 
   const companyId = userInformation?.companyId?._id;
+  const role = userInformation?.role?.name;
+
 
   // PO popup and images file
   const [popUpload, setPopUpload] = useState(false);
@@ -79,7 +81,6 @@ export const UserContextProvider = ({ children }) => {
       import.meta.env.VITE_BASE_URL + `/api/getAllEmployess/${id}`
     );
     const data = await resp.json();
-    console.log(data);
 
     setUserData([...data]);
   }
@@ -127,6 +128,7 @@ export const UserContextProvider = ({ children }) => {
   ].map((e) => e.toLowerCase());
 
   const getUserInformation = () => {
+    
     wyraiApi
       .get(`/api/UserInformation`)
       .then((res) => {
@@ -180,6 +182,7 @@ export const UserContextProvider = ({ children }) => {
           startTime,
           endTime,
           branchData,
+          role,
           setStartTime,
           setEndTime,
           setImagesFiles,
@@ -197,6 +200,7 @@ export const UserContextProvider = ({ children }) => {
           // handleBranchChange,
           setBranchData,
           setCheckedItems,
+          getUserInformation,
           userInformation,
         }}
       >

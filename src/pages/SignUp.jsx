@@ -8,7 +8,7 @@ import ClientOptions from "../container/ClientOptions";
 const Home = () => {
   const [role, setRole] = useState([
     { id: 0, name: "Buyer", icon: Buyer, selected: false },
-    { id: 1, name: "BuyingAgency", icon: Agency, selected: false },
+    { id: 1, name: "Buying Agency", icon: Agency, selected: false },
     { id: 2, name: "Factory", icon: factory, selected: false },
     { id: 3, name: "QC Agency", icon: QC, selected: false },
   ]);

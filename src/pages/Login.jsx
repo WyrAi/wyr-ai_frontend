@@ -12,7 +12,7 @@ const Login = () => {
   const { setAuth } = useContext(AuthContext);
 
   const { getUserInformation } = userGloabalContext();
-  console.log(getUserInformation);
+  // console.log(getUserInformation);
 
   const [formData, setFormData] = useState({
     email: "minion1@yopmail.com",
@@ -32,8 +32,11 @@ const Login = () => {
     wyraiApi
       .post(`/api/login`, formData)
       .then((res) => {
+        console.log(res.data.token);
         setAuth(res.data.token);
         // navigate("/dashboard");
+        const getAuth = getAuthToken();
+        console.log(getAuth);
       })
       .then(() => {
         getUserInformation();

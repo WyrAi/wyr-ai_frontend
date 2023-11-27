@@ -21,6 +21,7 @@ const ClientOptions = ({id, icon, role, setRole, selected}) => {
 			};
 
 			// Update the state with the new array
+			console.log(clickedRole); // Bug on creating Buying Agency do not redirect
 			setRole(updatedItems);
 			navigate(`/signUp/${clickedRole}`);
 		}
