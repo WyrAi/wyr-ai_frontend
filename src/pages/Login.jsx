@@ -12,6 +12,7 @@ const Login = () => {
   const { setAuth } = useContext(AuthContext);
 
   const { getUserInformation } = userGloabalContext();
+  console.log(getUserInformation);
 
   const [formData, setFormData] = useState({
     email: "minion1@yopmail.com",
