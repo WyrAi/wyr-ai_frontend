@@ -1,236 +1,242 @@
-import {useEffect, useState} from 'react';
-import {useFormik} from 'formik';
-import * as Yup from 'yup';
-import profile from '../assets/userProfile.svg';
-import leftarrow from '../assets/ion_arrow-back-outline.svg';
-import InputField from './InputField';
-import DropdownSelect from './DropdownSelect';
+import { useEffect, useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import profile from "../assets/userProfile.svg";
+import leftarrow from "../assets/ion_arrow-back-outline.svg";
+import InputField from "./InputField";
+import DropdownSelect from "./DropdownSelect";
 
-import PopupRoles from './PopupRoles';
-import camera from '../assets/noun-camera-6228850 1.svg';
-import PopupBranch from './PopupBranch';
-import {Link, useNavigate} from 'react-router-dom';
-import {userGloabalContext} from '../UserContext';
-import DropdownSelectRole from './DropdownSelectRole';
+import PopupRoles from "./PopupRoles";
+import camera from "../assets/noun-camera-6228850 1.svg";
+import PopupBranch from "./PopupBranch";
+import { Link, useNavigate } from "react-router-dom";
+import { userGloabalContext } from "../UserContext";
+import DropdownSelectRole from "./DropdownSelectRole";
 
 const AddUser = () => {
-	// Assuming you want to store the form data in a state
+  // Assuming you want to store the form data in a state
 
-	const {
-		handleBranchChange,
-		formData,
-		branchData,
-		setBranchData,
-		setFormData,
-		clearFieldData,
-		setIsEditMode,
-		isEditMode,
-		editData,
-		roleData,
-		fetchData,
-		userInformation,
-	} = userGloabalContext();
-	const navigate = useNavigate();
+  const {
+    handleBranchChange,
+    formData,
+    branchData,
+    setBranchData,
+    setFormData,
+    clearFieldData,
+    setIsEditMode,
+    isEditMode,
+    editData,
+    roleData,
+    fetchData,
+    userInformation,
+  } = userGloabalContext();
+  const navigate = useNavigate();
 
-	const [photos, setPhotos] = useState(null);
-	const [popupRole, setPopupRole] = useState(false);
-	const [popupBranch, setPopupBranch] = useState(false);
+  const [photos, setPhotos] = useState(null);
+  const [popupRole, setPopupRole] = useState(false);
+  const [addBranchPopUp, setAddBranchPopUp] = useState(false);
 
-	const handleEscKeyPress = (event) => {
-		if (event.key === 'Escape') {
-			// Do something when the Esc key is pressed
-			setPopupBranch(false);
-			setPopupRole(false);
-		}
-	};
+  const handleEscKeyPress = (event) => {
+    if (event.key === "Escape") {
+      // Do something when the Esc key is pressed
+      setAddBranchPopUp(false);
+      setPopupRole(false);
+    }
+  };
 
-	useEffect(() => {
-		document.addEventListener('keydown', handleEscKeyPress);
+  const closeAddBranchPopUp = () => {
+    setAddBranchPopUp(false);
+  };
 
-		// Cleanup: remove event listener when the component unmounts
-		return () => {
-			document.removeEventListener('keydown', handleEscKeyPress);
-		};
-	}, []); // The empty dependency array ensures that the effect runs only once when the component mounts
+  useEffect(() => {
+    document.addEventListener("keydown", handleEscKeyPress);
 
-	
-	const initialValues = {
-		name: formData.name,
-		email: formData.email,
-		assignRole: formData.assignRole,
-		employeeID: formData.employeeID,
-		phone: formData.phone,
-		addOfficeBranch: formData.addOfficeBranch,
-	};
+    // Cleanup: remove event listener when the component unmounts
+    return () => {
+      document.removeEventListener("keydown", handleEscKeyPress);
+    };
+  }, []); // The empty dependency array ensures that the effect runs only once when the component mounts
 
-	const userSchema = Yup.object().shape({
-		name: Yup.string().required('Name is required'),
-		email: Yup.string().email('Invalid email').required('Email is required'),
-		assignRole: Yup.string().required('Role is required'),
-		employeeID: Yup.string().required('Employee ID is required'),
-		phone: Yup.string()
-			.matches(/^[0-9]+$/, 'Phone number is not valid')
-			.required('Phone is required'),
-		addOfficeBranch: Yup.string().required('Branch is Required'),
-	});
+  const initialValues = {
+    name: formData.name,
+    email: formData.email,
+    assignRole: formData.assignRole,
+    employeeID: formData.employeeID,
+    phone: formData.phone,
+    addOfficeBranch: formData.addOfficeBranch,
+  };
 
-	const formik = useFormik({
-		initialValues,
-		onSubmit: (values) => handleSubmit(values),
-		validationSchema: userSchema,
-	});
+  const userSchema = Yup.object().shape({
+    name: Yup.string().required("Name is required"),
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    assignRole: Yup.string().required("Role is required"),
+    employeeID: Yup.string().required("Employee ID is required"),
+    phone: Yup.string()
+      .matches(/^[0-9]+$/, "Phone number is not valid")
+      .required("Phone is required"),
+    addOfficeBranch: Yup.string().required("Branch is Required"),
+  });
 
-	// if (isEditMode) {
-	// 	formik.values.email = formData.email;
-	// 	formik.values.name = formData.name;
-	// 	formik.values.phone = formData.phone;
-	// 	formik.values.employeeID = formData.employeeId;
-	// 	formik.values.assignRole = formData.role;
-	// 	formik.values.addOfficeBranch = formData.officeBranch;
+  const formik = useFormik({
+    initialValues,
+    onSubmit: (values) => handleSubmit(values),
+    validationSchema: userSchema,
+  });
 
-	// 	console.log(formik.values.name);
-	// }
-	// const handleChange = (e) => {
-	// 	this.setState({user: {...this.state.user, name: event.target.value}});
-	// 	// Then call Formik's handleChange
-	// 	formikProps.handleChange(event);
-	// };
+  // if (isEditMode) {
+  // 	formik.values.email = formData.email;
+  // 	formik.values.name = formData.name;
+  // 	formik.values.phone = formData.phone;
+  // 	formik.values.employeeID = formData.employeeId;
+  // 	formik.values.assignRole = formData.role;
+  // 	formik.values.addOfficeBranch = formData.officeBranch;
 
-	// 	console.log(e.target.name, e.target.getAttribute('data-name'));
-	// 	setFormData({...formData, [e.target.name]: e.target.value});
-	// 	console.log(formData);
-	// };
-	// const handleChangeSelect = (name, value) => {
-	// 	// const {name, value} = e.target.elements.submitButton;
-	// 	// console.log(e.target.name, e.target.getAttribute('data-name'));
-	// 	setFormData({
-	// 		...formData,
-	// 		[`${name}`]: value,
-	// 	});
+  // 	console.log(formik.values.name);
+  // }
+  // const handleChange = (e) => {
+  // 	this.setState({user: {...this.state.user, name: event.target.value}});
+  // 	// Then call Formik's handleChange
+  // 	formikProps.handleChange(event);
+  // };
 
-	// 	console.log(formData);
-	// };
+  // 	console.log(e.target.name, e.target.getAttribute('data-name'));
+  // 	setFormData({...formData, [e.target.name]: e.target.value});
+  // 	console.log(formData);
+  // };
+  // const handleChangeSelect = (name, value) => {
+  // 	// const {name, value} = e.target.elements.submitButton;
+  // 	// console.log(e.target.name, e.target.getAttribute('data-name'));
+  // 	setFormData({
+  // 		...formData,
+  // 		[`${name}`]: value,
+  // 	});
 
-	function handleFiles(e) {
-		// Actions to handle the file input change
+  // 	console.log(formData);
+  // };
 
-		const imgFile = e.target.files[0];
-		const reader = new FileReader();
-		reader.onload = (e) => {
-			// Use reader.result
-			// console.log(e.target.result);
-			setPhotos([e.target.result]);
-			// onDrop(e.target.result);
-		};
-		reader.readAsDataURL(imgFile);
-		// console.log(imgFile);
-	}
-	
-	const handleSubmit = async (values) => {
-		 const id = userInformation?.companyId?._id;
-		console.log()
-		console.log(userInformation)
-		const branchId = branchData.find(
-			(item) => item.branchName === values.addOfficeBranch
-		)._id;
-		const roleId = roleData.find((item) => item.name === values.assignRole)._id;
-		const role = userInformation?.UserInfo?.role;
+  function handleFiles(e) {
+    // Actions to handle the file input change
 
-		// const data = {...values, assignRole: roleId, addOfficeBranch: branchId};
-		// const file = photos;
-		// console.log(file);
+    const imgFile = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      // Use reader.result
+      // console.log(e.target.result);
+      setPhotos([e.target.result]);
+      // onDrop(e.target.result);
+    };
+    reader.readAsDataURL(imgFile);
+    // console.log(imgFile);
+  }
 
-		// const id = editData[0]?._id;
-		// console.log(editData, id);
-		// const data = {
-		// 	name: formData.name,
-		// 	employeeId: formData.employeeId,
-		// 	email: formData.email,
-		// 	phone: formData.phone,
-		// 	role: formData.role,
-		// 	officeBranch: formData.officeBranch,
-		// 	profileImagePath: photos,
-		// };
+  const handleSubmit = async (values) => {
+    const id = userInformation?.companyId?._id;
+    console.log();
+    console.log(userInformation);
+    const branchId = branchData.find(
+      (item) => item.branchName === values.addOfficeBranch
+    )._id;
+    const roleId = roleData.find((item) => item.name === values.assignRole)._id;
+    const role = userInformation?.UserInfo?.role;
 
-		if (isEditMode) {
-			// /api/registerEmployee
-			const id = editData[0]?._id;
-			const resp = await fetch(
-				`http://localhost:5000/api/updateEmploye/${id}`,
-				{
-					method: 'Put',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify(values),
-				}
-			);
-			if (resp.ok) {
-				fetchData();
-				setIsEditMode(!isEditMode);
-				clearFieldData();
-				navigate('/user');
-			}
-		} else {
-			const token = localStorage.getItem('token');
-			const resp = await fetch(
-				import.meta.env.VITE_BASE_URL + '/api/registerEmployee',
-				{
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						authtok: token,
-					},
-					body: JSON.stringify({
-						...values,
-						role: roleId,
-						officeBranch: branchId,
-						profileImage: photos,
-						companyId: id,
-				
-					}),
-				}
-			);
-			if (resp.ok) {
-				fetchData();
-				navigate('/user');
-			}
-		}
+    // const data = {...values, assignRole: roleId, addOfficeBranch: branchId};
+    // const file = photos;
+    // console.log(file);
 
-		// // // /api/registerEmployee
+    // const id = editData[0]?._id;
+    // console.log(editData, id);
+    // const data = {
+    // 	name: formData.name,
+    // 	employeeId: formData.employeeId,
+    // 	email: formData.email,
+    // 	phone: formData.phone,
+    // 	role: formData.role,
+    // 	officeBranch: formData.officeBranch,
+    // 	profileImagePath: photos,
+    // };
 
-		// Handle the form submission
+    if (isEditMode) {
+      // /api/registerEmployee
+      const id = editData[0]?._id;
+      const resp = await fetch(
+        `http://localhost:5000/api/updateEmploye/${id}`,
+        {
+          method: "Put",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        }
+      );
+      if (resp.ok) {
+        fetchData();
+        setIsEditMode(!isEditMode);
+        clearFieldData();
+        navigate("/user");
+      }
+    } else {
+      const token = localStorage.getItem("token");
+      const resp = await fetch(
+        import.meta.env.VITE_BASE_URL + "/api/registerEmployee",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authtok: token,
+          },
+          body: JSON.stringify({
+            ...values,
+            role: roleId,
+            officeBranch: branchId,
+            profileImage: photos,
+            companyId: id,
+          }),
+        }
+      );
+      if (resp.ok) {
+        fetchData();
+        navigate("/user");
+      }
+    }
 
-		// console.log(formData, photos); // photos is object check the files provided get neccessary items according to you
-	};
+    // // // /api/registerEmployee
 
-	return (
-		<div className=" rounded mb-4 flex flex-col w-[80%] h-full ml-5 mr-1 bg-gray-100 overflow-hidden">
-			<div className="flex gap-1 mb-3 ">
-				<Link to={'/user'} onClick={clearFieldData}>
-					<img src={leftarrow} className="cursor-pointer" alt="" />
-				</Link>
-				<h1 className="text-xl">Add User</h1>
-			</div>
-			<div className="flex flex-col bg-white w-full px-8 pt-6 pb-8 overflow-y-auto h-[87%] ">
-				<div className=" md:flex relative justify-center mb-14">
-					<label className="relative cursor-pointer text-white  font-medium py-2 px-4 rounded">
-						<input
-							type="file"
-							className="hidden"
-							onChange={(e) => handleFiles(e)}
-						/>
-						<div className="w-56 h-56 rounded-full"> 
-							<img src={photos?.[0] || profile} className='w-full h-full object-cover rounded-full' alt="" />
-						</div>
-						
-						<div className=" absolute bottom-0 right-[20%]  bg-blue w-10 h-10 rounded-full p-3">
-							<img src={camera} alt="camera" />
-						</div>
-					</label>
+    // Handle the form submission
 
-					{/* <input type="file" /> */}
-					{/* <button className="absolute right-0 top-[20%] bg-white py-[6px] pr-5 pl-4 items-center w-24 flex gap-1 text-xs text-[#1B9BEF] font-bold rounded-md border border-[#1B9BEF]">
+    // console.log(formData, photos); // photos is object check the files provided get neccessary items according to you
+  };
+
+  return (
+    <div className=" rounded mb-4 flex flex-col w-[80%] h-full ml-5 mr-1 bg-gray-100 overflow-hidden">
+      <div className="flex gap-1 mb-3 ">
+        <Link to={"/user"} onClick={clearFieldData}>
+          <img src={leftarrow} className="cursor-pointer" alt="" />
+        </Link>
+        <h1 className="text-xl">Add User</h1>
+      </div>
+      <div className="flex flex-col bg-white w-full px-8 pt-6 pb-8 overflow-y-auto h-[87%] ">
+        <div className=" md:flex relative justify-center mb-14">
+          <label className="relative cursor-pointer text-white  font-medium py-2 px-4 rounded">
+            <input
+              type="file"
+              className="hidden"
+              onChange={(e) => handleFiles(e)}
+            />
+            <div className="w-56 h-56 rounded-full">
+              <img
+                src={photos?.[0] || profile}
+                className="w-full h-full object-cover rounded-full"
+                alt=""
+              />
+            </div>
+
+            <div className=" absolute bottom-0 right-[20%]  bg-blue w-10 h-10 rounded-full p-3">
+              <img src={camera} alt="camera" />
+            </div>
+          </label>
+
+          {/* <input type="file" /> */}
+          {/* <button className="absolute right-0 top-[20%] bg-white py-[6px] pr-5 pl-4 items-center w-24 flex gap-1 text-xs text-[#1B9BEF] font-bold rounded-md border border-[#1B9BEF]">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							width="24"
@@ -260,108 +266,108 @@ const AddUser = () => {
 						</svg>
 						<span>Delete</span>
 					</button> */}
-				</div>
-				<form onSubmit={formik.handleSubmit} className="w-full ">
-					<div className="grid grid-cols-2 gap-5 -mx-3 mb-2">
-						{/* Input fields will go here */}
-						<InputField
-							label="Name"
-							name="name"
-							type="text"
-							value={formik.values.name}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-							error={formik.touched.name && formik.errors.name}
-							placeholder={'Enter the Name of User'}
-							labelColor={'bg-white'}
-						/>
+        </div>
+        <form onSubmit={formik.handleSubmit} className="w-full ">
+          <div className="grid grid-cols-2 gap-5 -mx-3 mb-2">
+            {/* Input fields will go here */}
+            <InputField
+              label="Name"
+              name="name"
+              type="text"
+              value={formik.values.name}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.name && formik.errors.name}
+              placeholder={"Enter the Name of User"}
+              labelColor={"bg-white"}
+            />
 
-						<InputField
-							label="Employee ID"
-							name="employeeID"
-							type="text"
-							value={formik.values.employeeID}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-							error={formik.touched.employeeID && formik.errors.employeeID}
-							placeholder={'Enter the Employee ID'}
-							labelColor={'bg-white'}
-						/>
-						<InputField
-							label="Email"
-							name="email"
-							type="text"
-							value={formik.values.email}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-							error={formik.touched.email && formik.errors.email}
-							placeholder={'Enter the Email of User'}
-							labelColor={'bg-white'}
-						/>
-						<InputField
-							label="Phone"
-							name="phone"
-							type="text"
-							value={formik.values.phone}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-							error={formik.touched.phone && formik.errors.phone}
-							placeholder={'+91 0123456789'}
-							labelColor={'bg-white'}
-						/>
-					</div>
-					<div className="grid grid-cols-2 gap-5 -mx-3 mb-2 ">
-						<DropdownSelectRole
-							popup={popupRole}
-							setPopup={setPopupRole}
-							label="Assign Role"
-							name="assignRole"
-							type="text"
-							value={formik.values.assignRole}
-							onChange={formik.setFieldValue}
-							onBlur={formik.handleBlur}
-							error={formik.touched.assignRole && formik.errors.assignRole}
-							placeholder={'Assign the role'}
-							labelColor={'bg-white'}
-						/>
-						<DropdownSelect
-							popup={popupBranch}
-							data={branchData}
-							setPopup={setPopupBranch}
-							label="Add Office Branch"
-							name="addOfficeBranch"
-							value={formik.values.addOfficeBranch}
-							onChange={formik.setFieldValue}
-							onBlur={formik.handleBlur}
-							error={
-								formik.touched.addOfficeBranch && formik.errors.addOfficeBranch
-							}
-							placeholder={'Add Office Branch'}
-							labelColor={'bg-white'}
-						/>
-					</div>
-					{/* ... */}
-					<div className="flex items-center justify-end">
-						<button
-							className="bg-blue hover:bg-blue-700 text-white  font-bold py-[10px] px-12 rounded focus:outline-none focus:shadow-outline"
-							type="submit"
-						>
-							Save User
-						</button>
-					</div>
-				</form>
-			</div>
+            <InputField
+              label="Employee ID"
+              name="employeeID"
+              type="text"
+              value={formik.values.employeeID}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.employeeID && formik.errors.employeeID}
+              placeholder={"Enter the Employee ID"}
+              labelColor={"bg-white"}
+            />
+            <InputField
+              label="Email"
+              name="email"
+              type="text"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.email && formik.errors.email}
+              placeholder={"Enter the Email of User"}
+              labelColor={"bg-white"}
+            />
+            <InputField
+              label="Phone"
+              name="phone"
+              type="text"
+              value={formik.values.phone}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.phone && formik.errors.phone}
+              placeholder={"+91 0123456789"}
+              labelColor={"bg-white"}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-5 -mx-3 mb-2 ">
+            <DropdownSelectRole
+              popup={popupRole}
+              setPopup={setPopupRole}
+              label="Assign Role"
+              name="assignRole"
+              type="text"
+              value={formik.values.assignRole}
+              onChange={formik.setFieldValue}
+              onBlur={formik.handleBlur}
+              error={formik.touched.assignRole && formik.errors.assignRole}
+              placeholder={"Assign the role"}
+              labelColor={"bg-white"}
+            />
+            <DropdownSelect
+              popup={addBranchPopUp}
+              data={branchData}
+              setPopup={setAddBranchPopUp}
+              label="Add Office Branch"
+              name="addOfficeBranch"
+              value={formik.values.addOfficeBranch}
+              onChange={formik.setFieldValue}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.addOfficeBranch && formik.errors.addOfficeBranch
+              }
+              placeholder={"Add Office Branch"}
+              labelColor={"bg-white"}
+            />
+          </div>
+          {/* ... */}
+          <div className="flex items-center justify-end">
+            <button
+              className="bg-blue hover:bg-blue-700 text-white  font-bold py-[10px] px-12 rounded focus:outline-none focus:shadow-outline"
+              type="submit"
+            >
+              Save User
+            </button>
+          </div>
+        </form>
+      </div>
 
-			{popupRole && <PopupRoles setPopupRole={setPopupRole} />}
-			{popupBranch && (
-				<PopupBranch
-					// branchInfo={branchInfo}
-					setChange={handleBranchChange}
-					setPopup={setPopupBranch}
-				/>
-			)}
-		</div>
-	);
+      {popupRole && <PopupRoles setPopupRole={setPopupRole} />}
+      {addBranchPopUp && (
+        <PopupBranch
+          // branchInfo={branchInfo}
+          setChange={handleBranchChange}
+          closeAddBranchPopUp={closeAddBranchPopUp}
+        />
+      )}
+    </div>
+  );
 };
 
 export default AddUser;
