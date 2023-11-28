@@ -11,7 +11,7 @@ import wyraiApi from "../api/wyraiApi";
 const RelationCard = ({ check, setCheck, company, relation }) => {
   const [click, setClick] = useState(false);
   // const [photos, setPhotos] = useState([]);
-  const [selectRelation, setSelectRelation] = useState(nul);
+  const [selectRelation, setSelectRelation] = useState(null);
 
   const Unregistered = async () => {
     try {
