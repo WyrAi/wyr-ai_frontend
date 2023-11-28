@@ -56,7 +56,7 @@ const UserCard = ({ check, setCheck, item }) => {
       <div className=" w-full pl-4 flex gap-[14px]">
         {/* <div className=" bg-red-500"></div> */}
         <img
-          className="w-16 h-16 rounded-full"
+          className="w-16 h-16 rounded-full object-cover"
           src={item?.profileImage}
           alt="Profile face"
         />

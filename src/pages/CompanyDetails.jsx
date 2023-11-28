@@ -40,18 +40,18 @@ const CompanyDetailsForm = () => {
   };
 
   const initialValues = {
-    name: "test",
-    address: "test test test",
-    country: "test",
-    city: "test",
-    pincode: "110059",
+    name: "",
+    address: "",
+    country: "",
+    city: "",
+    pincode: "",
   };
 
   const formik = useFormik({
     initialValues,
     onSubmit: () => {},
     validationSchema: companyDetailsValidationSchema,
-  })
+  });
 
   const handleSubmit = async () => {
     try {

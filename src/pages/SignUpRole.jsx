@@ -13,12 +13,12 @@ const SignUp = () => {
   const [userdata, setUserdata] = useState(null);
   const [popup, setPopup] = useState(false);
   const [formData, setFormData] = useState({
-    role: "Buyer",
-    name: "test",
-    email: "plnasdjjk@yopmail.com",
-    phoneNumber: "12345678890",
-    password: "test1234",
-    cpassword: "test1234",
+    role: "",
+    name: "",
+    email: "",
+    phoneNumber: "",
+    password: "",
+    cpassword: "",
   });
 
   const role = params.clickedRole;

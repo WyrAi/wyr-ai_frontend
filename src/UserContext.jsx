@@ -32,6 +32,7 @@ export const UserContextProvider = ({ children }) => {
   const [roleData, setRoleData] = useState([]);
   const [userInformation, setUserInformation] = useState();
   const [token, setToken] = useState(getAuthToken());
+  const [render, setRender] = useState(false);
 
   const [userData, setUserData] = useState(null);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -40,7 +41,6 @@ export const UserContextProvider = ({ children }) => {
 
   const companyId = userInformation?.companyId?._id;
   const role = userInformation?.role?.name;
-
 
   // PO popup and images file
   const [popUpload, setPopUpload] = useState(false);
@@ -74,7 +74,6 @@ export const UserContextProvider = ({ children }) => {
       import.meta.env.VITE_BASE_URL + `/api/getAllEmployess/${id}`
     );
     const data = await resp.json();
-
     setUserData([...data]);
   }
 
@@ -121,7 +120,6 @@ export const UserContextProvider = ({ children }) => {
   ].map((e) => e.toLowerCase());
 
   const getUserInformation = () => {
-    
     wyraiApi
       .get(`/api/UserInformation`)
       .then((res) => {
@@ -144,11 +142,15 @@ export const UserContextProvider = ({ children }) => {
         console.log(err);
       });
   };
+  useEffect(() => {
+    getAuthToken();
+  }, [render]);
 
   useEffect(() => {
     if (token && !userData) {
       getUserInformation();
     }
+    console.log(userData);
   }, [userData, token]);
 
   useEffect(() => {
@@ -197,6 +199,8 @@ export const UserContextProvider = ({ children }) => {
           setCheckedItems,
           getUserInformation,
           userInformation,
+          render,
+          setRender,
         }}
       >
         {children}

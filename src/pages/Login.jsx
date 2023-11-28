@@ -13,8 +13,8 @@ const Login = () => {
   const { setToken } = userGloabalContext();
 
   const [formData, setFormData] = useState({
-    email: "minion@yopmail.com",
-    password: "test1234",
+    email: "",
+    password: "",
   });
 
   const handleChange = (e) => {
