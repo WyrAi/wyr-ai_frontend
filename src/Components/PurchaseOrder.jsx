@@ -33,7 +33,7 @@ import axios from "axios";
  */
 
 function PurchaseOrder() {
-  const { setPopUpload, popUpload, userInformation, companyId } =
+  const { setPopUpload, popUpload, userInformation, companyId, role } =
     userGloabalContext();
 
   const [purchaseDoc, setPurchaseDoc] = useState(null);
@@ -122,12 +122,24 @@ function PurchaseOrder() {
     const { data } = await axios.get(
       import.meta.env.VITE_BASE_URL + `/api/getAllCompanyByRole/${companyId}`
     );
-    console.log(data);
-    setBuyer(data.buyer);
-    setVendor([...data.factory]);
+
+    if (userInformation?.companyId?.companyRole === "Buyer") {
+      console.log(userInformation);
+      formik.setFieldValue("nameOfBuyer", userInformation.companyId?.name);
+      formik.setFieldValue("addOfBuyer", userInformation.companyId?.city);
+    } else {
+      setBuyer(data.AllFields.Buyer);
+    }
+    setVendor(data.AllFields.Factory);
   };
-  
-  getUser();
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  //   getUser();
+  console.log(buyer);
+  console.log(vendor);
 
   // const getPeopleInterest = async () => {
 
@@ -229,20 +241,24 @@ function PurchaseOrder() {
 
   const DropDown = ({ data, name, address }) => {
     console.log(data);
+    console.log(address);
     return (
       <>
         <div className="absolute top-[60px] shadow mt-2 bg-white w-full z-50  ">
           <ul className="ml-6 h-[130px] overflow-x-auto cursor-pointer">
             {data &&
               data?.map((item, index) => {
-                const intials = item.name.charAt(0).toUpperCase();
+                const intials = item.companyId?.name.charAt(0).toUpperCase();
                 return (
                   <li
                     key={index}
                     className="py-2 flex items-center gap-4 mr-2 border-b"
                     onClick={() => {
-                      formik.setFieldValue(name, item.name);
-                      formik.setFieldValue(address, item.address);
+                      formik.setFieldValue(name, item.companyId?.name);
+                      formik.setFieldValue(
+                        address,
+                        `${item.companyId?.city}, ${item.companyId?.country}`
+                      );
                       setPopup({ ...popup, [name]: !popup[name] });
                     }}
                   >
@@ -250,10 +266,14 @@ function PurchaseOrder() {
                     <span className="w-6 h-6 bg-blue flex justify-center items-center rounded-full">
                       {intials}
                     </span>
-                    <span className="flex-1 text-xs">{item.name}</span>
+                    <span className="flex-1 text-xs">
+                      {item.companyId?.name}
+                    </span>
                     <span className="flex gap-2 items-center">
                       <img src={gps} alt="gps" className="w-[16px] h-[16px]" />
-                      <span className="text-[10px]">City</span>
+                      <span className="text-[10px]">
+                        {item.companyId?.city}, {item.companyId?.country}
+                      </span>
                     </span>
                   </li>
                 );
