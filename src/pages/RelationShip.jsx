@@ -70,8 +70,37 @@ const RelationShip = () => {
   const [sortFilter, setSortFilter] = useState(sortFilter_Opt[0]);
   const [allRelation, setAllRelation] = useState([]);
   const { companyId } = userGloabalContext();
+  const [selectRelation, setSelectRelation] = useState({
+    id: "",
+  });
 
   const navigate = useNavigate();
+  console.log("selectRelation._id:", selectRelation.id);
+  console.log("selectRelation.checkRelation:", selectRelation.checkRelation);
+  const Unregistered = async () => {
+    try {
+      if (selectRelation) {
+        wyraiApi
+          .put(`/api/rejectedRelationship/${selectRelation.id}`)
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const Registered = async () => {
+    try {
+      if (selectRelation) {
+        wyraiApi
+          .put(`/api/approvedRelationship/${selectRelation.id}`)
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const fetchRelation = () => {
     wyraiApi
@@ -82,6 +111,10 @@ const RelationShip = () => {
         setAllRelation(data);
       })
       .catch((err) => console.log(err));
+  };
+
+  const handleselectRelation = (value) => {
+    setSelectRelation(value);
   };
 
   useEffect(() => {
@@ -115,12 +148,30 @@ const RelationShip = () => {
             </div>
           </Prompt>
         </div>
-        <div>
+        <div className="flex justify-between">
           <SortFilter
             filters={sortFilter_Opt}
             selectedFilter={sortFilter}
             setSelectedFilter={setSortFilter}
           />
+          {selectRelation.id && selectRelation.checkRelation && (
+            <div className="flex items-center">
+              <button
+                type="button"
+                className="px-8 py-2 text-blue text-md"
+                onClick={() => Unregistered()}
+              >
+                Reject
+              </button>
+              <button
+                type="button"
+                className="px-8 py-2 text-blue text-md"
+                onClick={() => Registered()}
+              >
+                Approve
+              </button>
+            </div>
+          )}
         </div>
       </div>
       <div className=" mx-2 w-full flex-1 flex flex-col">
@@ -131,6 +182,7 @@ const RelationShip = () => {
                 <RelationCard
                   company={value.companyId}
                   relation={value.relationId}
+                  selectRelationmethod={handleselectRelation}
                 />
               </div>
             );
