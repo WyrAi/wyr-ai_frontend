@@ -142,9 +142,6 @@ export const UserContextProvider = ({ children }) => {
         console.log(err);
       });
   };
-  useEffect(() => {
-    getAuthToken();
-  }, [render]);
 
   useEffect(() => {
     if (token && !userData) {

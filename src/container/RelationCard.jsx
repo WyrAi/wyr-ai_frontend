@@ -6,9 +6,16 @@ import checked from "../assets/checked.svg";
 import unchecked from "../assets/unchecked.svg";
 import { FaRegTrashAlt } from "react-icons/fa";
 import gps from "../assets/ion_location-outline.svg";
+import wyraiApi from "../api/wyraiApi";
 import userGloabalContext from "../UserContext";
 
-const RelationCard = ({ check, setCheck, company, relation }) => {
+const RelationCard = ({
+  check,
+  setCheck,
+  company,
+  relation,
+  selectRelationmethod,
+}) => {
   const { companyId } = userGloabalContext();
   const [click, setClick] = useState(false);
 
@@ -27,7 +34,7 @@ const RelationCard = ({ check, setCheck, company, relation }) => {
   }
 
   let checkRelation = companyId === relation.ReceiverRelationId;
-
+  console.log(relation._id);
   console.log(relation.Status === "Unregistered");
 
   return (
@@ -44,7 +51,15 @@ const RelationCard = ({ check, setCheck, company, relation }) => {
           {relation.Status === "Unregistered" &&
             checkRelation &&
             (click ? (
-              <img src={checked} className="cursor-pointer" alt="checked" />
+              <img
+                src={checked}
+                className="cursor-pointer"
+                alt="checked"
+                // onClick={selectRelationmethod({
+                //   id: relation?._id,
+                //   checkRelation,
+                // })}
+              />
             ) : (
               <img src={unchecked} className="cursor-pointer" alt="unchecked" />
             ))}
