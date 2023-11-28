@@ -21,17 +21,17 @@ const RelationCard = ({
 
   // const [photos, setPhotos] = useState([]);
 
-  function handleBtnCheck(e) {
-    // const dataIdValue = e.currentTarget.getAttribute('data-id');
-    const dataIdValue = e.currentTarget.dataset.id;
-    // console.log(click);
-    if (!click) {
-      setCheck([...check, dataIdValue]);
-    } else {
-      setCheck([...check.filter((id) => id !== dataIdValue)]);
-    }
-    setClick(!click);
-  }
+  // function handleBtnCheck(e) {
+  //   // const dataIdValue = e.currentTarget.getAttribute('data-id');
+  //   const dataIdValue = e.currentTarget.dataset.id;
+  //   // console.log(click);
+  //   if (!click) {
+  //     setCheck([...check, dataIdValue]);
+  //   } else {
+  //     setCheck([...check.filter((id) => id !== dataIdValue)]);
+  //   }
+  //   setClick(!click);
+  // }
 
   let checkRelation = companyId === relation.ReceiverRelationId;
   console.log(relation._id);
@@ -44,22 +44,20 @@ const RelationCard = ({
           className="flex items-center gap-2"
           // data-id={item._id}
           id="select"
-          onClick={(e) => {
-            handleBtnCheck(e);
-          }}
+          // onClick={(e) => {
+          //   handleBtnCheck(e);
+          // }}
+          onClick={() =>
+            selectRelationmethod({
+              id: relation?._id,
+              checkRelation,
+            })
+          }
         >
           {relation.Status === "Unregistered" &&
             checkRelation &&
             (click ? (
-              <img
-                src={checked}
-                className="cursor-pointer"
-                alt="checked"
-                // onClick={selectRelationmethod({
-                //   id: relation?._id,
-                //   checkRelation,
-                // })}
-              />
+              <img src={checked} className="cursor-pointer" alt="checked" />
             ) : (
               <img src={unchecked} className="cursor-pointer" alt="unchecked" />
             ))}

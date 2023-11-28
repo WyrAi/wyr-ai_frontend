@@ -75,12 +75,13 @@ const RelationShip = () => {
   });
 
   const navigate = useNavigate();
-
+  console.log("selectRelation._id:", selectRelation.id);
+  console.log("selectRelation.checkRelation:", selectRelation.checkRelation);
   const Unregistered = async () => {
     try {
       if (selectRelation) {
         wyraiApi
-          .put(`/api/rejectedRelationship/${selectRelation}`)
+          .put(`/api/rejectedRelationship/${selectRelation.id}`)
           .then((res) => console.log(res))
           .catch((err) => console.log(err));
       }
@@ -92,7 +93,7 @@ const RelationShip = () => {
     try {
       if (selectRelation) {
         wyraiApi
-          .put(`/api/approvedRelationship/${selectRelation}`)
+          .put(`/api/approvedRelationship/${selectRelation.id}`)
           .then((res) => console.log(res))
           .catch((err) => console.log(err));
       }
@@ -153,12 +154,20 @@ const RelationShip = () => {
             selectedFilter={sortFilter}
             setSelectedFilter={setSortFilter}
           />
-          {selectRelation._id && selectRelation.checkRelation && (
+          {selectRelation.id && selectRelation.checkRelation && (
             <div className="flex items-center">
-              <button type="button" className="px-8 py-2 text-blue text-md">
+              <button
+                type="button"
+                className="px-8 py-2 text-blue text-md"
+                onClick={() => Unregistered()}
+              >
                 Reject
               </button>
-              <button type="button" className="px-8 py-2 text-blue text-md">
+              <button
+                type="button"
+                className="px-8 py-2 text-blue text-md"
+                onClick={() => Registered()}
+              >
                 Approve
               </button>
             </div>
