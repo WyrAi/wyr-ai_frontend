@@ -6,9 +6,12 @@ import checked from "../assets/checked.svg";
 import unchecked from "../assets/unchecked.svg";
 import { FaRegTrashAlt } from "react-icons/fa";
 import gps from "../assets/ion_location-outline.svg";
+import userGloabalContext from "../UserContext";
 
 const RelationCard = ({ check, setCheck, company, relation }) => {
+  const { companyId } = userGloabalContext();
   const [click, setClick] = useState(false);
+
   // const [photos, setPhotos] = useState([]);
 
   function handleBtnCheck(e) {
@@ -22,8 +25,10 @@ const RelationCard = ({ check, setCheck, company, relation }) => {
     }
     setClick(!click);
   }
-  // console.log(check);
-  console.log(click);
+
+  let checkRelation = companyId === relation.ReceiverRelationId;
+
+  console.log(relation.Status === "Unregistered");
 
   return (
     <div className="w-full h-full rounded overflow-hidden justify-between shadow-lg bg-white  flex flex-col items-center">
@@ -36,11 +41,13 @@ const RelationCard = ({ check, setCheck, company, relation }) => {
             handleBtnCheck(e);
           }}
         >
-          {click ? (
-            <img src={checked} className="cursor-pointer" alt="checked" />
-          ) : (
-            <img src={unchecked} className="cursor-pointer" alt="unchecked" />
-          )}
+          {relation.Status === "Unregistered" &&
+            checkRelation &&
+            (click ? (
+              <img src={checked} className="cursor-pointer" alt="checked" />
+            ) : (
+              <img src={unchecked} className="cursor-pointer" alt="unchecked" />
+            ))}
         </div>
 
         {/* <button className="text-gray-500">
