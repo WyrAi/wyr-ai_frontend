@@ -6,10 +6,37 @@ import checked from "../assets/checked.svg";
 import unchecked from "../assets/unchecked.svg";
 import { FaRegTrashAlt } from "react-icons/fa";
 import gps from "../assets/ion_location-outline.svg";
+import wyraiApi from "../api/wyraiApi";
 
 const RelationCard = ({ check, setCheck, company, relation }) => {
   const [click, setClick] = useState(false);
   // const [photos, setPhotos] = useState([]);
+  const [selectRelation, setSelectRelation] = useState(nul);
+
+  const Unregistered = async () => {
+    try {
+      if (selectRelation) {
+        wyraiApi
+          .put(`/api/rejectedRelationship/${selectRelation}`)
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const Registered = async () => {
+    try {
+      if (selectRelation) {
+        wyraiApi
+          .put(`/api/approvedRelationship/${selectRelation}`)
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   function handleBtnCheck(e) {
     // const dataIdValue = e.currentTarget.getAttribute('data-id');
