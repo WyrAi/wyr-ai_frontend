@@ -5,11 +5,11 @@ import profile from "../assets/Ellipse 8.svg";
 import checked from "../assets/checked.svg";
 import unchecked from "../assets/unchecked.svg";
 import { FaRegTrashAlt } from "react-icons/fa";
+import gps from "../assets/ion_location-outline.svg";
 
-const RelationCard = ({ check, setCheck, item }) => {
+const RelationCard = ({ check, setCheck, company, relation }) => {
   const [click, setClick] = useState(false);
   // const [photos, setPhotos] = useState([]);
-  console.log(item);
 
   function handleBtnCheck(e) {
     // const dataIdValue = e.currentTarget.getAttribute('data-id');
@@ -55,12 +55,13 @@ const RelationCard = ({ check, setCheck, item }) => {
           alt="Profile face"
         />
         <div className="flex flex-col justify-between ">
-          <p className="text-gray-500 text-xs">
-            Emp ID : {item?.employeeID || "test"}
-          </p>
-          <div className="text-gray-500  text-xs ">{item?.name || "test"}</div>
-          <p className="text-gray-700 text-sm">
-            {item?.assignRole.name || "test"}
+          <p className="text-gray-500 text-xs">{company?.name || "test"}</p>
+          <div className="text-gray-500  text-xs ">
+            {relation?.Status || "test"}
+          </div>
+          <p className="text-gray-700 text-sm flex gap-1">
+            <img src={gps} alt="" className="w-4 h-4 items-center" />
+            {company?.city || "test"}
           </p>
         </div>
       </div>
