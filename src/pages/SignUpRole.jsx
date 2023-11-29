@@ -6,7 +6,7 @@ import { Navigate, useParams } from "react-router-dom";
 import Loader from "../Components/Loader";
 import wyraiApi from "../api/wyraiApi";
 
-const allowedRoles = ["Buyer", "BuyingAgency", "Factory", "QC Agency"];
+const allowedRoles = ["Buyer", "Buying Agency", "Factory", "QC Agency"];
 const SignUp = () => {
   const params = useParams();
   const [isLoading, setIsLoading] = useState(false);
