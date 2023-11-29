@@ -5,25 +5,37 @@ import profile from "../assets/Ellipse 8.svg";
 import checked from "../assets/checked.svg";
 import unchecked from "../assets/unchecked.svg";
 import { FaRegTrashAlt } from "react-icons/fa";
+import gps from "../assets/ion_location-outline.svg";
+import wyraiApi from "../api/wyraiApi";
+import userGloabalContext from "../UserContext";
 
-const RelationCard = ({ check, setCheck, item }) => {
+const RelationCard = ({
+  check,
+  setCheck,
+  company,
+  relation,
+  selectRelationmethod,
+}) => {
+  const { companyId } = userGloabalContext();
   const [click, setClick] = useState(false);
-  // const [photos, setPhotos] = useState([]);
-  console.log(item);
 
-  function handleBtnCheck(e) {
-    // const dataIdValue = e.currentTarget.getAttribute('data-id');
-    const dataIdValue = e.currentTarget.dataset.id;
-    // console.log(click);
-    if (!click) {
-      setCheck([...check, dataIdValue]);
-    } else {
-      setCheck([...check.filter((id) => id !== dataIdValue)]);
-    }
-    setClick(!click);
-  }
-  // console.log(check);
-  console.log(click);
+  // const [photos, setPhotos] = useState([]);
+
+  // function handleBtnCheck(e) {
+  //   // const dataIdValue = e.currentTarget.getAttribute('data-id');
+  //   const dataIdValue = e.currentTarget.dataset.id;
+  //   // console.log(click);
+  //   if (!click) {
+  //     setCheck([...check, dataIdValue]);
+  //   } else {
+  //     setCheck([...check.filter((id) => id !== dataIdValue)]);
+  //   }
+  //   setClick(!click);
+  // }
+
+  let checkRelation = companyId === relation.ReceiverRelationId;
+  console.log(relation._id);
+  console.log(relation.Status === "Unregistered");
 
   return (
     <div className="w-full h-full rounded overflow-hidden justify-between shadow-lg bg-white  flex flex-col items-center">
@@ -32,15 +44,23 @@ const RelationCard = ({ check, setCheck, item }) => {
           className="flex items-center gap-2"
           // data-id={item._id}
           id="select"
-          onClick={(e) => {
-            handleBtnCheck(e);
-          }}
+          // onClick={(e) => {
+          //   handleBtnCheck(e);
+          // }}
+          onClick={() =>
+            selectRelationmethod({
+              id: relation?._id,
+              checkRelation,
+            })
+          }
         >
-          {click ? (
-            <img src={checked} className="cursor-pointer" alt="checked" />
-          ) : (
-            <img src={unchecked} className="cursor-pointer" alt="unchecked" />
-          )}
+          {relation.Status === "Unregistered" &&
+            checkRelation &&
+            (click ? (
+              <img src={checked} className="cursor-pointer" alt="checked" />
+            ) : (
+              <img src={unchecked} className="cursor-pointer" alt="unchecked" />
+            ))}
         </div>
 
         {/* <button className="text-gray-500">
@@ -55,12 +75,13 @@ const RelationCard = ({ check, setCheck, item }) => {
           alt="Profile face"
         />
         <div className="flex flex-col justify-between ">
-          <p className="text-gray-500 text-xs">
-            Emp ID : {item?.employeeID || "test"}
-          </p>
-          <div className="text-gray-500  text-xs ">{item?.name || "test"}</div>
-          <p className="text-gray-700 text-sm">
-            {item?.assignRole.name || "test"}
+          <p className="text-gray-500 text-xs">{company?.name || "test"}</p>
+          <div className="text-gray-500  text-xs ">
+            {relation?.Status || "test"}
+          </div>
+          <p className="text-gray-700 text-sm flex gap-1">
+            <img src={gps} alt="" className="w-4 h-4 items-center" />
+            {company?.city || "test"}
           </p>
         </div>
       </div>

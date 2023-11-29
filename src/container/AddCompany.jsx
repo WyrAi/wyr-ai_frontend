@@ -45,6 +45,8 @@ const AddCompany = () => {
         );
         if (selectedData.length === 0) {
           setError({ role: "Please select role before sending email " });
+          console.log(document.getElementById(modalID));
+          document.getElementById(modalID).close();
         } else {
           setError({ role: "" });
           // const requestBody = {
@@ -61,6 +63,7 @@ const AddCompany = () => {
             })
             .then((res) => {
               console.log(res);
+              document.getElementById(modalID).close();
             })
             .catch((err) => {
               console.log(err);
