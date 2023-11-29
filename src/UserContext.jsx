@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/prop-types */
-import { useContext, createContext, useState, useEffect } from "react";
+import React, { useContext, createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import wyraiApi from "./api/wyraiApi";
-import { getAuthToken } from "./Utils/authUtils";
+import { deleteToken, getAuthToken } from "./Utils/authUtils";
 
 const userContext = createContext();
 
@@ -30,17 +30,21 @@ export const UserContextProvider = ({ children }) => {
   });
   // ----------------------------------------------------------------
   const [roleData, setRoleData] = useState([]);
-  const [userInformation, setUserInformation] = useState();
+  const [userInformation, setUserInformation] = useState(null);
   const [token, setToken] = useState(getAuthToken());
   const [render, setRender] = useState(false);
 
-  const [userData, setUserData] = useState(null);
+  // const [userData, setUserData] = useState(null);
   const [checkedItems, setCheckedItems] = useState([]);
   const [editData, setEditData] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false);
 
-  const companyId = userInformation?.companyId?._id;
-  const role = userInformation?.role?.name;
+  const { companyId, role } = React.useMemo(() => {
+    console.log(userInformation);
+    const companyId = userInformation?.companyId?._id;
+    const role = userInformation?.role?.name;
+    return { companyId, role };
+  }, [userInformation]);
 
   // PO popup and images file
   const [popUpload, setPopUpload] = useState(false);
@@ -66,15 +70,20 @@ export const UserContextProvider = ({ children }) => {
     setFormData(clearedData);
   };
 
-  async function fetchData() {
-    // You can await here
-    // const response = await MyAPI.getData(someId);
-    const id = userInformation?.companyId._id;
-    const resp = await fetch(
-      import.meta.env.VITE_BASE_URL + `/api/getAllEmployess/${id}`
-    );
-    const data = await resp.json();
-    setUserData([...data]);
+  function fetchData() {
+    if(companyId){
+      wyraiApi
+      .get(`/api/getAllEmployess/${companyId}`)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+    else {
+      console.log("--noCompanyId--",companyId,userInformation);
+    }
   }
 
   const fetchRole = () => {
@@ -89,26 +98,26 @@ export const UserContextProvider = ({ children }) => {
       });
   };
 
-  const edit = (e) => {
-    const id = e[0];
-    userData.forEach((item) => {
-      if (item._id == id) {
-        console.log(item);
-        setEditData([item]);
-        setFormData({
-          name: item.name,
-          email: item.email,
-          employeeID: item.employeeID,
-          addOfficeBranch: item.addOfficeBranch,
-          phone: item.phone,
-          assignRole: item.assignRole,
-        });
-        setCheckedItems([]);
-        setIsEditMode(!isEditMode);
-        navigate("/add");
-      }
-    });
-  };
+  // const edit = (e) => {
+  //   const id = e[0];
+  //   userData.forEach((item) => {
+  //     if (item._id == id) {
+  //       console.log(item);
+  //       setEditData([item]);
+  //       setFormData({
+  //         name: item.name,
+  //         email: item.email,
+  //         employeeID: item.employeeID,
+  //         addOfficeBranch: item.addOfficeBranch,
+  //         phone: item.phone,
+  //         assignRole: item.assignRole,
+  //       });
+  //       setCheckedItems([]);
+  //       setIsEditMode(!isEditMode);
+  //       navigate("/add");
+  //     }
+  //   });
+  // };
 
   // PurchaseOrder
 
@@ -125,7 +134,6 @@ export const UserContextProvider = ({ children }) => {
       .then((res) => {
         const userInformation = res.data.UserInfo;
         setUserInformation(userInformation);
-        console.log(userInformation);
         const companyId = userInformation?.companyId?._id;
         if (
           !companyId &&
@@ -140,6 +148,8 @@ export const UserContextProvider = ({ children }) => {
       })
       .catch((err) => {
         console.log(err);
+        navigate("/login");
+        deleteToken();
       });
   };
   useEffect(() => {
@@ -147,11 +157,14 @@ export const UserContextProvider = ({ children }) => {
   }, [render]);
 
   useEffect(() => {
-    if (token && !userData) {
+    if (token && !userInformation) {
+      console.log("GET uSER CALLED");
       getUserInformation();
     }
-    console.log(userData);
-  }, [userData, token]);
+  }, [userInformation, token]);
+  useEffect(() => {
+    console.log("userInfo modified", userInformation);
+  }, [userInformation]);
 
   useEffect(() => {
     if (companyId) {
@@ -167,7 +180,6 @@ export const UserContextProvider = ({ children }) => {
           setToken,
           companyId,
           roleData,
-          userData,
           checkedItems,
           editData,
           formData,
@@ -190,8 +202,6 @@ export const UserContextProvider = ({ children }) => {
           setIsEditMode,
           setFormData,
           setEditData,
-          edit,
-          setUserData,
           fetchData,
           fetchRole,
           // handleBranchChange,
