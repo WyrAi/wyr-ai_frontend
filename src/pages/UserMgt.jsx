@@ -161,7 +161,7 @@ const UserMgt = () => {
             </Link>
           </div>
         </header>
-        <div className="grid grid-cols-[13rem_auto] gap-6 h-full">
+        <div className="grid grid-cols-[20rem_auto] gap-6 h-full">
           <div>
             <div className="flex flex-col  bg-white h-full ">
               <div className="flex items-center gap-1 pl-6 h-[52px] ">

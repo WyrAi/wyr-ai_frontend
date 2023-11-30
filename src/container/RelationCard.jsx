@@ -21,17 +21,30 @@ const RelationCard = ({
 
   // const [photos, setPhotos] = useState([]);
 
-  // function handleBtnCheck(e) {
-  //   // const dataIdValue = e.currentTarget.getAttribute('data-id');
-  //   const dataIdValue = e.currentTarget.dataset.id;
-  //   // console.log(click);
-  //   if (!click) {
-  //     setCheck([...check, dataIdValue]);
-  //   } else {
-  //     setCheck([...check.filter((id) => id !== dataIdValue)]);
-  //   }
-  //   setClick(!click);
-  // }
+  function handleBtnCheck() {
+    // // const dataIdValue = e.currentTarget.getAttribute('data-id');
+    // const dataIdValue = e.currentTarget.dataset.id;
+    // // console.log(click);
+    // if (!click) {
+    //   setCheck([...check, dataIdValue]);
+    // } else {
+    //   setCheck([...check.filter((id) => id !== dataIdValue)]);
+    // }
+    if (!click) {
+      selectRelationmethod({
+        id: relation?._id,
+        checkRelation,
+      });
+    } else {
+      selectRelationmethod({
+        id: "",
+        checkRelation,
+      });
+    }
+
+    setClick(!click);
+  }
+  console.log(click);
 
   let checkRelation = companyId === relation.ReceiverRelationId;
   console.log(relation._id);
@@ -47,12 +60,7 @@ const RelationCard = ({
           // onClick={(e) => {
           //   handleBtnCheck(e);
           // }}
-          onClick={() =>
-            selectRelationmethod({
-              id: relation?._id,
-              checkRelation,
-            })
-          }
+          onClick={() => handleBtnCheck()}
         >
           {relation.Status === "Unregistered" &&
             checkRelation &&
