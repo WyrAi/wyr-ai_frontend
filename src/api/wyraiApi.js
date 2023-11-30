@@ -15,7 +15,7 @@ wyraiApi.interceptors.request.use(
     return config;
   },
   (error) => {
-    throw new Error(error);
+    return Promise.reject(error);
   }
 );
 
@@ -25,7 +25,7 @@ wyraiApi.interceptors.response.use(
     return response;
   },
   (error) => {
-    throw new Error(error);
+    return Promise.reject(error);
   }
 );
 

@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { getAuthToken, setAuthToken } from "../Utils/authUtils";
 
 export const AuthContext = createContext();
@@ -21,3 +21,6 @@ export const AuthProvider = (props) => {
 };
 
 export default AuthProvider;
+
+export const useAuth = () => useContext(AuthContext);
+

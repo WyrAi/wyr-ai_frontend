@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../Contexts/authContext";
+import { useAuth } from "../Contexts/authContext";
 import { useContext } from "react";
 import wyraiApi from "../api/wyraiApi";
+import userGloabalContext from "../UserContext";
 
 const PopupOtp = (props) => {
   const { user, role } = props;
   const [otp, setOtp] = useState(new Array(4).fill(""));
   const [counter, setCounter] = useState(30);
   const navigate = useNavigate();
-  const { setAuth } = useContext(AuthContext);
+  const [isLoading,setIsLoading] = useState(false);
+  const { setAuth } = useAuth();
+  const { setToken } = userGloabalContext();
 
   useEffect(() => {
     // Timer for the OTP countdown
@@ -35,7 +38,6 @@ const PopupOtp = (props) => {
       .then((res) => {
         if (res.data.status === 200) {
           setIsLoading(false);
-          setUserdata(formData);
         }
       })
       .catch((err) => {
@@ -61,8 +63,10 @@ const PopupOtp = (props) => {
             verified: true,
           })
           .then((res) => {
-            setAuth(res.data.token);
-            localStorage.setItem("token", res.data.token);
+            const token = res.data.token;
+            localStorage.setItem("token", token);
+            setAuth(token);
+            setToken(token);
             navigate("/companyDetails");
           });
       })

@@ -33,7 +33,6 @@ const UserMgt = () => {
     companyId,
   } = userGloabalContext();
   // const companyId = userInformation?.companyId?._id;
-  console.log(userData);
 
   const [addBranchPopUp, setAddBranchPopUp] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState(null);
@@ -56,7 +55,6 @@ const UserMgt = () => {
   useEffect(() => {
     fetchData();
   }, []);
-  console.log(userData);
 
   const handleBranchClick = async (id) => {
     // setSelectedBranch(selectedBranch);
@@ -80,7 +78,6 @@ const UserMgt = () => {
           (user) => user.addOfficeBranch === selectedBranch.branchName
         )
       : userData;
-  console.log(filteredUsers);
 
   const handleEscKeyPress = (event) => {
     if (event.key === "Escape") {
