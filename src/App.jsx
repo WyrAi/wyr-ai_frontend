@@ -1,6 +1,7 @@
 import "./App.css";
+import { ToasterContextProvider } from "./Contexts/ToasterContext";
 import CustomRoutes from "./routes";
-import {UserContextProvider} from './UserContext';
+import { UserContextProvider } from "./UserContext";
 // import PoBoard from "./pages/PoBoard";
 // import Layout from './Layout';
 // import Layout from './Layout';
@@ -36,9 +37,11 @@ import {UserContextProvider} from './UserContext';
 
 const App = () => {
   return (
-    <UserContextProvider>
-      <CustomRoutes />
-    </UserContextProvider>
+    <ToasterContextProvider>
+      <UserContextProvider>
+        <CustomRoutes />
+      </UserContextProvider>
+    </ToasterContextProvider>
   );
 };
 

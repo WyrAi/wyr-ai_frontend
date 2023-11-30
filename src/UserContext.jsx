@@ -1,6 +1,12 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/prop-types */
-import React, { useContext, createContext, useState, useEffect } from "react";
+import React, {
+  useContext,
+  createContext,
+  useState,
+  useEffect,
+  useMemo,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import wyraiApi from "./api/wyraiApi";
@@ -39,13 +45,6 @@ export const UserContextProvider = ({ children }) => {
   const [editData, setEditData] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false);
 
-  const { companyId, role } = React.useMemo(() => {
-    console.log(userInformation);
-    const companyId = userInformation?.companyId?._id;
-    const role = userInformation?.role?.name;
-    return { companyId, role };
-  }, [userInformation]);
-
   // PO popup and images file
   const [popUpload, setPopUpload] = useState(false);
   const [imagesFiles, setImagesFiles] = useState([]);
@@ -71,18 +70,17 @@ export const UserContextProvider = ({ children }) => {
   };
 
   function fetchData() {
-    if(companyId){
+    if (companyId) {
       wyraiApi
-      .get(`/api/getAllEmployess/${companyId}`)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    }
-    else {
-      console.log("--noCompanyId--",companyId,userInformation);
+        .get(`/api/getAllEmployess/${companyId}`)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      console.log("--noCompanyId--", companyId, userInformation);
     }
   }
 
@@ -143,7 +141,7 @@ export const UserContextProvider = ({ children }) => {
         ) {
           navigate("/companyDetails");
         } else {
-          navigate("/dashboard");
+          // navigate("/dashboard");
         }
       })
       .catch((err) => {
@@ -155,12 +153,15 @@ export const UserContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (token && !userInformation) {
-      console.log("GET uSER CALLED");
       getUserInformation();
     }
   }, [userInformation, token]);
-  useEffect(() => {
-    console.log("userInfo modified", userInformation);
+
+  const { companyId, role, userRights } = React.useMemo(() => {
+    const companyId = userInformation?.companyId?._id;
+    const role = userInformation?.role?.name;
+    const rights = userInformation?.role?.SelectAccess;
+    return { companyId, role, userRights: rights };
   }, [userInformation]);
 
   useEffect(() => {
@@ -206,6 +207,7 @@ export const UserContextProvider = ({ children }) => {
           setCheckedItems,
           getUserInformation,
           userInformation,
+          userRights,
           render,
           setRender,
         }}

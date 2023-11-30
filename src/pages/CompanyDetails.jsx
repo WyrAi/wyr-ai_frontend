@@ -12,7 +12,7 @@ import wyraiApi from "../api/wyraiApi";
 import { userGloabalContext } from "../UserContext";
 
 const CompanyDetailsForm = () => {
-  const { userData, setUserData } = userGloabalContext();
+  const { companyId } = userGloabalContext();
   // Placeholder function for form submission
   const params = useParams();
   const id = params.id;
@@ -73,6 +73,12 @@ const CompanyDetailsForm = () => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (!companyId) {
+      navigate("/dashboard");
+    }
+  }, [companyId]);
 
   return (
     <>

@@ -4,6 +4,7 @@ import { FiEye } from "react-icons/fi";
 import DashboardNotification from "../Components/DashboardNotification";
 import userGloabalContext from "../UserContext";
 import { useEffect } from "react";
+import useToast from "../Contexts/ToasterContext";
 
 const InspectionCard = () => {
   return (
@@ -21,6 +22,7 @@ const InspectionCard = () => {
 
 const Dashboard = () => {
   const { getUserInformation, companyId } = userGloabalContext();
+  const toast= useToast();
 
   const status = {
     active: { name: "Active", Current: 0, color: "#EFD780" },
@@ -40,7 +42,9 @@ const Dashboard = () => {
           <h1 className="text-2xl font-semibold">Hey, UserName </h1>
           <p className="text-sm font-medium">Role</p>
         </div>
-        <button className="py-2 px-4 bg-blue rounded-md font-semibold text-base text-white">
+        <button className="py-2 px-4 bg-blue rounded-md font-semibold text-base text-white" onClick={()=>{
+          toast.error("Write function for purchase order");
+        }}>
           Create A Purchase Order
         </button>
       </header>

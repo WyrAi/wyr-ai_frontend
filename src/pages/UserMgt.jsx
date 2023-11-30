@@ -12,6 +12,7 @@ import { MdOutlineModeEditOutline } from "react-icons/md";
 import { FaRegTrashAlt } from "react-icons/fa";
 import axios from "axios";
 import wyraiApi from "../api/wyraiApi";
+import useToast from "../Contexts/ToasterContext";
 
 // *** there is filter to be added on when click button there is remove of id from array State ***
 
@@ -33,6 +34,7 @@ const UserMgt = () => {
     companyId,
   } = userGloabalContext();
   // const companyId = userInformation?.companyId?._id;
+  const toast = useToast();
 
   const [addBranchPopUp, setAddBranchPopUp] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState(null);
@@ -198,7 +200,13 @@ const UserMgt = () => {
               </div>
               <div
                 className="flex cursor-pointer pl-6 gap-1 py-3"
-                onClick={() => setAddBranchPopUp(!addBranchPopUp)}
+                onClick={() => {
+                  if (false) {
+                    setAddBranchPopUp(!addBranchPopUp);
+                  } else {
+                    toast.error("Action not allowed")
+                  }
+                }}
               >
                 <img src={plus} alt="add" />
                 <span className="text-[#1B9BEF] font-bold">Add branch</span>

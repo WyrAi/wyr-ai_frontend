@@ -15,12 +15,14 @@ import { LuPackageSearch } from "react-icons/lu";
 export const sideBarData = [
   {
     icon: <img src={dash} className="" alt="" />,
-    heading: "DashBoard",
+    heading: "Dashboard",
     link: "/dashboard",
+    name: "dashBoard",
   },
   {
     icon: <img src={cart} className="" alt="" />,
     heading: "Purachase Orders",
+    name: "purchaseOrder",
     link: "/purchase/",
   },
   {
@@ -28,36 +30,43 @@ export const sideBarData = [
       <LuPackageSearch className="text-3xl text-darkGray hover:text-white" />
     ),
     heading: "Inspection",
-    link: "/purchase/",
+    name: "packingList",
+    link: "/inspection/",
   },
   {
     icon: <img src={relation} className="" alt="" />,
-    heading: "Relationship Mgt.",
+    heading: "Relationship Mgmt.",
     link: "/relationShip",
+    name: "relationshipManagement",
   },
   {
     icon: <img src={user} className="" alt="" />,
-    heading: "User Management.",
+    heading: "User Management",
     link: "/user",
+    name: "userManagement",
   },
   {
     icon: <img src={reports} className="" alt="" />,
     heading: "Reports",
     link: "#",
+    name: "reports",
   },
   {
     icon: <img src={live} className="" alt="" />,
     heading: "Live",
     link: "#",
+    name: "liveInspection",
   },
   {
     icon: <img src={payment} className="" alt="" />,
     heading: "Payments",
     link: "#",
+    name: "inspectionWallet",
   },
   {
     icon: <img src={profile} className="" alt="" />,
     heading: "Profile",
     link: "#",
+    name: "profile",
   },
 ];
