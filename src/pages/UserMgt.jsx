@@ -65,7 +65,7 @@ const UserMgt = () => {
     const { data } = await axios(
       import.meta.env.VITE_BASE_URL + `/api/getAllEmployessWithBranch/${id}`
     );
-    console.log("te", data);
+    // console.log("te", data);
     setUserData(data);
   };
 
@@ -125,6 +125,8 @@ const UserMgt = () => {
       getBranches();
     }
   }, [companyId]);
+
+  console.log(filteredUsers);
 
   return (
     <>
@@ -204,7 +206,7 @@ const UserMgt = () => {
                   if (false) {
                     setAddBranchPopUp(!addBranchPopUp);
                   } else {
-                    toast.error("Action not allowed")
+                    toast.error("Action not allowed");
                   }
                 }}
               >

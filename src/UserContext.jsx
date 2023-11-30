@@ -40,7 +40,7 @@ export const UserContextProvider = ({ children }) => {
   const [token, setToken] = useState(getAuthToken());
   const [render, setRender] = useState(false);
 
-  // const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [checkedItems, setCheckedItems] = useState([]);
   const [editData, setEditData] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -75,6 +75,7 @@ export const UserContextProvider = ({ children }) => {
         .get(`/api/getAllEmployess/${companyId}`)
         .then((res) => {
           console.log(res);
+          setUserData(res.data);
         })
         .catch((err) => {
           console.log(err);
@@ -210,6 +211,8 @@ export const UserContextProvider = ({ children }) => {
           userRights,
           render,
           setRender,
+          setUserData,
+          userData,
         }}
       >
         {children}
