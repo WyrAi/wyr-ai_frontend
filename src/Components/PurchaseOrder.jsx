@@ -44,7 +44,7 @@ function PurchaseOrder() {
   const [vendor, setVendor] = useState([]);
   const [people, setPeople] = useState([]);
   const [peopleOfInterest, setPeopelOfInterest] = useState([
-    { id: userInformation._id, name: userInformation.name },
+    { id: userInformation?._id, name: userInformation?.name },
   ]);
   // console.log(...peopleOfInterest);
   const [ids, setIds] = useState({
@@ -107,7 +107,7 @@ function PurchaseOrder() {
   };
   const formik = useFormik({
     initialValues,
-    onSubmit: (values) => handleSubmit(values),
+    onSubmit: (values) => handleSubmit(),
     validationSchema,
   });
   const { values } = formik;
@@ -153,9 +153,10 @@ function PurchaseOrder() {
   //  there is options of creating a single 'productList' and 'slotOfProducts' change according to its
   // console.log(slotOfProducts);
 
-  async function handleSubmit(values) {
+  async function handleSubmit(e) {
     // console.log(userInformation);
     // console.log(peopleOfInterest);
+    console.log(e.target.type);
     let status = "";
     if (
       userInformation?.role?.SelectAccess?.purchaseOrder?.some(
@@ -197,6 +198,18 @@ function PurchaseOrder() {
         status,
       };
     }
+
+    if (e.target.type === "submit") {
+      wyraiApi
+        .post("/api/purchaseOrder", requestBody)
+        .then((res) => navigate(-1))
+        .catch((err) => console.log(err));
+    } else {
+      wyraiApi
+        .post(`/api/PuracheseOrderDraft/${userInformation?._id}`, requestBody)
+        .then((res) => navigate(-1))
+        .catch((err) => console.log(err));
+    }
     // console.log(requestBody);
 
     // const resp = await fetch(
@@ -209,10 +222,7 @@ function PurchaseOrder() {
     //     body: JSON.stringify(requestBody),
     //   }
     // );
-    wyraiApi
-      .post("/api/purchaseOrder", requestBody)
-      .then((res) => navigate(-1))
-      .catch((err) => console.log(err));
+
     // if (resp.ok) {
     //   navigate(-1);
     // }
@@ -623,7 +633,7 @@ function PurchaseOrder() {
                 <div className="absolute top-[22px] left-[24px] flex gap-4">
                   {peopleOfInterest.length > 0 &&
                     peopleOfInterest.map((item) => {
-                      const initial = item?.name.charAt(0).toUpperCase();
+                      const initial = item?.name?.charAt(0).toUpperCase();
                       return (
                         <div className="flex relative">
                           <span className="w-6 h-6  bg-blue flex justify-center items-center rounded-full">
@@ -706,15 +716,16 @@ function PurchaseOrder() {
             <button
               type="button"
               className="py-2 rounded-md px-11 border-2 border-[#1B9BEF] text-[#1B9BEF] font-bold "
+              onClick={(e) => handleSubmit(e)}
             >
               Save Draft
             </button>
             <button
               type="submit"
               className="py-2 rounded-md px-11 bg-blue font-bold text-white"
-              onClick={() => {
+              onClick={(e) => {
                 // addSlotOfProduct();
-                handleSubmit();
+                handleSubmit(e);
               }}
             >
               Publish

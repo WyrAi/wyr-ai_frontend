@@ -81,7 +81,7 @@ const Purchase = () => {
 
     wyraiApi
       .get(`api/purchaseOrder/${id}`)
-      .then((res) => setAllPOrder(res.data.Data.poList))
+      .then((res) => setAllPOrder(res?.data?.Response?.poList))
       .catch((err) => console.log(err));
 
     // // if (data.Order) setAllPOrder(data.Order);
