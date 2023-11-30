@@ -120,6 +120,7 @@ const RelationShip = () => {
   useEffect(() => {
     fetchRelation();
   }, []);
+  console.log(selectRelation.id);
 
   return (
     <main className="flex flex-col h-full">
@@ -155,17 +156,17 @@ const RelationShip = () => {
             setSelectedFilter={setSortFilter}
           />
           {selectRelation.id && selectRelation.checkRelation && (
-            <div className="flex items-center">
+            <div className="flex items-center gap-2">
               <button
                 type="button"
-                className="px-8 py-2 text-blue text-md"
+                className="px-8 py-2 text-lightRed text-md"
                 onClick={() => Unregistered()}
               >
                 Reject
               </button>
               <button
                 type="button"
-                className="px-8 py-2 text-blue text-md"
+                className="px-8 py-2 text-lightGreen border-2 border-lightGreen rounded-md text-md"
                 onClick={() => Registered()}
               >
                 Approve
@@ -175,7 +176,7 @@ const RelationShip = () => {
         </div>
       </div>
       <div className=" mx-2 w-full flex-1 flex flex-col">
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 flex-1 mt-5">
+        <div className="flex flex-w gap-2 flex-1 mt-5">
           {allRelation?.map((value, index) => {
             return (
               <div className="bg-gray-50 h-[120px] w-[295px]" key={index}>

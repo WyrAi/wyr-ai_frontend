@@ -1,6 +1,6 @@
 import { sideBarData } from "../assets/data/sidebarData";
 import logout from "../assets/noun-log-out-5762374 1.svg";
-import logo from "../assets/logo.svg";
+
 import { Link } from "react-router-dom";
 import userGloabalContext from "../UserContext";
 import React from "react";
@@ -22,10 +22,7 @@ const Nav = () => {
 
   return (
     <>
-      <div className="h-screen grid grid-rows-[10%_80%_10%] justify-around border items-center bg-white overflow-hidden">
-        <Link to="/user" className="w-full mt-6 flex justify-center  ">
-          <img src={logo} alt="" className="w-[112px]" />
-        </Link>
+      <div className="h-screen grid grid-rows-[80%_10%] justify-around border-r-[1px] border-gray-200 items-center bg-white overflow-hidden ">
         <div className="flex flex-col w-full gap-1 pt-8 justify-start h-full  px-7 ">
           {sideBarData?.map((item, index) => {
             if (accessArray.includes(item.name)) {

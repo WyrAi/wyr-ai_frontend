@@ -8,6 +8,7 @@ import { AuthContext } from "../Contexts/authContext";
 import { getAuthToken } from "../Utils/authUtils";
 import ResetPassword from "../pages/ResetPassword";
 import SuccessRelation from "../container/SuccessRelation";
+import InspectionForm from "../Components/InspectionForm";
 // import Dialog from "../Components/Dialog";
 // import Inspection from "../pages/Inspection";
 

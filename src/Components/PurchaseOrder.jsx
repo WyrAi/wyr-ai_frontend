@@ -16,6 +16,7 @@ import addUser from "../assets/noun-add-account-6047901 1.svg";
 import { HiOutlineCalendar } from "react-icons/hi";
 import { FaPlus } from "react-icons/fa";
 import { AiOutlineSearch } from "react-icons/ai";
+import { IoIosCloseCircle } from "react-icons/io";
 import Preview from "../container/Preview";
 import img from "../assets/sara-kurfess-ltE8bDLjX9E-unsplash.jpeg";
 import { userGloabalContext } from "../UserContext";
@@ -23,6 +24,7 @@ import UploadImages from "../container/UploadImages";
 import Datepicker from "./DatepickerComponent";
 import gps from "../assets/ion_location-outline.svg";
 import axios from "axios";
+import wyraiApi from "../api/wyraiApi";
 
 // import DropdownSelect from '../container/DropdownSelect';
 
@@ -35,12 +37,20 @@ import axios from "axios";
 function PurchaseOrder() {
   const { setPopUpload, popUpload, userInformation, companyId, role } =
     userGloabalContext();
-
+  const navigate = useNavigate();
   const [purchaseDoc, setPurchaseDoc] = useState(null);
   const [showPurchaseOrder, setShowPurchaseOrder] = useState(false);
   const [buyer, setBuyer] = useState([]);
   const [vendor, setVendor] = useState([]);
   const [people, setPeople] = useState([]);
+  const [peopleOfInterest, setPeopelOfInterest] = useState([
+    { id: userInformation?._id, name: userInformation?.name },
+  ]);
+  // console.log(...peopleOfInterest);
+  const [ids, setIds] = useState({
+    buyerId: "",
+    vendorId: "",
+  });
 
   const [slotOfProducts, setSlotOfProducts] = useState([]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -97,7 +107,7 @@ function PurchaseOrder() {
   };
   const formik = useFormik({
     initialValues,
-    onSubmit: (values) => handleSubmit(values),
+    onSubmit: (values) => handleSubmit(),
     validationSchema,
   });
   const { values } = formik;
@@ -113,20 +123,16 @@ function PurchaseOrder() {
     getUser();
   }, []);
 
-  // console.log(packingListFiles, showPurchaseOrder);
-  // console.log(userInformation);
-
-  const navigate = useNavigate();
-
   const getUser = async () => {
     const { data } = await axios.get(
       import.meta.env.VITE_BASE_URL + `/api/getAllCompanyByRole/${companyId}`
     );
 
     if (userInformation?.companyId?.companyRole === "Buyer") {
-      console.log(userInformation);
+      //   console.log(userInformation);
       formik.setFieldValue("nameOfBuyer", userInformation.companyId?.name);
       formik.setFieldValue("addOfBuyer", userInformation.companyId?.city);
+      setIds({ ...ids, buyerId: companyId });
     } else {
       setBuyer(data.AllFields.Buyer);
     }
@@ -135,56 +141,91 @@ function PurchaseOrder() {
 
   useEffect(() => {
     getUser();
+    fetchpeople();
   }, []);
 
   //   getUser();
-  console.log(buyer);
-  console.log(vendor);
-
-  // const getPeopleInterest = async () => {
-
-  // 	const {data} = await axios.get(
-  // 		import.meta.env.VITE_BASE_URL + `  /api/getAllEmployess/${id}/`
-  // 	);
-  // 	console.log(data);
-  // 	setPeople(data);
-  // };
+  // console.log(buyer);
+  // console.log(vendor);
+  // console.log(ids);
 
   // console.log('formik', formik);
   //  there is options of creating a single 'productList' and 'slotOfProducts' change according to its
   // console.log(slotOfProducts);
-  async function handleSubmit(values) {
-    console.log(slotOfProducts.length);
+
+  async function handleSubmit(e) {
+    // console.log(userInformation);
+    // console.log(peopleOfInterest);
+    console.log(e.target.type);
+    let status = "";
+    if (
+      userInformation?.role?.SelectAccess?.purchaseOrder?.some(
+        (item) => item === "Approve"
+      )
+    ) {
+      status = "Published";
+    } else {
+      status = "Pending";
+    }
+    // console.log(slotOfProducts.length);
     let requestBody = {};
     if (slotOfProducts.length > 0) {
       requestBody = {
         purchaseDoc,
-        ...formik.values,
+        buyer: ids.buyerId,
+        vendor: ids.vendorId,
+        shiptoName: formik.values.shiptoName,
+        shiptoAdd: formik.values.shiptoAdd,
+        shipVia: formik.values.shipVia,
+        shipDate: formik.values.shipDate,
+        assignedPeople: peopleOfInterest.map((item) => item.id),
+        poNumber: formik.values.poNumber,
         products: [...slotOfProducts],
+        status,
       };
     } else {
       requestBody = {
         purchaseDoc,
-        ...formik.values,
+        buyer: ids.buyerId,
+        vendor: ids.vendorId,
+        shiptoName: formik.values.shiptoName,
+        shiptoAdd: formik.values.shiptoAdd,
+        shipVia: formik.values.shipVia,
+        shipDate: formik.values.shipDate,
+        assignedPeople: peopleOfInterest.map((item) => item.id),
+        poNumber: formik.values.poNumber,
         products: [{ ...productList, images: imagesFiles }],
+        status,
       };
     }
-    console.log(requestBody);
 
-    const resp = await fetch(
-      import.meta.env.VITE_BASE_URL + "/api/purchaseOrder",
-      {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      }
-    );
-    console.log(resp);
-    if (resp.ok) {
-      navigate(-1);
+    if (e.target.type === "submit") {
+      wyraiApi
+        .post("/api/purchaseOrder", requestBody)
+        .then((res) => navigate(-1))
+        .catch((err) => console.log(err));
+    } else {
+      wyraiApi
+        .post(`/api/PuracheseOrderDraft/${userInformation?._id}`, requestBody)
+        .then((res) => navigate(-1))
+        .catch((err) => console.log(err));
     }
+    // console.log(requestBody);
+
+    // const resp = await fetch(
+    //   import.meta.env.VITE_BASE_URL + "/api/purchaseOrder",
+    //   {
+    //     method: "post",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(requestBody),
+    //   }
+    // );
+
+    // if (resp.ok) {
+    //   navigate(-1);
+    // }
   }
 
   const addSlotOfProduct = () => {
@@ -197,13 +238,28 @@ function PurchaseOrder() {
       console.log(error);
     }
   };
-  const addAssignPeople = () => {
+  const addAssignPeople = (id, name, value) => {
     try {
-      formik.setFieldValue("assignPeople", [...formik.values.assignPeople, ""]);
+      const isExisting = peopleOfInterest.some((item) => item.id === id);
+      // console.log(isExisting);
+      if (!isExisting) {
+        setPeopelOfInterest([...peopleOfInterest, { id, name }]);
+        setPopup({ ...popup, [value]: !popup[value] });
+      }
     } catch (error) {
       console.log(error);
     }
   };
+  // console.log(peopleOfInterest);
+
+  const RemoveAssignPeople = (id) => {
+    try {
+      setPeopelOfInterest(peopleOfInterest.filter((item) => item.id !== id));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // console.log(peopleOfInterest);
 
   const handleBack = () => {
     try {
@@ -224,60 +280,49 @@ function PurchaseOrder() {
   }
 
   const handleClick = (e) => {
-    console.log(e.target.name);
+    // console.log(e.target.name);
     setPopup({ ...popup, [e.target.name]: !popup[e.target.name] });
   };
 
   const handleChange = (e) => {
     formik.handleChange(e);
   };
-  const fetchpeople = async () => {
-    const { data } = await axios.get(
-      import.meta.env.VITE_BASE_URL + `  /api/getAllEmployess/${id}/`
+
+  const handleDropDownSelect = (name, address, item) => {
+    formik.setFieldValue(name, item.companyId?.name);
+    formik.setFieldValue(
+      address,
+      `${item.companyId?.city}, ${item.companyId?.country}`
     );
-    console.log(data);
-    setPeople(data);
+    if (name === "nameOfBuyer") {
+      setIds({ ...ids, buyerId: item.companyId?._id });
+    } else {
+      setIds({ ...ids, vendorId: item.companyId?._id });
+    }
+    setPopup({ ...popup, [name]: !popup[name] });
   };
 
-  const DropDown = ({ data, name, address }) => {
-    console.log(data);
-    console.log(address);
+  const fetchpeople = async () => {
+    if (ids.buyerId.length > 0 && ids.vendorId.length > 0) {
+      wyraiApi
+        .get(`/api/getAllEmployess/${ids.buyerId}/${ids.vendorId}`)
+        .then((res) => setPeople(res.data))
+        .then((err) => console.log(err));
+    }
+
+    // console.log(data);
+    // setPeople(data);
+  };
+  // console.log(people);
+
+  //   getEmploy and clear console.log from PO
+
+  const DropDown = ({ children }) => {
     return (
       <>
         <div className="absolute top-[60px] shadow mt-2 bg-white w-full z-50  ">
           <ul className="ml-6 h-[130px] overflow-x-auto cursor-pointer">
-            {data &&
-              data?.map((item, index) => {
-                const intials = item.companyId?.name.charAt(0).toUpperCase();
-                return (
-                  <li
-                    key={index}
-                    className="py-2 flex items-center gap-4 mr-2 border-b"
-                    onClick={() => {
-                      formik.setFieldValue(name, item.companyId?.name);
-                      formik.setFieldValue(
-                        address,
-                        `${item.companyId?.city}, ${item.companyId?.country}`
-                      );
-                      setPopup({ ...popup, [name]: !popup[name] });
-                    }}
-                  >
-                    {/* {item} */}
-                    <span className="w-6 h-6 bg-blue flex justify-center items-center rounded-full">
-                      {intials}
-                    </span>
-                    <span className="flex-1 text-xs">
-                      {item.companyId?.name}
-                    </span>
-                    <span className="flex gap-2 items-center">
-                      <img src={gps} alt="gps" className="w-[16px] h-[16px]" />
-                      <span className="text-[10px]">
-                        {item.companyId?.city}, {item.companyId?.country}
-                      </span>
-                    </span>
-                  </li>
-                );
-              })}
+            {children}
           </ul>
         </div>
       </>
@@ -286,7 +331,7 @@ function PurchaseOrder() {
 
   return (
     <>
-      <div className=" h-full w-[95%] bg-white py-4 mx-auto">
+      <div className=" h-[94vh] w-[95%] pt-2 mx-auto flex flex-col">
         <div className="h-[3%] mb-5">
           <button
             type="button"
@@ -298,7 +343,7 @@ function PurchaseOrder() {
         </div>
         <form
           onSubmit={formik.handleSubmit}
-          className="flex-cols gap-10  w-full h-[45%] px-5 overflow-y-auto  "
+          className="flex-1 flex-cols gap-10  w-full h-[45%] bg-white p-2 overflow-y-auto  "
         >
           <div className=" relative z-10 h-[500px] rounded-md  flex mb-11 border-dashed border-2 border-[#666666]">
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -351,11 +396,40 @@ function PurchaseOrder() {
                 />
 
                 {popup.nameOfBuyer && (
-                  <DropDown
-                    data={buyer}
-                    name={"nameOfBuyer"}
-                    address={"addOfBuyer"}
-                  />
+                  <DropDown>
+                    {buyer &&
+                      buyer?.map((item, index) => {
+                        const intials = item.name.charAt(0).toUpperCase();
+                        return (
+                          <li
+                            key={index}
+                            className="py-2 flex items-center gap-4 mr-2 border-b"
+                            onClick={() =>
+                              handleDropDownSelect(
+                                "nameOfBuyer",
+                                "addOfBuyer",
+                                item
+                              )
+                            }
+                          >
+                            <span className="w-6 h-6 bg-blue flex justify-center items-center rounded-full">
+                              {intials}
+                            </span>
+                            <span className="flex-1 text-xs">{item.name}</span>
+                            <span className="flex gap-2 items-center">
+                              <img
+                                src={gps}
+                                alt="gps"
+                                className="w-[16px] h-[16px]"
+                              />
+                              <span className="text-[10px]">
+                                {item.city}, {item.country}
+                              </span>
+                            </span>
+                          </li>
+                        );
+                      })}
+                  </DropDown>
                 )}
               </div>
 
@@ -372,9 +446,6 @@ function PurchaseOrder() {
                   placeholder={"Address Of Buyer"}
                   labelColor={"bg-white"}
                 />
-                {/* {popup.addOfBuyer && (
-									<DropDown data={add} name={'addOfBuyer'} />
-								)} */}
               </div>
             </div>
           </div>
@@ -397,11 +468,46 @@ function PurchaseOrder() {
                   labelColor={"bg-white"}
                 />
                 {popup.nameOfVendor && (
-                  <DropDown
-                    data={vendor}
-                    name={"nameOfVendor"}
-                    address={"addOfVendor"}
-                  />
+                  <DropDown>
+                    {vendor &&
+                      vendor?.map((item, index) => {
+                        const intials = item?.companyId?.name
+                          .charAt(0)
+                          .toUpperCase();
+                        return (
+                          <li
+                            key={index}
+                            className="py-2 flex items-center gap-4 mr-2 border-b"
+                            onClick={() =>
+                              handleDropDownSelect(
+                                "nameOfVendor",
+                                "addOfVendor",
+                                item
+                              )
+                            }
+                          >
+                            {/* {item} */}
+                            <span className="w-6 h-6 bg-blue flex justify-center items-center rounded-full">
+                              {intials || "A"}
+                            </span>
+                            <span className="flex-1 text-xs">
+                              {item?.companyId?.name}
+                            </span>
+                            <span className="flex gap-2 items-center">
+                              <img
+                                src={gps}
+                                alt="gps"
+                                className="w-[16px] h-[16px]"
+                              />
+                              <span className="text-[10px]">
+                                {item?.companyId?.city},{" "}
+                                {item?.companyId?.country}
+                              </span>
+                            </span>
+                          </li>
+                        );
+                      })}
+                  </DropDown>
                 )}
               </div>
 
@@ -420,9 +526,6 @@ function PurchaseOrder() {
                   placeholder={"Address Of Vendor"}
                   labelColor={"bg-white"}
                 />
-                {/* {popup.addOfVendor && (
-									<DropDown data={add} name={'addOfVendor'} />
-								)} */}
               </div>
             </div>
           </div>
@@ -509,12 +612,12 @@ function PurchaseOrder() {
                   onChange={handleChange}
                   handleClick={handleClick}
                   onBlur={formik.handleBlur}
-                  error={
-                    formik.touched.assignPeople && formik.errors.assignPeople
-                  }
+                  // error={
+                  //   formik.touched.assignPeople && formik.errors.assignPeople
+                  // }
                   placeholder={""}
                   labelColor={"bg-white"}
-                  // disable={true}
+                  disable={true}
                 />
                 <img
                   src={addUser}
@@ -527,9 +630,63 @@ function PurchaseOrder() {
                     })
                   }
                 />
+                <div className="absolute top-[22px] left-[24px] flex gap-4">
+                  {peopleOfInterest.length > 0 &&
+                    peopleOfInterest.map((item) => {
+                      const initial = item?.name?.charAt(0).toUpperCase();
+                      return (
+                        <div className="flex relative">
+                          <span className="w-6 h-6  bg-blue flex justify-center items-center rounded-full">
+                            {initial}
+                          </span>
+                          <IoIosCloseCircle
+                            className="absolute bottom-[-5px] right-[-7px] bg-white rounded-full cursor-pointer"
+                            onClick={() => RemoveAssignPeople(item?.id)}
+                          />
+                        </div>
+                      );
+                    })}
+                </div>
               </div>
               {popup.assignPeople && (
-                <DropDown data={name} name={"assignPeople"} />
+                <DropDown>
+                  {people.length > 0 &&
+                    people?.map((item, index) => {
+                      const intials = item?.name.charAt(0).toUpperCase();
+                      //   console.log(item._id);
+                      return (
+                        <li
+                          key={index}
+                          className="py-2 flex items-center gap-4 mr-2 border-b"
+                          onClick={() =>
+                            addAssignPeople(
+                              item?._id,
+                              item?.name,
+                              "assignPeople"
+                            )
+                          }
+                        >
+                          {/* {item} */}
+                          <span className="w-6 h-6 bg-blue flex justify-center items-center rounded-full">
+                            {intials || "A"}
+                          </span>
+                          <span className="flex-1 text-xs">{item?.name}</span>
+                          <span className="text-xs">{item?.role?.name}</span>
+                          <span className="flex gap-2 items-center">
+                            <img
+                              src={gps}
+                              alt="gps"
+                              className="w-[16px] h-[16px]"
+                            />
+                            <span className="text-[10px]">
+                              {item?.officeBranch?.city},{" "}
+                              {item?.officeBranch?.country}
+                            </span>
+                          </span>
+                        </li>
+                      );
+                    })}
+                </DropDown>
               )}
             </div>
           </div>
@@ -559,15 +716,16 @@ function PurchaseOrder() {
             <button
               type="button"
               className="py-2 rounded-md px-11 border-2 border-[#1B9BEF] text-[#1B9BEF] font-bold "
+              onClick={(e) => handleSubmit(e)}
             >
               Save Draft
             </button>
             <button
               type="submit"
               className="py-2 rounded-md px-11 bg-blue font-bold text-white"
-              onClick={() => {
-                addSlotOfProduct();
-                handleSubmit();
+              onClick={(e) => {
+                // addSlotOfProduct();
+                handleSubmit(e);
               }}
             >
               Publish
