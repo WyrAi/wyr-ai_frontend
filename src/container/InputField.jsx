@@ -1,54 +1,54 @@
 /* eslint-disable react/prop-types */
 // eslint-disable-next-line react/prop-types
 const InputField = ({
-	label,
-	name,
-	value,
-	onChange,
-	handleClick,
-	error,
-	placeholder,
-	labelColor,
-	labelsize,
-	padding,
-	type,
-	disable,
+  label,
+  name,
+  value,
+  onChange,
+  handleClick,
+  error,
+  placeholder,
+  labelColor,
+  labelsize,
+  padding,
+  type,
+  disable,
 }) => {
-	return (
-		<>
-			<div className=" relative  mb-4 ">
-				<input
-					className={`mt-1 indent-2 hover:opacity-95 block w-full  ${
-						padding || 'pl-2 py-4 pr-10'
-					} ${labelColor} 
+  return (
+    <>
+      <div className="h-full relative  mb-4 ">
+        <input
+          className={`mt-1 indent-2 hover:opacity-95 block w-full  ${
+            padding || "pl-2 py-4 pr-10"
+          } ${labelColor} 
 					 text-gray-900 placeholder-gray-400  border rounded-md shadow-sm focus:outline-none focus:bg-white
 					${
-						error
-							? 'border-red-500 focus:border-red-500'
-							: 'border-gray-400 focus:border-gray-500'
-					}`}
-					name={name}
-					id={name}
-					type={type}
-					placeholder={placeholder}
-					value={value}
-					onChange={onChange}
-					onClick={handleClick}
-					disabled={disable || false}
-					autoComplete="off"
-				/>
-				<label
-					className={`block absolute top-[-25%]  left-[8%] md:top-[-26%] md:left-[10%] text-gray-500 ${labelColor} tracking-tighter  py-1 px-3  ${
-						labelsize || 'text-base'
-					} mb-2`}
-					htmlFor="name"
-				>
-					{label}
-				</label>
-				{error && <p className="text-red-500 text-xs pl-6 ">{error}</p>}
-			</div>
-		</>
-	);
+            error
+              ? "border-red-500 focus:border-red-500"
+              : "border-gray-400 focus:border-gray-500"
+          }`}
+          name={name}
+          id={name}
+          type={type}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          onClick={handleClick}
+          disabled={disable || false}
+          autoComplete="off"
+        />
+        <label
+          className={`block absolute top-[-25%]  left-[8%] md:top-[-26%] md:left-[10%] text-gray-500 ${labelColor} tracking-tighter  py-1 px-3  ${
+            labelsize || "text-base"
+          } mb-2`}
+          htmlFor="name"
+        >
+          {label}
+        </label>
+        {error && <p className="text-red-500 text-xs pl-6 ">{error}</p>}
+      </div>
+    </>
+  );
 };
 
 export default InputField;

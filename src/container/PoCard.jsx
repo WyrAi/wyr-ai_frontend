@@ -10,7 +10,7 @@ const PoCard = ({ id, purchaseDoc, buyer, status, statusLabel }) => {
   return (
     <>
       <div
-        className={`flex gap-2 w-full h-full items-center  pl-2 `}
+        className={`flex gap-2 w-[290px] h-full items-center  pl-2 py-3 pr-4 bg-white`}
         style={{ borderLeft: "2px solid" + color }}
       >
         <img src={purchaseDoc} alt="" className="w-16 h-16 flex-1" />

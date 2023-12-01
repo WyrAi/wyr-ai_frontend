@@ -12,7 +12,6 @@ import InspectionForm from "../Components/InspectionForm";
 // import Dialog from "../Components/Dialog";
 // import Inspection from "../pages/Inspection";
 
-
 const RequiredAuth = (props) => {
   const { auth } = useContext(AuthContext);
   const { children } = props;
@@ -32,7 +31,7 @@ const CustomRoutes = () => {
         <Route path="/signUp/:clickedRole" element={<SignUpRole />} />
         <Route path="/login" element={<Login />} />
         <Route path="/resetPassword/:token" element={<ResetPassword />} />
-        <Route path="/test" element={<SuccessRelation />} />
+        <Route path="/test" element={<InspectionForm />} />
 
         <Route
           path="/*"

@@ -1,7 +1,7 @@
 /** @format */
 
 // InspectionForm.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BiArrowBack, BiUserPlus } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
@@ -20,6 +20,8 @@ import { RiCloseCircleFill } from "react-icons/ri";
 import DatepickerComponent from "./DatepickerComponent";
 import TimePicker from "./TimePicker";
 import { userGloabalContext } from "../UserContext";
+import InputField from "../container/InputField";
+import wyraiApi from "../api/wyraiApi";
 
 /**
  * A form component for inspection data.
@@ -28,21 +30,36 @@ import { userGloabalContext } from "../UserContext";
  */
 
 function InspectionForm() {
-  const { startTime, endTime } = userGloabalContext();
+  const { startTime, companyId } = userGloabalContext();
 
   const [packingListFiles, setPackingListFiles] = useState(null);
   const [inspectionDate, setInspectionDate] = useState(new Date());
   const [slotOfInspection, setSlotOfInspection] = useState([]);
+  const [addpurchaseOrder, setAddPurchaseOrder] = useState([]);
+  const initials = {
+    from: "",
+    to: "",
+    styleId: "",
+    styleName: "",
+    quantityPerBox: "",
+    totalBox: "",
+    totalQuantity: "",
+  };
+  const [purchaseOrder, setPurchaseOrder] = useState(initials);
+  const [count, setCount] = useState(1);
   // const [inspectionTime, setInspectionTime] = useState('');
   const navigate = useNavigate();
   const initialValues = {
     nameOfBuyer: "",
     addOfBuyer: "",
+    nameOfQcAgency: "",
+    nameOfQcHead: "",
     nameOfFactory: "",
     addOfFactory: "",
     totalCarton: "",
     inv_number: "",
-    // slotOfInspection: [],
+    po_number: "",
+    // slotOfInspection: slotOfInspection,
   };
 
   const names = ["ashish", "sachin", "karan"];
@@ -69,6 +86,12 @@ function InspectionForm() {
   async function handleSubmit(values) {
     try {
       console.log(values);
+      const reqbody = {
+        ...formik.values,
+        addpurchaseOrder,
+        slotOfInspection,
+      };
+      console.log(reqbody);
     } catch (error) {
       console.error(error);
     }
@@ -76,27 +99,48 @@ function InspectionForm() {
 
   const addSlotOfInspection = () => {
     try {
-      // formik.setFieldValue('slotOfInspection', [
-      // 	...formik.values.slotOfInspection,
-      // 	'',
-      // ]);
       setSlotOfInspection([
         ...slotOfInspection,
-        { data: inspectionDate, time: `${startTime} ${endTime}` },
+        { date: inspectionDate, time: startTime },
       ]);
     } catch (error) {
       console.log(error);
     }
   };
-  console.log(slotOfInspection);
-
+  // console.log(slotOfInspection[0].date);
+  const clearFieldData = (data, setData) => {
+    const clearedData = Object.fromEntries(
+      Object.keys(data).map((key) => [key, ""])
+    );
+    console.log(clearedData);
+    setData(clearedData);
+  };
+  console.log(purchaseOrder);
   const handleAddAnotherPurchase = () => {
     try {
-      //   return;
+      // console.log(purchaseOrder, "TEST");
+      setAddPurchaseOrder([...addpurchaseOrder, { ...purchaseOrder }]);
+      // clearFieldData(purchaseOrder, setPurchaseOrder);
+      setPurchaseOrder((prevState) => ({ ...prevState, ...initials }));
     } catch (error) {
       console.log(error);
     }
   };
+  const getAllData = () => {
+    wyraiApi
+      .get(`/api/getAllCompanyByRole/${companyId}`)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    getAllData();
+  }, []);
+
+  console.log(addpurchaseOrder);
+  useEffect(() => {
+    setPurchaseOrder(initials);
+  }, [addpurchaseOrder]);
 
   const handleBack = () => {
     try {
@@ -128,7 +172,7 @@ function InspectionForm() {
               message={"Upload Packing List"}
             />
           </div>
-          <Input
+          <InputField
             label="Name of Buyer"
             name="nameOfBuyer"
             type="text"
@@ -136,8 +180,10 @@ function InspectionForm() {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.nameOfBuyer && formik.errors.nameOfBuyer}
+            placeholder={"Enter the Email of User"}
+            labelColor={"bg-white"}
           />
-          <Input
+          <InputField
             label="Address of Buyer"
             name="addOfBuyer"
             type="text"
@@ -145,8 +191,10 @@ function InspectionForm() {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.addOfBuyer && formik.errors.addOfBuyer}
+            placeholder={"Enter the Email of User"}
+            labelColor={"bg-white"}
           />
-          <Input
+          <InputField
             label="Name of Factory"
             name="nameOfFactory"
             type="text"
@@ -154,8 +202,10 @@ function InspectionForm() {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.nameOfFactory && formik.errors.nameOfFactory}
+            placeholder={"Enter the Email of User"}
+            labelColor={"bg-white"}
           />
-          <Input
+          <InputField
             label="Address of Factory"
             name="addOfFactory"
             type="text"
@@ -163,17 +213,35 @@ function InspectionForm() {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.addOfFactory && formik.errors.addOfFactory}
+            placeholder={"Enter the Email of User"}
+            labelColor={"bg-white"}
           />
-          <Input
-            label="Total Carton"
-            name="totalCarton"
+          <InputField
+            label="Name of QC Agency"
+            name="nameOfQcAgency"
             type="text"
-            value={formik.values.totalCarton}
+            value={formik.values.nameOfQcAgency}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={formik.touched.totalCarton && formik.errors.totalCarton}
+            error={
+              formik.touched.nameOfQcAgency && formik.errors.nameOfQcAgency
+            }
+            placeholder={"Enter the Email of User"}
+            labelColor={"bg-white"}
           />
-          <Input
+          <InputField
+            label="Name Of QC Head"
+            name="nameOfQcHead"
+            type="text"
+            value={formik.values.nameOfQcHead}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.nameOfQcHead && formik.errors.nameOfQcHead}
+            placeholder={"Enter the Email of User"}
+            labelColor={"bg-white"}
+          />
+
+          {/* <Input
             label="Invoice Number"
             name="inv_number"
             type="text"
@@ -181,83 +249,114 @@ function InspectionForm() {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.inv_number && formik.errors.inv_number}
-          />
-          <div>
-            <label>Add Slot Of Inspection</label>
-            <div className="flex items-center justify-between p-1 px-4 hover:opacity-95 w-full py-6 bg-gray-50 border rounded-md shadow-sm focus:outline-none focus:bg-white">
-              <div className="flex flex-col">
-                {/* {formik?.values?.slotOfInspection.map((slot, index) => (
-									<span key={slot + index}>{slot}</span>
-								))} */}
-              </div>
-              <div className="text-white ">
-                <Prompt
-                  btnText={
-                    <AiOutlinePlus
-                      onClick={addSlotOfInspection}
-                      className="bg-blue text-white cursor-pointer hover:opacity-80 rounded-full"
-                      size={35}
-                    />
-                  }
-                  modalID={`addSlotInspection`}
-                >
-                  <div className="flex flex-col gap-4 md:min-h-[50vh] bg-white text-dark">
-                    <div className="flex flex-col gap-4 justify-center items-center">
-                      <h2 className="font-semibold text-lg">
-                        Add Slot Of Inspection
-                      </h2>
-                      <span className="font-semibold text-sm mb-4">
-                        {formatDate(inspectionDate)}
-                        {startTime.length > 0 && <span>- {startTime}</span>}
-                        {endTime.length > 0 && <span> to {endTime}</span>}
-                      </span>
-                    </div>
-                    <div className="grid md:grid-cols-[17rem_auto]">
-                      {/* <Datepicker
+          /> */}
+
+          <div className="flex gap-5 items-center col-span-2">
+            <div className="flex-1">
+              <label>Add Slot Of Inspection</label>
+              <div className="flex items-center justify-between p-1 px-4 hover:opacity-95 w-full py-6 bg-gray-50 border border-gray-400 rounded-md shadow-sm focus:outline-none focus:bg-white">
+                <div className="flex flex-col h-[100px] overflow-y-auto w-1/2">
+                  {slotOfInspection?.map((slot, index) => (
+                    <span key={slot + index}>
+                      {formatDate(slot?.date)} - {slot?.time}
+                    </span>
+                  ))}
+                </div>
+                <div className="text-white ">
+                  <Prompt
+                    btnText={
+                      <AiOutlinePlus
+                        // onClick={addSlotOfInspection}
+                        className="bg-blue text-white cursor-pointer hover:opacity-80 rounded-full"
+                        size={35}
+                      />
+                    }
+                    modalID={`addSlotInspection`}
+                  >
+                    <div className="flex flex-col gap-4 md:min-h-[50vh] bg-white text-dark">
+                      <div className="flex flex-col gap-4 justify-center items-center">
+                        <h2 className="font-semibold text-lg">
+                          Add Slot Of Inspection
+                        </h2>
+                        <span className="font-semibold text-sm mb-4">
+                          {formatDate(inspectionDate)}
+                          {startTime.length > 0 && <span>- {startTime}</span>}
+                          {/* {endTime.length > 0 && <span> to {endTime}</span>} */}
+                        </span>
+                      </div>
+                      <div className="grid md:grid-cols-[17rem_auto]">
+                        {/* <Datepicker
 												selectedDate={inspectionDate}
 												setSelectedDate={setInspectionDate}
 												className={'form-input px-4 py-3 rounded-md w-full'}
 											/> */}
 
-                      <DatepickerComponent
-                        inline={true}
-                        selectedDate={inspectionDate}
-                        setSelectedDate={setInspectionDate}
-                        name={"shipDate"}
-                        className={
-                          "form-input  mt-1 pl-4 py-4 pr-10  rounded-md w-full outline-none"
-                        }
-                      />
-                      <TimePicker />
-                      <div className="col-span-2 text-end ">
-                        {!startTime.length ? (
-                          <p className="text-xs text-red-500">
-                            Please, Enter desired slot time{" "}
-                          </p>
-                        ) : (
-                          <button
-                            type="submit"
-                            className="col-span-2 bg-blue py-2 px-7 text-white rounded "
-                            onClick={addSlotOfInspection}
-                          >
-                            Save
-                          </button>
-                        )}
+                        <DatepickerComponent
+                          inline={true}
+                          selectedDate={inspectionDate}
+                          setSelectedDate={setInspectionDate}
+                          name={"shipDate"}
+                          className={
+                            "form-input  mt-1 pl-4 py-4 pr-10  rounded-md w-full outline-none"
+                          }
+                        />
+                        <TimePicker />
+                        <div className="col-span-2 text-end ">
+                          {!startTime.length ? (
+                            <p className="text-xs text-red-500">
+                              Please, Enter desired slot time{" "}
+                            </p>
+                          ) : (
+                            <button
+                              type="submit"
+                              className="col-span-2 bg-blue py-2 px-7 text-white rounded "
+                              onClick={addSlotOfInspection}
+                            >
+                              Save
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Prompt>
+                  </Prompt>
+                </div>
               </div>
             </div>
+            <div className="flex-1">
+              <InputField
+                label="Total Carton"
+                name="totalCarton"
+                type="text"
+                value={formik.values.totalCarton}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.totalCarton && formik.errors.totalCarton}
+                placeholder={"Enter the Email of User"}
+                labelColor={"bg-white"}
+              />
+            </div>
           </div>
-          <div className="flex md:flex-col bg-slimeGray p-2 rounded-md col-span-2 gap-4 items-center ">
-            <div className="flex w-full items-center  ">
-              <div className=" flex-1 ">
-                <div className="flex items-center gap-5">
-                  <div className="flex-1">
-                    <Input name={"po_number"} label={"PO Number"} />
-                  </div>
-                  <div className="flex-1 flex gap-2">
+          {[...Array(count)].map((_, index) => (
+            <div className="flex md:flex-col bg-slimeGray p-2 rounded-md col-span-2 gap-4 items-center ">
+              <div className="flex w-full items-center  ">
+                <div className=" flex-1 ">
+                  <div className="flex items-center gap-5">
+                    <div className="w-1/2">
+                      <InputField
+                        label="PO Number"
+                        name="po_number"
+                        type="text"
+                        value={formik.values.po_number}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={
+                          formik.touched.po_number && formik.errors.po_number
+                        }
+                        placeholder={"Enter the PO number"}
+                        labelColor={"bg-white"}
+                      />
+                    </div>
+                    {/* <div className="flex-1 flex gap-2">
                     {names.length &&
                       names.map((name, index) => (
                         <div
@@ -271,22 +370,24 @@ function InspectionForm() {
                         </div>
                       ))}
                     <img src={addUser} alt="addUser" className="h-9 w-9" />
+                  </div> */}
                   </div>
                 </div>
               </div>
-              <button
-                type="button"
-                className=" p-2 px-6 h-9 bg-blue text-white rounded-md hover:opacity-90 "
-              >
-                Edit
-              </button>
+              <PackingList
+                purchaseOrder={purchaseOrder}
+                setPurchaseOrder={setPurchaseOrder}
+                handlesubmit={handleAddAnotherPurchase}
+              />
             </div>
-            <PackingList />
-          </div>
+          ))}
           <div className="grid col-span-2 pb-5">
             <button
               type="button"
-              onClick={handleAddAnotherPurchase}
+              onClick={() => {
+                handleAddAnotherPurchase();
+                setCount((prevCount) => prevCount + 1);
+              }}
               className="flex bg-[#1b9aef42] p-3 text-blue font-semibold items-center gap-4"
             >
               <AiOutlinePlus size={28} />
@@ -295,7 +396,7 @@ function InspectionForm() {
           </div>
           <div className="flex col-span-2 justify-end gap-4">
             <button
-              type="submit"
+              type="button"
               className="px-8 py-2 outline rounded-md outline-2 text-[#CCCCCC] font-semibold hover:opacity-90 outline-[#CCCCCC]"
             >
               Save Draft
@@ -303,6 +404,10 @@ function InspectionForm() {
             <button
               type="submit"
               className="px-8 py-2 outline bg-[#CCCCCC] text-white rounded-md outline-2 hover:opacity-90 outline-[#CCCCCC] font-semibold "
+              onClick={() => {
+                handleAddAnotherPurchase();
+                handleSubmit();
+              }}
             >
               Publish
             </button>
