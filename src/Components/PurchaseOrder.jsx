@@ -69,7 +69,7 @@ function PurchaseOrder() {
   // const [buyerPopup, setBuyerPopup] = useState(false);
   // const [vendorPopup, setVendorPopup] = useState(false);
   const [count, setCount] = useState(1);
-
+  const [userRelations, setUserRelations] = useState();
   const { productList, imagesFiles, setImagesFiles } = userGloabalContext();
 
   const validationSchema = Yup.object().shape({

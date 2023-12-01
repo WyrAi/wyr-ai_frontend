@@ -22,6 +22,7 @@ import TimePicker from "./TimePicker";
 import { userGloabalContext } from "../UserContext";
 import InputField from "../container/InputField";
 import wyraiApi from "../api/wyraiApi";
+import gps from "../assets/ion_location-outline.svg";
 
 /**
  * A form component for inspection data.
@@ -31,6 +32,7 @@ import wyraiApi from "../api/wyraiApi";
 
 function InspectionForm() {
   const { startTime, companyId } = userGloabalContext();
+  const [userRelations, setUserRelations] = useState("");
 
   const [packingListFiles, setPackingListFiles] = useState(null);
   const [inspectionDate, setInspectionDate] = useState(new Date());
@@ -97,6 +99,17 @@ function InspectionForm() {
     }
   }
 
+  // const popupIntials =
+  const [popup, setPopup] = useState({
+    nameOfBuyer: false,
+    nameOfQcAgency: false,
+    nameOfFactory: false,
+    nameOfQcHead: false,
+    po_number: false,
+  });
+
+  console.log(popup.nameOfFactory);
+
   const addSlotOfInspection = () => {
     try {
       setSlotOfInspection([
@@ -107,6 +120,7 @@ function InspectionForm() {
       console.log(error);
     }
   };
+
   // console.log(slotOfInspection[0].date);
   const clearFieldData = (data, setData) => {
     const clearedData = Object.fromEntries(
@@ -129,7 +143,7 @@ function InspectionForm() {
   const getAllData = () => {
     wyraiApi
       .get(`/api/getAllCompanyByRole/${companyId}`)
-      .then((res) => console.log(res))
+      .then((res) => setUserRelations(res.data.AllFields))
       .catch((err) => console.log(err));
   };
 
@@ -137,10 +151,34 @@ function InspectionForm() {
     getAllData();
   }, []);
 
-  console.log(addpurchaseOrder);
+  console.log(userRelations);
+
   useEffect(() => {
     setPurchaseOrder(initials);
   }, [addpurchaseOrder]);
+
+  const handleDropDownSelect = (name, address, item) => {
+    console.log("test");
+    formik.setFieldValue(name, item.companyId?.name);
+    formik.setFieldValue(
+      address,
+      `${item.companyId?.city}, ${item.companyId?.country}`
+    );
+    if (name === "nameOfBuyer") {
+      setIds({ ...ids, buyerId: item.companyId?._id });
+    } else {
+      setIds({ ...ids, vendorId: item.companyId?._id });
+    }
+
+    // setPopup({ ...popup, [name]: !popup[name] });
+  };
+
+  console.log(popup);
+
+  const handleClick = (e) => {
+    // console.log(e.target.name);
+    setPopup({ ...popup, [e.target.name]: !popup[e.target.name] });
+  };
 
   const handleBack = () => {
     try {
@@ -150,9 +188,21 @@ function InspectionForm() {
     }
   };
 
+  const DropDown = ({ children }) => {
+    return (
+      <>
+        <div className="absolute top-[60px] shadow mt-2 bg-white w-full z-50  ">
+          <ul className="ml-6 h-[130px] overflow-x-auto cursor-pointer">
+            {children}
+          </ul>
+        </div>
+      </>
+    );
+  };
+
   return (
-    <div className="h-[94vh] bg-white py-4">
-      <div className="grid gap-8 w-[95%] mx-auto">
+    <div className="h-[91vh] bg-white py-4">
+      <div className="grid gap-8 w-[95%] h-full mx-auto">
         <div>
           <button
             onClick={handleBack}
@@ -162,7 +212,7 @@ function InspectionForm() {
           </button>
         </div>
         <form
-          className="grid gap-8 md:grid-cols-2 w-full h-[60%] overflow-auto"
+          className="grid gap-8 md:grid-cols-2 w-full h-full overflow-auto"
           onSubmit={formik.handleSubmit}
         >
           <div className="col-span-2 h-[40vh]  border-2 border-dashed border-black rounded-md overflow-hidden flex">
@@ -172,17 +222,58 @@ function InspectionForm() {
               message={"Upload Packing List"}
             />
           </div>
-          <InputField
-            label="Name of Buyer"
-            name="nameOfBuyer"
-            type="text"
-            value={formik.values.nameOfBuyer}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.nameOfBuyer && formik.errors.nameOfBuyer}
-            placeholder={"Enter the Email of User"}
-            labelColor={"bg-white"}
-          />
+          <div className="relative">
+            <InputField
+              label="Name of Buyer"
+              name="nameOfBuyer"
+              type="text"
+              value={formik.values.nameOfBuyer}
+              onChange={formik.handleChange}
+              handleClick={handleClick}
+              onBlur={formik.handleBlur}
+              error={formik.touched.nameOfBuyer && formik.errors.nameOfBuyer}
+              placeholder={"Enter the Email of User"}
+              labelColor={"bg-white"}
+            />
+            {popup.nameOfBuyer && (
+              <DropDown>
+                {userRelations["Buyer"]?.map((item, index) => {
+                  const intials = item?.companyId?.name
+                    ?.charAt(0)
+                    .toUpperCase();
+                  console.log(intials);
+                  return (
+                    <li
+                      key={index}
+                      className="py-2 flex items-center gap-4 mr-2 border-b"
+                      onClick={() => {
+                        handleDropDownSelect("nameOfBuyer", "addOfBuyer", item);
+                        handleClick();
+                      }}
+                    >
+                      <span className="w-6 h-6 bg-blue flex justify-center items-center rounded-full">
+                        {intials}
+                      </span>
+                      <span className="flex-1 text-xs">
+                        {item.companyId?.name}
+                      </span>
+                      <span className="flex gap-2 items-center">
+                        <img
+                          src={gps}
+                          alt="gps"
+                          className="w-[16px] h-[16px]"
+                        />
+                        <span className="text-[10px]">
+                          {item.companyId?.city}, {item.companyId?.country}
+                        </span>
+                      </span>
+                    </li>
+                  );
+                })}
+              </DropDown>
+            )}
+          </div>
+
           <InputField
             label="Address of Buyer"
             name="addOfBuyer"
@@ -194,17 +285,64 @@ function InspectionForm() {
             placeholder={"Enter the Email of User"}
             labelColor={"bg-white"}
           />
-          <InputField
-            label="Name of Factory"
-            name="nameOfFactory"
-            type="text"
-            value={formik.values.nameOfFactory}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.nameOfFactory && formik.errors.nameOfFactory}
-            placeholder={"Enter the Email of User"}
-            labelColor={"bg-white"}
-          />
+          <div className="relative">
+            <InputField
+              label="Name of Factory"
+              name="nameOfFactory"
+              type="text"
+              value={formik.values.nameOfFactory}
+              onChange={formik.handleChange}
+              handleClick={handleClick}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.nameOfFactory && formik.errors.nameOfFactory
+              }
+              placeholder={"Enter the Email of User"}
+              labelColor={"bg-white"}
+            />
+
+            {popup.nameOfFactory && (
+              <DropDown>
+                {userRelations["Factory"]?.map((item, index) => {
+                  const intials = item?.companyId?.name
+                    ?.charAt(0)
+                    .toUpperCase();
+                  console.log(intials);
+                  return (
+                    <li
+                      key={index}
+                      className="py-2 flex items-center gap-4 mr-2 border-b"
+                      onClick={() =>
+                        handleDropDownSelect(
+                          "nameOfFactory",
+                          "addOfFactory",
+                          item
+                        )
+                      }
+                    >
+                      <span className="w-6 h-6 bg-blue flex justify-center items-center rounded-full">
+                        {intials}
+                      </span>
+                      <span className="flex-1 text-xs">
+                        {item.companyId?.name}
+                      </span>
+                      <span className="flex gap-2 items-center">
+                        <img
+                          src={gps}
+                          alt="gps"
+                          className="w-[16px] h-[16px]"
+                        />
+                        <span className="text-[10px]">
+                          {item.companyId?.city}, {item.companyId?.country}
+                        </span>
+                      </span>
+                    </li>
+                  );
+                })}
+              </DropDown>
+            )}
+          </div>
+
           <InputField
             label="Address of Factory"
             name="addOfFactory"
@@ -216,30 +354,74 @@ function InspectionForm() {
             placeholder={"Enter the Email of User"}
             labelColor={"bg-white"}
           />
-          <InputField
-            label="Name of QC Agency"
-            name="nameOfQcAgency"
-            type="text"
-            value={formik.values.nameOfQcAgency}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.touched.nameOfQcAgency && formik.errors.nameOfQcAgency
-            }
-            placeholder={"Enter the Email of User"}
-            labelColor={"bg-white"}
-          />
-          <InputField
-            label="Name Of QC Head"
-            name="nameOfQcHead"
-            type="text"
-            value={formik.values.nameOfQcHead}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.nameOfQcHead && formik.errors.nameOfQcHead}
-            placeholder={"Enter the Email of User"}
-            labelColor={"bg-white"}
-          />
+          <div className="relative">
+            <InputField
+              label="Name of QC Agency"
+              name="nameOfQcAgency"
+              type="text"
+              value={formik.values.nameOfQcAgency}
+              onChange={formik.handleChange}
+              handleClick={handleClick}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.nameOfQcAgency && formik.errors.nameOfQcAgency
+              }
+              placeholder={"Enter the Email of User"}
+              labelColor={"bg-white"}
+            />
+            {popup.nameOfQcAgency && (
+              <DropDown>
+                {userRelations["QC Agency"]?.map((item, index) => {
+                  const intials = item?.companyId?.name
+                    ?.charAt(0)
+                    .toUpperCase();
+                  console.log(intials);
+                  return (
+                    <li
+                      key={index}
+                      className="py-2 flex items-center gap-4 mr-2 border-b"
+                      onClick={
+                        () => {}
+                        // handleDropDownSelect("nameOfBuyer", "addOfBuyer", item)
+                      }
+                    >
+                      <span className="w-6 h-6 bg-blue flex justify-center items-center rounded-full">
+                        {intials}
+                      </span>
+                      <span className="flex-1 text-xs">
+                        {item.companyId?.name}
+                      </span>
+                      <span className="flex gap-2 items-center">
+                        <img
+                          src={gps}
+                          alt="gps"
+                          className="w-[16px] h-[16px]"
+                        />
+                        <span className="text-[10px]">
+                          {item.companyId?.city}, {item.companyId?.country}
+                        </span>
+                      </span>
+                    </li>
+                  );
+                })}
+              </DropDown>
+            )}
+          </div>
+          <div>
+            <InputField
+              label="Name Of QC Head"
+              name="nameOfQcHead"
+              type="text"
+              value={formik.values.nameOfQcHead}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.nameOfQcHead && formik.errors.nameOfQcHead}
+              placeholder={"Enter the Email of User"}
+              labelColor={"bg-white"}
+            />
+
+            {popup.nameOfQcHead && {}}
+          </div>
 
           {/* <Input
             label="Invoice Number"
@@ -394,7 +576,7 @@ function InspectionForm() {
               Add another Purchase Order
             </button>
           </div>
-          <div className="flex col-span-2 justify-end gap-4">
+          <div className="flex col-span-2 justify-end gap-4 mb-5">
             <button
               type="button"
               className="px-8 py-2 outline rounded-md outline-2 text-[#CCCCCC] font-semibold hover:opacity-90 outline-[#CCCCCC]"
