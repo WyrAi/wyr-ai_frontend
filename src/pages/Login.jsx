@@ -11,6 +11,7 @@ const Login = () => {
   // const navigate = useNavigate();
   const { setAuth } = useContext(AuthContext);
   const { setToken } = userGloabalContext();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -33,6 +34,7 @@ const Login = () => {
         console.log("got token");
         setToken(res.data.token);
         setAuth(res.data.token);
+        navigate("/dashboard");
       })
       .catch((err) => {
         console.log(err);
