@@ -4,12 +4,25 @@ import DropZone from "../Components/DropZone";
 import InputField from "./InputField";
 import addUser from "../assets/noun-add-account-6047901 1.svg";
 import sample from "../assets/Rectangle 25.png";
+import { useEffect, useState } from "react";
+import wyraiApi from "../api/wyraiApi";
+import userGloabalContext from "../UserContext";
 
-const PackingList = ({ purchaseOrder, setPurchaseOrder, handlesubmit }) => {
-  //   const [purchaseOrder, setPurchaseOrder] = useState([]);
-  //   const initialValues = {
-
-  //   };
+const PackingList = ({
+  purchaseOrder,
+  setPurchaseOrder,
+  handlesubmit,
+  data,
+  poIndex,
+  productIndex,
+  handleProductChange,
+}) => {
+  const { companyId } = userGloabalContext();
+  console.log(data.styleId);
+  const productList = data;
+  const [branchData, setBranchData] = useState(null);
+  const [branch, setBranch] = useState(null);
+  const [popup, setPopup] = useState(false);
 
   const validationSchema = Yup.object().shape({
     from: Yup.number()
@@ -35,16 +48,17 @@ const PackingList = ({ purchaseOrder, setPurchaseOrder, handlesubmit }) => {
       .positive("Must be positive")
       .integer("Must be an integer"),
   });
-
+  console.log(data);
   const formik = useFormik({
-    initialValues: purchaseOrder,
+    initialValues: { ...data },
     onSubmit: (values, actions) => {
       // Handle form submission
-      console.log(values);
+      //   console.log(values);
       actions.setSubmitting(false);
     },
     validationSchema,
   });
+  console.log(formik.values);
 
   const validationCheck = async (name, value) => {
     try {
@@ -56,29 +70,64 @@ const PackingList = ({ purchaseOrder, setPurchaseOrder, handlesubmit }) => {
       formik.setFieldError(name, error.message); // Set error message
     }
   };
-  console.log(formik.values.from);
+  //   console.log(formik.values.from);
 
   async function handleInputChange(e) {
     const name = e.target.name;
     const value = e.target.value;
-    console.log(name);
-    validationCheck(name, value);
-    // setPurchaseOrder({ ...purchaseOrder, [name]: value });
-    setPurchaseOrder((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+
+    // validationCheck(name, value);
+    handleProductChange(poIndex, productIndex, name, value);
 
     formik.setFieldValue(name, value);
   }
 
-  //   console.log(purchaseOrder);
+  const handleDropDownSelect = (item) => {
+    console.log(item);
+
+    handleProductChange(poIndex, productIndex, "branch", item?._id);
+    setBranch(item?.branchName);
+  };
+
+  const DropDown = ({ children }) => {
+    return (
+      <>
+        <div className="absolute top-[60px] shadow mt-2 bg-white w-full z-50  ">
+          <ul className="ml-6 h-[130px] overflow-x-auto cursor-pointer">
+            {children}
+          </ul>
+        </div>
+      </>
+    );
+  };
+
+  useEffect(() => {
+    // formik.setFieldValue("styleName", productList?.styleName);
+    // formik.setFieldValue("styleId", productList?.styleId);
+
+    // setPurchaseOrder((prevState) => ({
+    //   ...prevState,
+    //   ["styleName"]: productList?.styleName,
+    //   ["styleId"]: productList?.styleId,
+    //   ["id"]: productList?._id,
+    // }));
+    console.log(formik.values.styleId);
+
+    wyraiApi
+      .get(`/api/UserBranchesGet/${companyId}`)
+      .then((res) => setBranchData(res.data.Response.Branches))
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <>
       <div className=" grid md:grid-cols-[1fr_repeat(7,2fr)_1fr] gap-2 items-center">
         <div className=" h-12 w-12  mb-4 mx-auto ">
-          <img src={sample} alt="photo" className="h-full w-full " />
+          <img
+            src={productList?.images?.[0]}
+            alt="photo"
+            className="h-full w-full "
+          />
         </div>
         <div>
           <InputField
@@ -115,7 +164,7 @@ const PackingList = ({ purchaseOrder, setPurchaseOrder, handlesubmit }) => {
             label={"Style Name"}
             name={"styleName"}
             type="text"
-            value={formik.values.styleName}
+            value={productList?.styleId}
             onChange={handleInputChange}
             onBlur={formik.handleBlur}
             error={formik.touched.styleName && formik.errors.styleName}
@@ -132,7 +181,7 @@ const PackingList = ({ purchaseOrder, setPurchaseOrder, handlesubmit }) => {
             label="StyleId"
             name="styleId"
             type="text"
-            value={formik.values.styleId}
+            value={productList?.styleId}
             onChange={handleInputChange}
             onBlur={formik.handleBlur}
             error={formik.touched.styleId && formik.errors.styleId}
@@ -190,10 +239,47 @@ const PackingList = ({ purchaseOrder, setPurchaseOrder, handlesubmit }) => {
             padding={"py-2"}
           />
         </div>
-        <button className=" mb-8 " onClick={() => {}}>
+        <div
+          className=" relative mb-8  cursor-pointer"
+          onClick={() => setPopup(!popup)}
+        >
           <span className="text-[10px]">Assign Factory</span>
-          <img src={addUser} alt="add" className="w-6 h-6 m-auto" />
-        </button>
+          <div className="flex justify-around items-center">
+            <img
+              src={addUser}
+              alt="add"
+              className={`w-6 h-6 ${branch ? "" : "m-auto"}`}
+            />
+            {branch && (
+              <span className="w-5 h-5 bg-blue flex justify-center items-center rounded-full">
+                {branch?.charAt(0).toUpperCase()}
+              </span>
+            )}
+          </div>
+
+          {popup && (
+            <DropDown>
+              {branchData.map((item, index) => {
+                console.log(item);
+                return (
+                  <li
+                    key={index}
+                    className="py-2 flex items-center gap-4 mr-2 border-b"
+                    onClick={() => handleDropDownSelect(item)}
+                  >
+                    <span className="flex-1 text-xs">{item?.branchName}</span>
+                    {/* <span className="flex gap-2 items-center">
+                      <img src={gps} alt="gps" className="w-[16px] h-[16px]" />
+                      <span className="text-[10px]">
+                        {item.companyId?.city}, {item.companyId?.country}
+                      </span>
+                    </span> */}
+                  </li>
+                );
+              })}
+            </DropDown>
+          )}
+        </div>
       </div>
     </>
   );

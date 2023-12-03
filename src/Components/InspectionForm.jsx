@@ -31,14 +31,26 @@ import gps from "../assets/ion_location-outline.svg";
  */
 
 function InspectionForm() {
-  const { startTime, companyId } = userGloabalContext();
+  const { startTime, companyId, userInformation } = userGloabalContext();
   const [userRelations, setUserRelations] = useState("");
+  const [qcUser, setQcUsers] = useState([]);
 
   const [packingListFiles, setPackingListFiles] = useState(null);
   const [inspectionDate, setInspectionDate] = useState(new Date());
   const [slotOfInspection, setSlotOfInspection] = useState([]);
-  const [addpurchaseOrder, setAddPurchaseOrder] = useState([]);
+
+  const [poNumber, setPoNumber] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [added, setAdded] = useState(false);
+  const [ids, setIds] = useState({
+    buyerId: "",
+    factoryId: "",
+    qcId: "",
+    qcHeadId: "",
+  });
+
   const initials = {
+    images: "",
     from: "",
     to: "",
     styleId: "",
@@ -46,10 +58,42 @@ function InspectionForm() {
     quantityPerBox: "",
     totalBox: "",
     totalQuantity: "",
+    branch: "",
   };
+
   const [purchaseOrder, setPurchaseOrder] = useState(initials);
+  const initialPoData = { poNumber: "", poId: "", products: [initials] };
+
+  const [addpurchaseOrder, setAddPurchaseOrder] = useState([initialPoData]);
+
+  const handlePoNumberChange = (index, item) => {
+    setProducts([item]);
+    const newPurchaseOrder = [...addpurchaseOrder];
+
+    newPurchaseOrder[index].poNumber = item?.poNumber;
+    newPurchaseOrder[index].poId = item?._id;
+    newPurchaseOrder[index].products = item?.products?.map((item, index) => {
+      return {
+        ...addpurchaseOrder[index].products[0],
+        styleId: item.styleId,
+        styleName: item.styleName,
+        images: item.images,
+      };
+    });
+    setAddPurchaseOrder(newPurchaseOrder);
+  };
+  const handleProductChange = (poIndex, productIndex, field, value) => {
+    console.log(poIndex, productIndex, field, value);
+    const newPurchaseOrders = [...addpurchaseOrder];
+    newPurchaseOrders[poIndex].products[productIndex][field] = value;
+    setAddPurchaseOrder(newPurchaseOrders);
+  };
+
+  const addNewPo = () => {
+    setAddPurchaseOrder([...addpurchaseOrder, { ...initialPoData }]);
+  };
+
   const [count, setCount] = useState(1);
-  // const [inspectionTime, setInspectionTime] = useState('');
   const navigate = useNavigate();
   const initialValues = {
     nameOfBuyer: "",
@@ -59,7 +103,6 @@ function InspectionForm() {
     nameOfFactory: "",
     addOfFactory: "",
     totalCarton: "",
-    inv_number: "",
     po_number: "",
     // slotOfInspection: slotOfInspection,
   };
@@ -84,22 +127,7 @@ function InspectionForm() {
     onSubmit: (values) => handleSubmit(values),
     validationSchema,
   });
-  //
-  async function handleSubmit(values) {
-    try {
-      console.log(values);
-      const reqbody = {
-        ...formik.values,
-        addpurchaseOrder,
-        slotOfInspection,
-      };
-      console.log(reqbody);
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
-  // const popupIntials =
   const [popup, setPopup] = useState({
     nameOfBuyer: false,
     nameOfQcAgency: false,
@@ -107,8 +135,6 @@ function InspectionForm() {
     nameOfQcHead: false,
     po_number: false,
   });
-
-  console.log(popup.nameOfFactory);
 
   const addSlotOfInspection = () => {
     try {
@@ -121,7 +147,6 @@ function InspectionForm() {
     }
   };
 
-  // console.log(slotOfInspection[0].date);
   const clearFieldData = (data, setData) => {
     const clearedData = Object.fromEntries(
       Object.keys(data).map((key) => [key, ""])
@@ -129,17 +154,7 @@ function InspectionForm() {
     console.log(clearedData);
     setData(clearedData);
   };
-  console.log(purchaseOrder);
-  const handleAddAnotherPurchase = () => {
-    try {
-      // console.log(purchaseOrder, "TEST");
-      setAddPurchaseOrder([...addpurchaseOrder, { ...purchaseOrder }]);
-      // clearFieldData(purchaseOrder, setPurchaseOrder);
-      setPurchaseOrder((prevState) => ({ ...prevState, ...initials }));
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   const getAllData = () => {
     wyraiApi
       .get(`/api/getAllCompanyByRole/${companyId}`)
@@ -147,36 +162,62 @@ function InspectionForm() {
       .catch((err) => console.log(err));
   };
 
-  useEffect(() => {
-    getAllData();
-  }, []);
-
-  console.log(userRelations);
-
-  useEffect(() => {
-    setPurchaseOrder(initials);
-  }, [addpurchaseOrder]);
-
-  const handleDropDownSelect = (name, address, item) => {
-    console.log("test");
+  const getQCUsers = (item, name) => {
+    setPopup({ ...popup, [name]: !popup[name] });
+    setIds({ ...ids, qcId: item?.companyId?._id });
     formik.setFieldValue(name, item.companyId?.name);
-    formik.setFieldValue(
-      address,
-      `${item.companyId?.city}, ${item.companyId?.country}`
-    );
-    if (name === "nameOfBuyer") {
-      setIds({ ...ids, buyerId: item.companyId?._id });
-    } else {
-      setIds({ ...ids, vendorId: item.companyId?._id });
-    }
-
-    // setPopup({ ...popup, [name]: !popup[name] });
+    wyraiApi
+      .get(`/api/qcAssignmentRolePeoples/${item?.companyId?._id}`)
+      .then((res) => {
+        setQcUsers(res.data.Data);
+      })
+      .catch((err) => console.log(err));
   };
 
-  console.log(popup);
+  useEffect(() => {
+    getAllData();
+    if (userInformation?.companyId?.companyRole === "Factory") {
+      setIds({ ...ids, factoryId: companyId });
+      formik.setFieldValue("nameOfFactory", userInformation?.companyId?.name);
+      formik.setFieldValue(
+        "addOfFactory",
+        userInformation?.companyId?.city +
+          ", " +
+          userInformation?.companyId?.country
+      );
+    }
+  }, []);
+
+  const handleDropDownSelect = (name, address, item) => {
+    setPopup({ ...popup, [name]: !popup[name] });
+
+    formik.setFieldValue(name, item?.name);
+    formik.setFieldValue(address, `${item?.city}, ${item?.country}`);
+
+    if (name === "nameOfBuyer") {
+      wyraiApi
+        .get(`/api/PoGetFromUser/${userInformation?._id}/${item?._id}`)
+        .then((res) => setPoNumber(res.data.Response));
+      setIds({ ...ids, buyerId: item?._id });
+    } else if (name === "nameOfQcHead") {
+      setIds({ ...ids, qcHeadId: item?._id });
+    } else {
+      // setIds({ ...ids, vendorId: item?._id });
+    }
+  };
+
+  const [activePoNumber, setActivePoNumber] = useState(null);
+
+  const toggleDropDown = (key) => {
+    console.log(activePoNumber, key);
+    if (activePoNumber === key) {
+      setActivePoNumber(null);
+    } else {
+      setActivePoNumber(key);
+    }
+  };
 
   const handleClick = (e) => {
-    // console.log(e.target.name);
     setPopup({ ...popup, [e.target.name]: !popup[e.target.name] });
   };
 
@@ -187,6 +228,20 @@ function InspectionForm() {
       console.error(error);
     }
   };
+  async function handleSubmit() {
+    try {
+      const reqbody = {
+        ...formik.values,
+        addpurchaseOrder,
+        slotOfInspection,
+        packingListFiles,
+        ...ids,
+      };
+      console.log(formik.values);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const DropDown = ({ children }) => {
     return (
@@ -241,14 +296,17 @@ function InspectionForm() {
                   const intials = item?.companyId?.name
                     ?.charAt(0)
                     .toUpperCase();
-                  console.log(intials);
                   return (
                     <li
                       key={index}
                       className="py-2 flex items-center gap-4 mr-2 border-b"
                       onClick={() => {
-                        handleDropDownSelect("nameOfBuyer", "addOfBuyer", item);
-                        handleClick();
+                        handleDropDownSelect(
+                          "nameOfBuyer",
+                          "addOfBuyer",
+                          item?.companyId
+                        );
+                        // handleClick();
                       }}
                     >
                       <span className="w-6 h-6 bg-blue flex justify-center items-center rounded-full">
@@ -299,6 +357,7 @@ function InspectionForm() {
               }
               placeholder={"Enter the Email of User"}
               labelColor={"bg-white"}
+              disable={true}
             />
 
             {popup.nameOfFactory && (
@@ -307,7 +366,6 @@ function InspectionForm() {
                   const intials = item?.companyId?.name
                     ?.charAt(0)
                     .toUpperCase();
-                  console.log(intials);
                   return (
                     <li
                       key={index}
@@ -316,7 +374,7 @@ function InspectionForm() {
                         handleDropDownSelect(
                           "nameOfFactory",
                           "addOfFactory",
-                          item
+                          item?.companyId
                         )
                       }
                     >
@@ -375,13 +433,12 @@ function InspectionForm() {
                   const intials = item?.companyId?.name
                     ?.charAt(0)
                     .toUpperCase();
-                  console.log(intials);
                   return (
                     <li
                       key={index}
                       className="py-2 flex items-center gap-4 mr-2 border-b"
                       onClick={
-                        () => {}
+                        () => getQCUsers(item, "nameOfQcAgency")
                         // handleDropDownSelect("nameOfBuyer", "addOfBuyer", item)
                       }
                     >
@@ -407,20 +464,57 @@ function InspectionForm() {
               </DropDown>
             )}
           </div>
-          <div>
+          <div className="relative">
             <InputField
               label="Name Of QC Head"
               name="nameOfQcHead"
               type="text"
               value={formik.values.nameOfQcHead}
               onChange={formik.handleChange}
+              handleClick={handleClick}
               onBlur={formik.handleBlur}
               error={formik.touched.nameOfQcHead && formik.errors.nameOfQcHead}
               placeholder={"Enter the Email of User"}
               labelColor={"bg-white"}
             />
 
-            {popup.nameOfQcHead && {}}
+            {popup.nameOfQcHead && (
+              <DropDown>
+                {qcUser?.map((item, index) => {
+                  const intials = item?.name?.charAt(0).toUpperCase();
+                  return (
+                    <li
+                      key={index}
+                      className="py-2 flex items-center gap-4 mr-2 border-b"
+                      onClick={() =>
+                        handleDropDownSelect("nameOfQcHead", "", item)
+                      }
+                    >
+                      <span className="w-6 h-6 bg-blue flex justify-center items-center rounded-full">
+                        {intials}
+                      </span>
+                      <div className="flex flex-col flex-1 ">
+                        <span className=" text-xs font-medium">
+                          {item?.name}
+                        </span>
+                        <span className=" text-xs">{item?.email}</span>
+                      </div>
+
+                      {/* <span className="flex gap-2 items-center">
+                        <img
+                          src={gps}
+                          alt="gps"
+                          className="w-[16px] h-[16px]"
+                        />
+                        <span className="text-[10px]">
+                          {item?.city}, {item?.country}
+                        </span>
+                      </span> */}
+                    </li>
+                  );
+                })}
+              </DropDown>
+            )}
           </div>
 
           {/* <Input
@@ -518,58 +612,76 @@ function InspectionForm() {
               />
             </div>
           </div>
-          {[...Array(count)].map((_, index) => (
-            <div className="flex md:flex-col bg-slimeGray p-2 rounded-md col-span-2 gap-4 items-center ">
+
+          {addpurchaseOrder.map((item, poIndex) => (
+            <div
+              key={poIndex}
+              className="flex md:flex-col bg-slimeGray p-2 rounded-md col-span-2 gap-4 items-center "
+            >
               <div className="flex w-full items-center  ">
                 <div className=" flex-1 ">
-                  <div className="flex items-center gap-5">
-                    <div className="w-1/2">
-                      <InputField
-                        label="PO Number"
-                        name="po_number"
-                        type="text"
-                        value={formik.values.po_number}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        error={
-                          formik.touched.po_number && formik.errors.po_number
-                        }
-                        placeholder={"Enter the PO number"}
-                        labelColor={"bg-white"}
-                      />
+                  <div className="w-1/2 relative">
+                    <div
+                      className="relative flex items-center justify-between p-1 px-4 py-4 hover:opacity-95 w-full h-[60px] bg-gray-50 border border-gray-400 rounded-md shadow-sm focus:outline-none focus:bg-white"
+                      onClick={() => toggleDropDown(poIndex)}
+                    >
+                      <div className="flex flex-col h-full overflow-y-auto w-full cursor-pointer">
+                        <span>{item?.poNumber}</span>
+                      </div>
+                      <span className="absolute top-[-13px] bg-white px-2 left-[50px]">
+                        Po Number
+                      </span>
                     </div>
-                    {/* <div className="flex-1 flex gap-2">
-                    {names.length &&
-                      names.map((name, index) => (
-                        <div
-                          key={index}
-                          className="relative flex justify-center  items-center  bg-blue rounded-full h-9 w-9"
-                        >
-                          <span className="font-semibold text-sm text-white w-full text-center">
-                            {name.charAt(0).toUpperCase()}
-                          </span>
-                          <RiCloseCircleFill className="absolute top-[30px] right-0 bg-white rounded-full" />
-                        </div>
-                      ))}
-                    <img src={addUser} alt="addUser" className="h-9 w-9" />
-                  </div> */}
+                    {activePoNumber === poIndex && (
+                      <DropDown>
+                        {poNumber?.map((item, index) => {
+                          return (
+                            <li
+                              key={index}
+                              className="py-2 flex items-center gap-4 mr-2 border-b"
+                              onClick={() => {
+                                toggleDropDown(poIndex);
+                                handlePoNumberChange(poIndex, item?.poList[0]);
+                              }}
+                            >
+                              {/* <span className="w-6 h-6 bg-blue flex justify-center items-center rounded-full">
+                                {item?.poList?.name?.poNumber}
+                              </span> */}
+                              <div className="flex flex-col flex-1 ">
+                                <span className=" text-md font-medium">
+                                  PO Number- {item?.poList[0]?.poNumber}
+                                </span>
+                                <span className=" text-xs">{item?.email}</span>
+                              </div>
+                            </li>
+                          );
+                        })}
+                      </DropDown>
+                    )}
                   </div>
                 </div>
               </div>
-              <PackingList
-                purchaseOrder={purchaseOrder}
-                setPurchaseOrder={setPurchaseOrder}
-                handlesubmit={handleAddAnotherPurchase}
-              />
+              {item?.products?.map((item, productIndex) => {
+                console.log(item);
+                return (
+                  <PackingList
+                    key={products?._id}
+                    purchaseOrder={item}
+                    setPurchaseOrder={setPurchaseOrder}
+                    handleProductChange={handleProductChange}
+                    poNumber={poNumber}
+                    data={item}
+                    poIndex={poIndex}
+                    productIndex={productIndex}
+                  />
+                );
+              })}
             </div>
           ))}
           <div className="grid col-span-2 pb-5">
             <button
               type="button"
-              onClick={() => {
-                handleAddAnotherPurchase();
-                setCount((prevCount) => prevCount + 1);
-              }}
+              onClick={addNewPo}
               className="flex bg-[#1b9aef42] p-3 text-blue font-semibold items-center gap-4"
             >
               <AiOutlinePlus size={28} />
@@ -586,10 +698,7 @@ function InspectionForm() {
             <button
               type="submit"
               className="px-8 py-2 outline bg-[#CCCCCC] text-white rounded-md outline-2 hover:opacity-90 outline-[#CCCCCC] font-semibold "
-              onClick={() => {
-                handleAddAnotherPurchase();
-                handleSubmit();
-              }}
+              onClick={handleSubmit}
             >
               Publish
             </button>
