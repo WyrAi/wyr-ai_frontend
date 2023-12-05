@@ -13,6 +13,8 @@ import userGloabalContext from "../UserContext";
 import Page404 from "../pages/Page404";
 import useToast from "../Contexts/ToasterContext";
 import InspectionForm from "../Components/InspectionForm";
+import QcInspection from "../pages/QcInspection";
+import InspectionView from "../Components/InspectionView";
 
 const IsRouteAllowed = (props) => {
   const { hasPermissions, children } = props;
@@ -39,6 +41,8 @@ const ProtectedRoutes = () => {
         <Route path="/purchase/add" element={<PurchaseOrder />} />
         <Route path="/inspection" element={<Inspection />} />
         <Route path="/inspection/add" element={<InspectionForm />} />
+        <Route path="/qcInspection" element={<QcInspection />} />
+        <Route path="/inspection/view/:id" element={<InspectionView />} />
         {/* {userRights?.userManagement?.length ? ( */}
         <Route
           path="/user"

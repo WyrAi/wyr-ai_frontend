@@ -202,13 +202,7 @@ const UserMgt = () => {
               </div>
               <div
                 className="flex cursor-pointer pl-6 gap-1 py-3"
-                onClick={() => {
-                  if (false) {
-                    setAddBranchPopUp(!addBranchPopUp);
-                  } else {
-                    toast.error("Action not allowed");
-                  }
-                }}
+                onClick={() => setAddBranchPopUp(!addBranchPopUp)}
               >
                 <img src={plus} alt="add" />
                 <span className="text-[#1B9BEF] font-bold">Add branch</span>
@@ -239,3 +233,5 @@ const UserMgt = () => {
 };
 
 export default UserMgt;
+
+// toast.error("Action not allowed");

@@ -19,6 +19,7 @@ const Nav = () => {
     }
     return [];
   }, [userInformation?.role?.SelectAccess]);
+  console.log(userRights);
 
   return (
     <>

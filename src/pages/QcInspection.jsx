@@ -1,5 +1,3 @@
-/** @format */
-
 import React, { useEffect, useState } from "react";
 import FilterBlock from "../Components/FiltersBlock";
 import SortFilter from "../Components/SortFilter";
@@ -45,39 +43,41 @@ const sortFilter_Opt = [
     color: "#B08968",
   },
   {
-    text: "Drafts",
+    text: "UnApproved",
     color: "#666666",
   },
   {
-    text: "Pending Approval",
+    text: "Pending QC Assign",
     color: "#FB8B24",
   },
   {
-    text: "Approved",
+    text: "Completed",
     color: "#52B788",
   },
 ];
 
-const Inspection = () => {
+const QcInspection = () => {
   const [selectedFilter, setSelectedFilter] = useState(filters[0]);
   const [sortFilter, setSortFilter] = useState(sortFilter_Opt[0]);
   const [plData, setPlData] = useState([]);
   const navigate = useNavigate();
   const { userInformation } = userGloabalContext();
-  console.log(userInformation);
+  console.log(userInformation?._id);
 
   function handleAddPage() {
     try {
-      navigate("/inspection/add");
+      navigate("/qcinspection/add");
     } catch (error) {
       console.log(error);
     }
   }
 
   useEffect(() => {
-    wyraiApi
-      .get(`/api/PlDisplay/${userInformation?._id}`)
-      .then((res) => setPlData(res.data.Response.plList));
+    if (userInformation?._id.length > 0) {
+      wyraiApi
+        .get(`/api/PlDisplay/${userInformation?._id}`)
+        .then((res) => setPlData(res.data.Response));
+    }
   }, []);
 
   console.log(plData);
@@ -97,7 +97,7 @@ const Inspection = () => {
             onClick={handleAddPage}
             className="bg-blue p-3 rounded-md font-bold text-white w-[40vh]"
           >
-            Schedule Inspection
+            View Upcoming Inspection
           </button>
         </div>
         <div>
@@ -112,6 +112,7 @@ const Inspection = () => {
           <div className="flex flex-wrap w-full h-24 gap-6">
             {plData?.map((value, index) => {
               const { packingListFiles, buyerId, status, _id } = value;
+              console.log(value);
               return (
                 <InspectionCard
                   k={index}
@@ -133,4 +134,4 @@ const Inspection = () => {
   );
 };
 
-export default Inspection;
+export default QcInspection;

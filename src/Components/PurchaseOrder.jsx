@@ -162,9 +162,9 @@ function PurchaseOrder() {
         (item) => item === "Approve"
       )
     ) {
-      status = "Published";
+      status = "Approved";
     } else {
-      status = "Pending";
+      status = "Pending Approval";
     }
     // console.log(slotOfProducts.length);
     let requestBody = {};
