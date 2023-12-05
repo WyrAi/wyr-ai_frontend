@@ -10,7 +10,7 @@ import ResetPassword from "../pages/ResetPassword";
 import SuccessRelation from "../container/SuccessRelation";
 import InspectionForm from "../Components/InspectionForm";
 import ReportVideos from "../pages/ReportVideos";
-import QcInspection from "../pages/QcInspection";
+
 // import Dialog from "../Components/Dialog";
 // import Inspection from "../pages/Inspection";
 
