@@ -75,7 +75,7 @@ const CompanyDetailsForm = () => {
   };
 
   useEffect(() => {
-    if (!companyId) {
+    if (companyId) {
       navigate("/dashboard");
     }
   }, [companyId]);
