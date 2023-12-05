@@ -47,37 +47,69 @@ const Information = () => {
     // Check if the capture element is found
 
     if (capture) {
-      // Clone the scrollable content into a new div
-      const cloneDiv = document.createElement("div");
-      cloneDiv.innerHTML = capture.innerHTML;
-      cloneDiv.style.overflow = "visible";
-      cloneDiv.style.height = "auto";
-      cloneDiv.style.width = capture.offsetWidth + "px";
-      // Append the clone to the document (you may need to adjust the position)
-      document.body.appendChild(cloneDiv);
       // Use html2canvas options to wait for images to load
       const ignoreElements = [
         ".input-comments",
         ".delete-button",
         ".download-Button",
       ];
-      html2canvas(capture, {
+
+      // // Remove ignored elements from the clone
+      // ignoreElements.forEach((selector) => {
+      //   const elementsToRemove = clone.querySelectorAll(selector);
+      //   elementsToRemove.forEach((element) =>
+      //     element.parentNode.removeChild(element)
+      //   );
+      // });
+      // html2canvas(capture, {
+      //   useCORS: true,
+      //   logging: true,
+      //   allowTaint: true,
+      //   proxy: "path/to/proxy", // Provide a path to a proxy if needed
+      //   ignoreElements: (element) => {
+      //     // Check if the element should be ignored
+      //     return ignoreElements.some((selector) => element.matches(selector));
+      //   },
+      // }).then((canvas) => {
+      //   // Create PDF using jsPDF
+      //   const imgData = canvas.toDataURL("image/png");
+      //   const doc = new jsPDF("p", "mm", "a4");
+      //   const componentWidth = doc.internal.pageSize.getWidth();
+      //   const componentHeight = doc.internal.pageSize.getHeight();
+      //   doc.addImage(imgData, "PNG", 0, 0, componentWidth, componentHeight);
+      //   doc.save("receipt.pdf");
+      // });
+
+      // Create a clone of the capture element to avoid interference with the original content
+      const clone = capture.cloneNode(true);
+
+      // Use html2canvas options to exclude certain elements
+      html2canvas(clone, {
         useCORS: true,
         logging: true,
         allowTaint: true,
         proxy: "path/to/proxy", // Provide a path to a proxy if needed
         ignoreElements: (element) => {
           // Check if the element should be ignored
-          return ignoreElements.some((selector) => element.matches(selector));
+          return (
+            element.nodeName.toLowerCase() === "iframe" ||
+            ignoreElements.some((selector) => element.matches(selector))
+          );
         },
       }).then((canvas) => {
+        // Calculate the proper scale to fit the content into the PDF page
+        const scale = 2; // You can adjust this value
+
         // Create PDF using jsPDF
         const imgData = canvas.toDataURL("image/png");
-        const doc = new jsPDF("p", "mm", "a4");
-        const componentWidth = doc.internal.pageSize.getWidth();
-        const componentHeight = doc.internal.pageSize.getHeight();
-        doc.addImage(imgData, "PNG", 0, 0, componentWidth, componentHeight);
-        doc.save("receipt.pdf");
+        const pdf = new jsPDF("p", "mm", "a4");
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const imgWidth = pdfWidth;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight, "", "FAST");
+        pdf.save("receipt.pdf");
       });
     } else {
       console.error("Element with class 'actual-receipt' not found.");
@@ -88,7 +120,7 @@ const Information = () => {
   }, []);
   return (
     <>
-      <div className="w-full h-full ">
+      <div className="w-full h-full overflow-y-auto xl:h-screen ">
         <div className=" text-right download-Button  py-3 px-4 right-0">
           <button
             className="bg-[#1e96fc] rounded-md px-4 py-2  font-medium text-lg text-white"
@@ -105,7 +137,7 @@ const Information = () => {
             height="100px"
             className="py-4 ml-4"
           />
-          <div className="overflow-y-auto h-[650px]">
+          <div className="">
             <div className="flex justify-between items-center w-full text-2xl">
               <div className="font-bold">
                 <h2>Client Name :{"XYZ"}</h2>
