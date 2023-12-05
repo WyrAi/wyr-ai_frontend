@@ -13,7 +13,6 @@ import ReportVideos from "../pages/ReportVideos";
 // import Dialog from "../Components/Dialog";
 // import Inspection from "../pages/Inspection";
 
-
 const RequiredAuth = (props) => {
   const { auth } = useContext(AuthContext);
   const { children } = props;

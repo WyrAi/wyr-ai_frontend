@@ -48,7 +48,7 @@ export const sideBarData = [
   {
     icon: <img src={reports} className="" alt="" />,
     heading: "Reports",
-    link: "#",
+    link: "/Information_Dashboard",
     name: "reports",
   },
   {
