@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 /** @format */
 
-import {useState} from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 /**
  * A component that renders a datepicker using react-tailwindcss-datepicker library.
@@ -14,31 +14,30 @@ import 'react-datepicker/dist/react-datepicker.css';
  */
 
 const DatepickerComponent = ({
-	selectedDate,
-	setSelectedDate,
-	className,
-	name,
-	inline,
-	onClickOutside,
-	open
+  selectedDate,
+  setSelectedDate,
+  className,
+  name,
+  inline,
+  onClickOutside,
+  open,
 }) => {
-
-	return (
-		<>
-			<DatePicker
-				selected={selectedDate}
-				onChange={(date) => handleChange(date)}
-				name={name}
-				minDate={new Date()}
-				wrapperClassName={'w-full relative'}
-				className={className || ''}
-				onClickOutside={onClickOutside}
-				onFocus={onClickOutside}
-				open={open}
-				inline={inline || false}
-			></DatePicker>
-		</>
-	);
+  return (
+    <>
+      <DatePicker
+        selected={selectedDate}
+        onChange={(date) => setSelectedDate(date)}
+        name={name}
+        minDate={new Date()}
+        wrapperClassName={"w-full relative"}
+        className={className || ""}
+        onClickOutside={onClickOutside}
+        onFocus={onClickOutside}
+        open={open}
+        inline={inline || false}
+      ></DatePicker>
+    </>
+  );
 };
 
 export default DatepickerComponent;

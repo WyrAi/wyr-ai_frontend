@@ -118,24 +118,25 @@ const Purchase = () => {
           />
         </div>
       </div>
-      <div className=" mx-2 w-full flex-1 flex flex-col">
-        <div className="flex flex-wrap gap-2 flex-1 mt-5">
+      <div className=" ml-5 w-full flex-1 flex flex-col">
+        <div className="flex flex-wrap w-full h-24 gap-6">
           {allPOrder?.map((value, index) => {
             const { poNumber, purchaseDoc, buyer, status } = value;
             return (
-              <div className="bg-gray-50 h-[120px] w-[295px]" key={index}>
-                <PoCard
-                  id={poNumber}
-                  purchaseDoc={purchaseDoc}
-                  buyer={buyer.name}
-                  status={status}
-                  statusLabel={sortFilter_Opt}
-                />
-              </div>
+              <PoCard
+                k={index}
+                id={poNumber}
+                purchaseDoc={purchaseDoc}
+                buyer={buyer.name}
+                status={status}
+                statusLabel={sortFilter_Opt}
+              />
             );
           })}
         </div>
-        <div className="text-center mb-5">Pagination</div>
+
+        {/* <div className="flex flex-wrap gap-2 w-full h-[120px] flex-1 mt-5"></div> */}
+        {/* <div className="text-center mb-5">Pagination</div> */}
       </div>
     </main>
   );

@@ -12,8 +12,8 @@ import RelationShip from "../pages/RelationShip";
 import userGloabalContext from "../UserContext";
 import Page404 from "../pages/Page404";
 import useToast from "../Contexts/ToasterContext";
-import Information from "../pages/Information";
 import InformationDashboard from "../pages/InformationDashboard";
+import Information from "../pages/Information";
 
 const IsRouteAllowed = (props) => {
   const { hasPermissions, children } = props;
@@ -44,6 +44,7 @@ const ProtectedRoutes = () => {
         <Route path="/purchase" element={<Purchase />} />
         <Route path="/purchase/add" element={<PurchaseOrder />} />
         <Route path="/inspection" element={<Inspection />} />
+        <Route path="/inspection/add" element={<InspectionForm />} />
         {/* {userRights?.userManagement?.length ? ( */}
         <Route
           path="/user"
