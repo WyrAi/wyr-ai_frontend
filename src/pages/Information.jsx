@@ -5,6 +5,10 @@ import axios from "axios";
 import html2canvas from "html2canvas";
 import "./temp.css";
 import { RiDeleteBack2Fill } from "react-icons/ri";
+import { PiPaperPlaneRightFill } from "react-icons/pi";
+import { MdModeEdit } from "react-icons/md";
+import { AiFillDelete } from "react-icons/ai";
+import { RxCrossCircled } from "react-icons/rx";
 
 const Information = () => {
   const [data, setData] = React.useState([]);
@@ -43,6 +47,10 @@ const Information = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+  const editComment = (infoIndex, commentIndex, text) => {
+    formik.setFieldValue("comment", text);
+    formik.setFieldValue("editingId", id);
   };
 
   // const downloadPDF = () => {
@@ -187,44 +195,156 @@ const Information = () => {
   useEffect(() => {
     InformationGet();
   }, []);
+
+  console.log(data);
   return (
     <>
-      {/* <div className="w-full h-full "> */}
-      <div className=" text-right download-Button py-3 px-4 right-0">
-        <button
-          className="bg-[#1e96fc] rounded-md px-4 py-2  font-medium text-lg text-white"
-          onClick={() => downloadPDF()}
-        >
-          Download
-        </button>
-      </div>
-      <div className=" flex flex-col items-center actual-receipt p-6 ">
-        <img
-          src={logo}
-          alt=""
-          width="240px"
-          height="100px"
-          className="py-4 ml-4"
-        />
-        {/* <div className="overflow-y-auto"> */}
-        <div className="flex justify-between items-center w-full text-2xl">
-          <div className="font-bold">
-            <h2>Client Name :{"XYZ"}</h2>
-            <h2>Vender Name :{"XYZ"}</h2>
-            <h2>Factory Name :{"XYZ"}</h2>
-          </div>
-          <div className="font-bold text-right">
-            <h2>
-              Inspector Name : <span className="font-medium">{"XYZ"}</span>
-            </h2>
-            <h2>
-              Inspector Location:{" "}
-              <span className="font-medium">{"XYZ Factory"}</span>
-            </h2>
-            <h2>
-              Inspector Type:{" "}
-              <span className="font-medium">{"Final Random Inspection"}</span>
-            </h2>
+      <div className="w-full h-full overflow-y-auto xl:h-screen ">
+        <div className=" text-right download-Button  py-3 px-4 right-0">
+          <button
+            className="bg-[#1e96fc] rounded-md px-4 py-2  font-medium text-lg text-white"
+            onClick={() => downloadPDF()}
+          >
+            Download
+          </button>
+        </div>
+        <div className=" flex flex-col items-center actual-receipt p-6 w-full">
+          <img
+            src={logo}
+            alt=""
+            width="240px"
+            height="100px"
+            className="py-4 ml-4"
+          />
+          <div className="">
+            <div className="flex justify-between items-center w-full text-2xl">
+              <div className="font-bold">
+                <h2>Client Name :{"XYZ"}</h2>
+                <h2>Vender Name :{"XYZ"}</h2>
+                <h2>Factory Name :{"XYZ"}</h2>
+              </div>
+              <div className="font-bold text-right">
+                <h2>
+                  Inspector Name : <span className="font-medium">{"XYZ"}</span>
+                </h2>
+                <h2>
+                  Inspector Location:{" "}
+                  <span className="font-medium">{"XYZ Factory"}</span>
+                </h2>
+                <h2>
+                  Inspector Type:{" "}
+                  <span className="font-medium">
+                    {"Final Random Inspection"}
+                  </span>
+                </h2>
+              </div>
+            </div>
+            <div className="flex justify-between items-center w-full text-2xl mt-5">
+              <div className="font-bold">
+                <h2>
+                  Po Number : <span className="font-medium">{"11111"}</span>
+                </h2>
+                <h2>
+                  Style Number : <span className="font-medium">{"J/224"}</span>
+                </h2>
+                <h2>
+                  Color : <span className="font-medium">{"Blue"}</span>
+                </h2>
+                <h2>
+                  Product Description :
+                  <span className="font-medium">
+                    {"100% Cotton, Polo SS blue with dots, man's T-shirt"}
+                  </span>
+                </h2>
+              </div>
+              <div className="font-bold text-right">
+                <h2>
+                  Order Quantity :{" "}
+                  <span className="font-medium">{"1644 Pcs"}</span>
+                </h2>
+                <h2>
+                  Offer Quantity:{" "}
+                  <span className="font-medium">{"800 Pcs"}</span>
+                </h2>
+                <h2>
+                  Product Size & ratio:{" "}
+                  <span className="font-medium">{"20*20(1),40*40(1)"}</span>
+                </h2>
+              </div>
+            </div>
+            <div className=" w-full mt-5 h-full">
+              {data.map((e, InfoIndex) => (
+                <div className="flex pt-5 h-full ">
+                  <img
+                    src={e.image}
+                    alt="Product"
+                    width={"750px"}
+                    height={"400px"}
+                    className="border"
+                  />
+                  <div className="p-5 w-full flex justify-between gap-5">
+                    <div className="flex flex-col justify-between w-full">
+                      <ul className="w-full overflow-auto">
+                        {e?.comment?.length > 0 ? (
+                          e?.comment?.map((comment, CommentIndex) => (
+                            <li
+                              key={CommentIndex}
+                              className="flex items-center justify-between px-4 py-2 mb-2 border-b"
+                            >
+                              <span className="text-sm flex-grow text-lightGray">
+                                {comment}
+                              </span>
+                              <div className="flex gap-5 ">
+                                <MdModeEdit
+                                  className="text-xl text-black cursor-pointer"
+                                  // onClick={() =>
+                                  //   editComment(comment.id, comment.comment)
+                                  // }
+                                />
+                                <AiFillDelete
+                                  className="text-2xl text-red-500 cursor-pointer"
+                                  // onClick={() => removeComment(comment.id)}
+                                />
+                              </div>
+                            </li>
+                          ))
+                        ) : (
+                          <>
+                            <li className="text-center">Add New Comment....</li>
+                          </>
+                        )}
+                      </ul>
+
+                      <div className=" flex gap-5 input-comments w-full">
+                        <input
+                          type="text"
+                          name=""
+                          id=""
+                          className="w-full p-4 rounded-md text-base border-none outline-none"
+                          placeholder="Enter another comment"
+                          onChange={(e) => setComment(e.target.value)}
+                        />
+                        <button
+                          className="bg-[#1e96fc] px-8 text-white text-lg font-medium rounded-md"
+                          onClick={() => AddNewComment(e._id)}
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* <div className="delete-button">
+                      <RiDeleteBack2Fill
+                        fill="#1e96fc"
+                        className="text-3xl cursor-pointer"
+                        width={"40px"}
+                        onClick={() => slotDelete(e._id)}
+                      />
+                    </div> */}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
         <div className="flex justify-between items-center w-full text-2xl mt-5">
@@ -323,3 +443,13 @@ const Information = () => {
 };
 
 export default Information;
+
+{
+  /* <div>
+{e.comment.map((c, index) => (
+  <p className="font-medium text-[20px] capitalize">{`${
+    index + 1
+  }.  ${c}`}</p>
+))}
+</div> */
+}
