@@ -110,6 +110,7 @@ function PurchaseOrder() {
     validationSchema,
   });
   const { values } = formik;
+
   useEffect(() => {
     if (values.nameOfBuyer && values.nameOfVendor) {
       fetchpeople();
@@ -126,7 +127,7 @@ function PurchaseOrder() {
     const { data } = await axios.get(
       import.meta.env.VITE_BASE_URL + `/api/getAllCompanyByRole/${companyId}`
     );
-
+    console.log(data);
     if (userInformation?.companyId?.companyRole === "Buyer") {
       //   console.log(userInformation);
       formik.setFieldValue("nameOfBuyer", userInformation.companyId?.name);
@@ -162,7 +163,7 @@ function PurchaseOrder() {
         (item) => item === "Approve"
       )
     ) {
-      status = "Approved";
+      status = "Published";
     } else {
       status = "Pending Approval";
     }
