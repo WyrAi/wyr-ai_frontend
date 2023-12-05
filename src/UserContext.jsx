@@ -162,6 +162,7 @@ export const UserContextProvider = ({ children }) => {
     const companyId = userInformation?.companyId?._id;
     const role = userInformation?.role?.name;
     const rights = userInformation?.role?.SelectAccess;
+    console.log(rights);
     return { companyId, role, userRights: rights };
   }, [userInformation]);
 
