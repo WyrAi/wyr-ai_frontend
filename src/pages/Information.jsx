@@ -80,7 +80,7 @@ const Information = () => {
   }, []);
   return (
     <>
-      <div className="w-full h-full overflow-y-auto ">
+      <div className="w-full h-full ">
         <div className=" text-right download-Button  py-3 px-4 right-0">
           <button
             className="bg-[#1e96fc] rounded-md px-4 py-2  font-medium text-lg text-white"
@@ -97,7 +97,7 @@ const Information = () => {
             height="100px"
             className="py-4 ml-4"
           />
-          <div className="overflow-y-auto">
+          <div className="overflow-y-auto h-[650px]">
             <div className="flex justify-between items-center w-full text-2xl">
               <div className="font-bold">
                 <h2>Client Name :{"XYZ"}</h2>
