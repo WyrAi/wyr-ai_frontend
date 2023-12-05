@@ -47,6 +47,14 @@ const Information = () => {
     // Check if the capture element is found
 
     if (capture) {
+      // Clone the scrollable content into a new div
+      const cloneDiv = document.createElement("div");
+      cloneDiv.innerHTML = capture.innerHTML;
+      cloneDiv.style.overflow = "visible";
+      cloneDiv.style.height = "auto";
+      cloneDiv.style.width = capture.offsetWidth + "px";
+      // Append the clone to the document (you may need to adjust the position)
+      document.body.appendChild(cloneDiv);
       // Use html2canvas options to wait for images to load
       const ignoreElements = [
         ".input-comments",
