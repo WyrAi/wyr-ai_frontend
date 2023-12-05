@@ -3,12 +3,15 @@ import React, { useEffect } from "react";
 import logo from "../assets/logo.svg";
 import axios from "axios";
 import html2canvas from "html2canvas";
+import "./temp.css";
 import { RiDeleteBack2Fill } from "react-icons/ri";
 
 const Information = () => {
   const [data, setData] = React.useState([]);
   const baseURL = import.meta.env.VITE_BASE_URL;
   const [comment, setComment] = React.useState("");
+  // const { toPDF, targetRef } = usePDF({ filename: "page.pdf" });
+
   const InformationGet = async () => {
     try {
       const { data } = await axios.get(`${baseURL}/api/AllInformationGet`);
@@ -42,217 +45,279 @@ const Information = () => {
     }
   };
 
-  const downloadPDF = () => {
-    const capture = document.querySelector(".actual-receipt");
-    // Check if the capture element is found
+  // const downloadPDF = () => {
+  //   const capture = document.querySelector(".actual-receipt");
+  //   // Check if the capture element is found
 
+  //   if (capture) {
+  //     // Use html2canvas options to wait for images to load
+  //     const ignoreElements = [
+  //       ".input-comments",
+  //       ".delete-button",
+  //       ".download-Button",
+  //     ];
+
+  //     // // Remove ignored elements from the clone
+  //     // ignoreElements.forEach((selector) => {
+  //     //   const elementsToRemove = clone.querySelectorAll(selector);
+  //     //   elementsToRemove.forEach((element) =>
+  //     //     element.parentNode.removeChild(element)
+  //     //   );
+  //     // });
+  //     html2canvas(capture, {
+  //       useCORS: true,
+  //       logging: true,
+  //       allowTaint: true,
+  //       proxy: "path/to/proxy", // Provide a path to a proxy if needed
+  //       ignoreElements: (element) => {
+  //         // Check if the element should be ignored
+  //         return ignoreElements.some((selector) => element.matches(selector));
+  //       },
+  //     }).then((canvas) => {
+  //       // Create PDF using jsPDF
+  //       const imgData = canvas.toDataURL("image/png");
+  //       const doc = new jsPDF("p", "mm", "a4");
+  //       const componentWidth = doc.internal.pageSize.getWidth();
+  //       const componentHeight = doc.internal.pageSize.getHeight();
+  //       doc.addImage(imgData, "PNG", 0, 0, componentWidth, componentHeight);
+  //       doc.save("receipt.pdf");
+  //     });
+  //   } else {
+  //     console.error("Element with class 'actual-receipt' not found.");
+  //   }
+  // };
+
+  // const downloadPDF = () => {
+  //   const capture = document.querySelector(".actual-receipt");
+  //   // Check if the capture element is found
+
+  //   if (capture) {
+  //     // Use html2canvas options to wait for images to load
+  //     const ignoreElements = [
+  //       ".input-comments",
+  //       ".delete-button",
+  //       ".download-Button",
+  //     ];
+  //     html2canvas(capture, {
+  //       useCORS: true,
+  //       logging: true,
+  //       allowTaint: true,
+  //       proxy: "path/to/proxy", // Provide a path to a proxy if needed
+  //       ignoreElements: (element) => {
+  //         // Check if the element should be ignored
+  //         return ignoreElements.some((selector) => element.matches(selector));
+  //       },
+  //     }).then((canvas) => {
+  //       // Create PDF using jsPDF
+  //       const imgData = canvas.toDataURL("image/png");
+  //       const doc = new jsPDF("p", "mm", "a4");
+  //       const componentWidth = doc.internal.pageSize.getWidth();
+  //       const componentHeight = doc.internal.pageSize.getHeight();
+  //       doc.addImage(imgData, "PNG", 0, 0, componentWidth, componentHeight);
+  //       doc.save("receipt.pdf");
+  //     });
+  //   } else {
+  //     console.error("Element with class 'actual-receipt' not found.");
+  //   }
+  // };
+
+  const downloadPDF = async () => {
+    const capture = document.querySelector(".actual-receipt");
+
+    // Check if the capture element is found
     if (capture) {
-      // Use html2canvas options to wait for images to load
+      // Specify elements to be ignored during capture
       const ignoreElements = [
         ".input-comments",
         ".delete-button",
         ".download-Button",
       ];
 
-      // // Remove ignored elements from the clone
-      // ignoreElements.forEach((selector) => {
-      //   const elementsToRemove = clone.querySelectorAll(selector);
-      //   elementsToRemove.forEach((element) =>
-      //     element.parentNode.removeChild(element)
-      //   );
-      // });
-      // html2canvas(capture, {
-      //   useCORS: true,
-      //   logging: true,
-      //   allowTaint: true,
-      //   proxy: "path/to/proxy", // Provide a path to a proxy if needed
-      //   ignoreElements: (element) => {
-      //     // Check if the element should be ignored
-      //     return ignoreElements.some((selector) => element.matches(selector));
-      //   },
-      // }).then((canvas) => {
-      //   // Create PDF using jsPDF
-      //   const imgData = canvas.toDataURL("image/png");
-      //   const doc = new jsPDF("p", "mm", "a4");
-      //   const componentWidth = doc.internal.pageSize.getWidth();
-      //   const componentHeight = doc.internal.pageSize.getHeight();
-      //   doc.addImage(imgData, "PNG", 0, 0, componentWidth, componentHeight);
-      //   doc.save("receipt.pdf");
-      // });
-
-      // Create a clone of the capture element to avoid interference with the original content
-      const clone = capture.cloneNode(true);
-
       // Use html2canvas options to exclude certain elements
-      html2canvas(clone, {
+      const captureOptions = {
         useCORS: true,
         logging: true,
         allowTaint: true,
         proxy: "path/to/proxy", // Provide a path to a proxy if needed
         ignoreElements: (element) => {
           // Check if the element should be ignored
-          return (
-            element.nodeName.toLowerCase() === "iframe" ||
-            ignoreElements.some((selector) => element.matches(selector))
-          );
+          return ignoreElements.some((selector) => element.matches(selector));
         },
-      }).then((canvas) => {
-        // Calculate the proper scale to fit the content into the PDF page
-        const scale = 2; // You can adjust this value
+        // Add some additional options to improve the PDF quality
+        scale: 2, // Increase scale for higher resolution
+      };
 
-        // Create PDF using jsPDF
-        const imgData = canvas.toDataURL("image/png");
-        const pdf = new jsPDF("p", "mm", "a4");
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-        const imgWidth = pdfWidth;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      // Calculate A4 size
+      const a4Width = 210; // A4 width in mm
+      const a4Height = 297; // A4 height in mm
 
-        pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight, "", "FAST");
-        pdf.save("receipt.pdf");
-      });
+      // Create PDF using jsPDF
+      const doc = new jsPDF("p", "mm", "a4");
+
+      // Capture content for each page
+      let currentPage = 1;
+      let yOffset = 0;
+
+      while (yOffset < capture.scrollHeight) {
+        const pageCanvas = await html2canvas(capture, {
+          ...captureOptions,
+          windowHeight: a4Height,
+          scrollY: yOffset,
+        });
+
+        // Add captured page to the PDF
+        if (currentPage > 1) {
+          doc.addPage();
+        }
+
+        const imgData = pageCanvas.toDataURL("image/png");
+        doc.addImage(imgData, "PNG", 0, 0, a4Width, a4Height);
+
+        yOffset += a4Height;
+        currentPage += 1;
+      }
+
+      // Save the PDF
+      doc.save("receipt.pdf");
     } else {
       console.error("Element with class 'actual-receipt' not found.");
     }
   };
+
   useEffect(() => {
     InformationGet();
   }, []);
   return (
     <>
-      <div className="w-full h-full overflow-y-auto xl:h-screen ">
-        <div className=" text-right download-Button  py-3 px-4 right-0">
-          <button
-            className="bg-[#1e96fc] rounded-md px-4 py-2  font-medium text-lg text-white"
-            onClick={() => downloadPDF()}
-          >
-            Download
-          </button>
-        </div>
-        <div className=" flex flex-col items-center actual-receipt p-6 w-full">
-          <img
-            src={logo}
-            alt=""
-            width="240px"
-            height="100px"
-            className="py-4 ml-4"
-          />
-          <div className="">
-            <div className="flex justify-between items-center w-full text-2xl">
-              <div className="font-bold">
-                <h2>Client Name :{"XYZ"}</h2>
-                <h2>Vender Name :{"XYZ"}</h2>
-                <h2>Factory Name :{"XYZ"}</h2>
-              </div>
-              <div className="font-bold text-right">
-                <h2>
-                  Inspector Name : <span className="font-medium">{"XYZ"}</span>
-                </h2>
-                <h2>
-                  Inspector Location:{" "}
-                  <span className="font-medium">{"XYZ Factory"}</span>
-                </h2>
-                <h2>
-                  Inspector Type:{" "}
-                  <span className="font-medium">
-                    {"Final Random Inspection"}
-                  </span>
-                </h2>
-              </div>
-            </div>
-            <div className="flex justify-between items-center w-full text-2xl mt-5">
-              <div className="font-bold">
-                <h2>
-                  Po Number : <span className="font-medium">{"11111"}</span>
-                </h2>
-                <h2>
-                  Style Number : <span className="font-medium">{"J/224"}</span>
-                </h2>
-                <h2>
-                  Color : <span className="font-medium">{"Blue"}</span>
-                </h2>
-                <h2>
-                  Product Description :
-                  <span className="font-medium">
-                    {"100% Cotton, Polo SS blue with dots, man's T-shirt"}
-                  </span>
-                </h2>
-              </div>
-              <div className="font-bold text-right">
-                <h2>
-                  Order Quantity :{" "}
-                  <span className="font-medium">{"1644 Pcs"}</span>
-                </h2>
-                <h2>
-                  Offer Quantity:{" "}
-                  <span className="font-medium">{"800 Pcs"}</span>
-                </h2>
-                <h2>
-                  Product Size & ratio:{" "}
-                  <span className="font-medium">{"20*20(1),40*40(1)"}</span>
-                </h2>
-              </div>
-            </div>
-            <div className=" w-full mt-5 h-full">
-              {data.map((e) => (
-                <div className="flex pt-5 h-full ">
-                  <img
-                    src={e.image}
-                    alt="Product"
-                    width={"750px"}
-                    height={"400px"}
-                    className="border"
-                  />
-                  <div className="p-5 w-full flex justify-between gap-5">
-                    <div className="flex flex-col justify-between w-full">
-                      <div>
-                        {e.comment.map((c, index) => (
-                          <p className="font-medium text-[20px] capitalize">{`${
-                            index + 1
-                          }.  ${c}`}</p>
-                        ))}
-                      </div>
-                      <div className=" flex gap-5 input-comments w-full">
-                        <input
-                          type="text"
-                          name=""
-                          id=""
-                          className="w-full p-4 rounded-md text-base border-none outline-none"
-                          placeholder="Enter another comment"
-                          onChange={(e) => setComment(e.target.value)}
-                        />
-                        <button
-                          className="bg-[#1e96fc] px-8 text-white text-lg font-medium rounded-md"
-                          onClick={() => AddNewComment(e._id)}
-                        >
-                          Submit
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="delete-button">
-                      <RiDeleteBack2Fill
-                        fill="#1e96fc"
-                        className="text-3xl cursor-pointer"
-                        width={"40px"}
-                        onClick={() => slotDelete(e._id)}
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+      {/* <div className="w-full h-full "> */}
+      <div className=" text-right download-Button py-3 px-4 right-0">
+        <button
+          className="bg-[#1e96fc] rounded-md px-4 py-2  font-medium text-lg text-white"
+          onClick={() => downloadPDF()}
+        >
+          Download
+        </button>
+      </div>
+      <div className=" flex flex-col items-center actual-receipt p-6 ">
+        <img
+          src={logo}
+          alt=""
+          width="240px"
+          height="100px"
+          className="py-4 ml-4"
+        />
+        {/* <div className="overflow-y-auto"> */}
+        <div className="flex justify-between items-center w-full text-2xl">
+          <div className="font-bold">
+            <h2>Client Name :{"XYZ"}</h2>
+            <h2>Vender Name :{"XYZ"}</h2>
+            <h2>Factory Name :{"XYZ"}</h2>
+          </div>
+          <div className="font-bold text-right">
+            <h2>
+              Inspector Name : <span className="font-medium">{"XYZ"}</span>
+            </h2>
+            <h2>
+              Inspector Location:{" "}
+              <span className="font-medium">{"XYZ Factory"}</span>
+            </h2>
+            <h2>
+              Inspector Type:{" "}
+              <span className="font-medium">{"Final Random Inspection"}</span>
+            </h2>
           </div>
         </div>
-        <div className=" text-right download-Button  py-3 px-4  right-0">
-          <button
-            className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white"
-            onClick={() => downloadPDF()}
-          >
-            Download
-          </button>
+        <div className="flex justify-between items-center w-full text-2xl mt-5">
+          <div className="font-bold">
+            <h2>
+              Po Number : <span className="font-medium">{"11111"}</span>
+            </h2>
+            <h2>
+              Style Number : <span className="font-medium">{"J/224"}</span>
+            </h2>
+            <h2>
+              Color : <span className="font-medium">{"Blue"}</span>
+            </h2>
+            <h2>
+              Product Description :
+              <span className="font-medium">
+                {"100% Cotton, Polo SS blue with dots, man's T-shirt"}
+              </span>
+            </h2>
+          </div>
+          <div className="font-bold text-right">
+            <h2>
+              Order Quantity : <span className="font-medium">{"1644 Pcs"}</span>
+            </h2>
+            <h2>
+              Offer Quantity: <span className="font-medium">{"800 Pcs"}</span>
+            </h2>
+            <h2>
+              Product Size & ratio:{" "}
+              <span className="font-medium">{"20*20(1),40*40(1)"}</span>
+            </h2>
+          </div>
+        </div>
+        <div className=" w-full mt-5 ">
+          {data.map((e) => (
+            <div className="flex pt-5 h-full">
+              <img
+                src={e.image}
+                alt="Product"
+                width={"750px"}
+                height={"300px"}
+                // className="w-[750px] h-[400px]"
+              />
+              <div className="p-5 w-full flex justify-between gap-5">
+                <div className="flex flex-col justify-between w-full">
+                  <div>
+                    {e.comment.map((c, index) => (
+                      <p className="font-medium text-[20px] capitalize">{`${
+                        index + 1
+                      }.  ${c}`}</p>
+                    ))}
+                  </div>
+                  <div className=" flex gap-5 input-comments w-full">
+                    <input
+                      type="text"
+                      name=""
+                      id=""
+                      className="w-full p-4 rounded-md text-base border-none outline-none"
+                      placeholder="Enter another comment"
+                      onChange={(e) => setComment(e.target.value)}
+                    />
+                    <button
+                      className="bg-[#1e96fc] px-8 text-white text-lg font-medium rounded-md"
+                      onClick={() => AddNewComment(e._id)}
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </div>
+
+                {/* <div className="delete-button">
+                  <RiDeleteBack2Fill
+                    fill="#1e96fc"
+                    className="text-3xl cursor-pointer"
+                    width={"40px"}
+                    onClick={() => slotDelete(e._id)}
+                  />
+                </div> */}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
+      {/* </div> */}
+      <div className=" text-right download-Button  py-3 px-4  right-0">
+        <button
+          className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white"
+          onClick={() => downloadPDF()}
+        >
+          Download
+        </button>
+      </div>
+      {/* </div> */}
     </>
   );
 };
