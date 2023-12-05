@@ -80,7 +80,7 @@ const Information = () => {
   }, []);
   return (
     <>
-      <div className="w-full h-full ">
+      <div className="w-full h-[39%] overflow-y-auto ">
         <div className=" text-right download-Button  py-3 px-4 right-0">
           <button
             className="bg-[#1e96fc] rounded-md px-4 py-2  font-medium text-lg text-white"
