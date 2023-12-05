@@ -14,6 +14,7 @@ import Page404 from "../pages/Page404";
 import useToast from "../Contexts/ToasterContext";
 import InformationDashboard from "../pages/InformationDashboard";
 import Information from "../pages/Information";
+import InspectionForm from "../Components/InspectionForm";
 
 const IsRouteAllowed = (props) => {
   const { hasPermissions, children } = props;
