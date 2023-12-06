@@ -95,6 +95,7 @@ const ResetPassword = () => {
               </div>
             );
           })}
+          <p className="mt-2 text-left">Password should be alpha-numeric</p>;
           <button
             className="mt-6 border py-3 text-xl font-medium bg-[#1B9BEF] rounded-md w-5/12 text-white "
             onClick={() => {
