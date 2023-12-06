@@ -189,7 +189,7 @@ const RelationShip = () => {
             );
           })}
         </div>
-        <div className="text-center mb-5">Pagination</div>
+        {/* <div className="text-center mb-5">Pagination</div> */}
       </div>
     </main>
   );
