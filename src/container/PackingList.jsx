@@ -57,15 +57,15 @@ const PackingList = ({
 
   const formik = useFormik({
     initialValues: {
-      images: data?.images,
-      from: data?.from,
-      to: data?.to,
-      styleId: data?.styleId,
-      styleName: data?.styleName,
-      quantityPerBox: data?.quantityPerBox,
-      totalBox: data?.totalBox,
-      totalQuantity: data?.totalQuantity,
-      branch: data?.branch?.branchName,
+      images: data.images,
+      from: data.from,
+      to: data.to,
+      styleId: data.styleId,
+      styleName: data.styleName,
+      quantityPerBox: data.quantityPerBox,
+      totalBox: data.totalBox,
+      totalQuantity: data.totalQuantity,
+      branch: data.branch?.branchName,
     },
     onSubmit: (values, actions) => {
       // Handle form submission
@@ -155,7 +155,7 @@ const PackingList = ({
             labelColor={"bg-slimeGray"}
             labelsize={"text-[10px]"}
             padding={"pt-3 pb-1"}
-            disable={true}
+            // disable={true}
           />
         </div>
         <div className="">
@@ -171,7 +171,7 @@ const PackingList = ({
             labelColor={"bg-slimeGray"}
             labelsize={"text-[10px]"}
             padding={"py-2"}
-            disable={true}
+            // disable={true}
           />
         </div>
         <div className="">
@@ -179,7 +179,7 @@ const PackingList = ({
             label={"Style Name"}
             name={"styleName"}
             type="text"
-            value={formik.values.styleName}
+            value={data.styleName}
             onChange={handleInputChange}
             onBlur={formik.handleBlur}
             error={formik.touched.styleName && formik.errors.styleName}
@@ -196,7 +196,7 @@ const PackingList = ({
             label="StyleId"
             name="styleId"
             type="text"
-            value={formik.values.styleId}
+            value={data.styleId}
             onChange={handleInputChange}
             onBlur={formik.handleBlur}
             error={formik.touched.styleId && formik.errors.styleId}
@@ -204,7 +204,7 @@ const PackingList = ({
             labelColor={"bg-slimeGray"}
             labelsize={"text-[10px]"}
             padding={"py-2"}
-            disable={true}
+            // disable={true}
           />
         </div>
         <div className="">
@@ -222,7 +222,7 @@ const PackingList = ({
             labelColor={"bg-slimeGray"}
             labelsize={"text-[10px]"}
             padding={"py-2"}
-            disable={true}
+            // disable={true}
           />
         </div>
         <div className="">
@@ -238,7 +238,7 @@ const PackingList = ({
             labelColor={"bg-slimeGray"}
             labelsize={"text-[10px]"}
             padding={"py-2"}
-            disable={true}
+            // disable={true}
           />
         </div>
         <div className="">
@@ -254,7 +254,7 @@ const PackingList = ({
             labelColor={"bg-slimeGray"}
             labelsize={"text-[10px]"}
             padding={"py-2"}
-            disable={true}
+            // disable={true}
           />
         </div>
         <div className="flex gap-2">
@@ -277,76 +277,28 @@ const PackingList = ({
               )}
             </div>
 
-            {popup.branch &&
-              qcExist(
-                <DropDown>
-                  {branchData?.map((item, index) => {
-                    return (
-                      <li
-                        key={index}
-                        className="py-2 flex items-center gap-4 mr-2 border-b"
-                        onClick={() => handleDropDownSelect(item)}
-                      >
-                        <span className="flex-1 text-xs">
-                          {item?.branchName}
-                        </span>
-                        {/* <span className="flex gap-2 items-center">
+            {popup.branch && (
+              <DropDown>
+                {branchData?.map((item, index) => {
+                  return (
+                    <li
+                      key={index}
+                      className="py-2 flex items-center gap-4 mr-2 border-b"
+                      onClick={() => handleDropDownSelect(item)}
+                    >
+                      <span className="flex-1 text-xs">{item?.branchName}</span>
+                      {/* <span className="flex gap-2 items-center">
                       <img src={gps} alt="gps" className="w-[16px] h-[16px]" />
                       <span className="text-[10px]">
                         {item.companyId?.city}, {item.companyId?.country}
                       </span>
                     </span> */}
-                      </li>
-                    );
-                  })}
-                </DropDown>
-              )}
+                    </li>
+                  );
+                })}
+              </DropDown>
+            )}
           </div>
-          {qcExist && (
-            <div
-              className=" relative mb-8  cursor-pointer"
-              onClick={() => setPopup({ ...popup, qc: !popup.qc })}
-            >
-              <span className="text-[10px]">Add QC</span>
-              <div className="flex justify-around items-center">
-                {branch ? (
-                  <span className="w-5 h-5 bg-blue flex justify-center items-center rounded-full">
-                    {branch?.charAt(0).toUpperCase()}
-                  </span>
-                ) : (
-                  <img
-                    src={addUser}
-                    alt="add"
-                    className={`w-6 h-6 ${branch ? "" : "m-auto"}`}
-                  />
-                )}
-              </div>
-
-              {popup.qc && (
-                <DropDown>
-                  {branchData?.map((item, index) => {
-                    return (
-                      <li
-                        key={index}
-                        className="py-2 flex items-center gap-4 mr-2 border-b"
-                        onClick={() => handleDropDownSelect(item)}
-                      >
-                        <span className="flex-1 text-xs">
-                          {item?.branchName}
-                        </span>
-                        {/* <span className="flex gap-2 items-center">
-                    <img src={gps} alt="gps" className="w-[16px] h-[16px]" />
-                    <span className="text-[10px]">
-                      {item.companyId?.city}, {item.companyId?.country}
-                    </span>
-                  </span> */}
-                      </li>
-                    );
-                  })}
-                </DropDown>
-              )}
-            </div>
-          )}
         </div>
       </div>
     </>

@@ -37,12 +37,17 @@ import wyraiApi from "../api/wyraiApi";
 function PurchaseOrder() {
   const { setPopUpload, popUpload, userInformation, companyId, role } =
     userGloabalContext();
+  const { productList, setProductList, imagesFiles, setImagesFiles } =
+    userGloabalContext();
+
   const navigate = useNavigate();
   const [purchaseDoc, setPurchaseDoc] = useState(null);
   const [showPurchaseOrder, setShowPurchaseOrder] = useState(false);
   const [buyer, setBuyer] = useState([]);
   const [vendor, setVendor] = useState([]);
   const [people, setPeople] = useState([]);
+  const [imageIndex, setImageIndex] = useState("");
+
   const [peopleOfInterest, setPeopelOfInterest] = useState([
     { id: userInformation?._id, name: userInformation?.name },
   ]);
@@ -52,7 +57,9 @@ function PurchaseOrder() {
     vendorId: "",
   });
 
-  const [slotOfProducts, setSlotOfProducts] = useState([]);
+  const [slotOfProducts, setSlotOfProducts] = useState([
+    { ...productList, imagesFiles },
+  ]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   const toggleCalendar = () => {
@@ -69,7 +76,6 @@ function PurchaseOrder() {
   // const [buyerPopup, setBuyerPopup] = useState(false);
   // const [vendorPopup, setVendorPopup] = useState(false);
   const [count, setCount] = useState(1);
-  const { productList, imagesFiles, setImagesFiles } = userGloabalContext();
 
   const validationSchema = Yup.object().shape({
     poNumber: Yup.number().required("PO Number is required"),
@@ -89,6 +95,23 @@ function PurchaseOrder() {
     inv_number: Yup.string().required("Invoice Number is required"),
     // slotOfInspection: Add validation for the array if needed
   });
+
+  const intials = {
+    styleId: "",
+    styleName: "",
+    quantity: "",
+    color: "",
+    weight: "",
+    weightTolerance: "",
+    length: "",
+    lengthTolerance: "",
+    width: "",
+    widthTolerance: "",
+    height: "",
+    heightTolerance: "",
+    aql: "",
+    comments: [], //this can have many comments so, when sent as Array of comments
+  };
 
   const initialValues = {
     poNumber: null,
@@ -169,35 +192,49 @@ function PurchaseOrder() {
     }
     // console.log(slotOfProducts.length);
     let requestBody = {};
-    if (slotOfProducts.length > 0) {
-      requestBody = {
-        purchaseDoc,
-        buyer: ids.buyerId,
-        vendor: ids.vendorId,
-        shiptoName: formik.values.shiptoName,
-        shiptoAdd: formik.values.shiptoAdd,
-        shipVia: formik.values.shipVia,
-        shipDate: formik.values.shipDate,
-        assignedPeople: peopleOfInterest.map((item) => item.id),
-        poNumber: formik.values.poNumber,
-        products: [...slotOfProducts],
-        status,
-      };
-    } else {
-      requestBody = {
-        purchaseDoc,
-        buyer: ids.buyerId,
-        vendor: ids.vendorId,
-        shiptoName: formik.values.shiptoName,
-        shiptoAdd: formik.values.shiptoAdd,
-        shipVia: formik.values.shipVia,
-        shipDate: formik.values.shipDate,
-        assignedPeople: peopleOfInterest.map((item) => item.id),
-        poNumber: formik.values.poNumber,
-        products: [{ ...productList, images: imagesFiles }],
-        status,
-      };
-    }
+    // if (slotOfProducts.length > 0) {
+    //   requestBody = {
+    //     purchaseDoc,
+    //     buyer: ids.buyerId,
+    //     vendor: ids.vendorId,
+    //     shiptoName: formik.values.shiptoName,
+    //     shiptoAdd: formik.values.shiptoAdd,
+    //     shipVia: formik.values.shipVia,
+    //     shipDate: formik.values.shipDate,
+    //     assignedPeople: peopleOfInterest.map((item) => item.id),
+    //     poNumber: formik.values.poNumber,
+    //     products: [...slotOfProducts],
+    //     status,
+    //   };
+    // } else {
+    //   requestBody = {
+    //     purchaseDoc,
+    //     buyer: ids.buyerId,
+    //     vendor: ids.vendorId,
+    //     shiptoName: formik.values.shiptoName,
+    //     shiptoAdd: formik.values.shiptoAdd,
+    //     shipVia: formik.values.shipVia,
+    //     shipDate: formik.values.shipDate,
+    //     assignedPeople: peopleOfInterest.map((item) => item.id),
+    //     poNumber: formik.values.poNumber,
+    //     products: [{ ...productList, images: imagesFiles }],
+    //     status,
+    //   };
+    // }
+    requestBody = {
+      purchaseDoc,
+      buyer: ids.buyerId,
+      vendor: ids.vendorId,
+      shiptoName: formik.values.shiptoName,
+      shiptoAdd: formik.values.shiptoAdd,
+      shipVia: formik.values.shipVia,
+      shipDate: formik.values.shipDate,
+      assignedPeople: peopleOfInterest.map((item) => item.id),
+      poNumber: formik.values.poNumber,
+      products: [...slotOfProducts],
+      status,
+    };
+    console.log(requestBody);
 
     if (e.target.type === "submit") {
       wyraiApi
@@ -228,16 +265,61 @@ function PurchaseOrder() {
     // }
   }
 
-  const addSlotOfProduct = () => {
-    try {
+  useEffect(() => {
+    const allFieldsFilled = Object.values(productList).every(
+      (value) => value !== ""
+    );
+    console.log(allFieldsFilled, productList);
+
+    if (allFieldsFilled) {
       setSlotOfProducts([
         ...slotOfProducts,
         { ...productList, images: imagesFiles },
       ]);
+      console.log(slotOfProducts);
+      // setProductList(intials);
+    }
+  }, [productList]);
+
+  // console.log(imagesFiles, imageIndex);
+  useEffect(() => {
+    console.log(imageIndex, typeof imageIndex === "number");
+    if (typeof imageIndex === "number") {
+      console.log("first");
+      handleProductChange(imageIndex, "images", imagesFiles);
+      // setImagesFiles([]);
+    }
+  }, [imageIndex, imagesFiles]);
+
+  const handleProductChange = (poIndex, field, value) => {
+    console.log(poIndex, field, value);
+    const newPurchaseOrders = [...slotOfProducts];
+    // if (field === "images") {
+    //   const img = newPurchaseOrders[poIndex][field];
+    //   console.log(newPurchaseOrders[poIndex][field]);
+    //   // newPurchaseOrders[poIndex][field] = [...img, ...value];
+    // } else {
+    //   newPurchaseOrders[poIndex][field] = value;
+    // }
+    newPurchaseOrders[poIndex][field] = value;
+    console.log(newPurchaseOrders);
+    setSlotOfProducts(newPurchaseOrders);
+  };
+  console.log(slotOfProducts);
+  const addSlotOfProduct = () => {
+    try {
+      // setProductList(intials);
+      // setImagesFiles([]);
+      // // setSlotOfProducts([
+      //   ...slotOfProducts,
+      //   { ...productList, images: imagesFiles },
+      // ]);
+      setSlotOfProducts([...slotOfProducts, { ...intials, images: [] }]);
     } catch (error) {
       console.log(error);
     }
   };
+
   const addAssignPeople = (id, name, value) => {
     try {
       const isExisting = peopleOfInterest.some((item) => item.id === id);
@@ -693,10 +775,20 @@ function PurchaseOrder() {
 
           <div className="mb-4">
             <h1 className="text-xl font-bold mb-4">Products</h1>
-            {[...Array(count)].map((_, index) => (
-              <Products key={index} />
+            {slotOfProducts.map((item, index) => {
+              console.log(item);
+
+              return (
+                <Products
+                  setImageIndex={setImageIndex}
+                  key={index}
+                  data={item}
+                  handleProductChange={handleProductChange}
+                  poIndex={index}
+                />
+              );
               // <CounterComponent key={index} />
-            ))}
+            })}
           </div>
 
           <button

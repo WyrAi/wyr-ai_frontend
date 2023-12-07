@@ -8,9 +8,21 @@ import { MdModeEdit } from "react-icons/md";
 import { AiFillDelete } from "react-icons/ai";
 import { RxCrossCircled } from "react-icons/rx";
 import { userGloabalContext } from "../UserContext";
+import { useEffect, useState } from "react";
 
-const CommentBox = ({ setTogglePopup, move, header, btnText }) => {
+const CommentBox = ({
+  poIndex,
+  setTogglePopup,
+  move,
+  header,
+  btnText,
+  handleProductChange,
+  comments,
+}) => {
   const { productList, setProductList } = userGloabalContext();
+  const [commentsData, setCommentsData] = useState(comments);
+
+  // const [newComment, setNewComment] = useState('');
 
   const initialValues = { comment: "", editingId: null };
 
@@ -32,35 +44,43 @@ const CommentBox = ({ setTogglePopup, move, header, btnText }) => {
       if (values.editingId) {
         //this is for editing comments
         console.log(values);
-        const updatedComments = productList.comments.map((comment) =>
-          comment.id === values.editingId
-            ? { ...comment, comment: values.comment }
-            : comment
-        );
-        setProductList((prevState) => ({
-          ...prevState,
-          comments: updatedComments,
-        }));
 
+        const updatedComments = [...comments];
+        updatedComments[values.editingId] = values.comment;
+        setCommentsData(updatedComments);
+        // const updatedComments = comments.map((comment) =>
+        //   comment.id === values.editingId
+        //     ? { ...comment, comment: values.comment }
+        //     : comment
+        // );
+        // comments
+        // setProductList((prevState) => ({
+        //   ...prevState,
+        //   comments: updatedComments,
+        // }));
         values.editingId = null;
       } else {
-        const data = {
-          id: productList.comments.length + 1,
-          comment: values.comment,
-        };
+        if (values.comment.trim() !== "") {
+          setCommentsData([...commentsData, values.comment]);
+          // setNewComment('');
+        }
+        // const data = {
+        //   id: productList.comments.length + 1,
+        //   comment: values.comment,
+        // };
 
-        setProductList((currentProductList) => {
-          // Check if comments is an array, if not, default to an empty array
-          const commentsArray = Array.isArray(currentProductList.comments)
-            ? currentProductList.comments
-            : [];
-          return {
-            ...currentProductList,
-            comments: [...commentsArray, data],
-          };
-        });
+        // setProductList((currentProductList) => {
+        //   // Check if comments is an array, if not, default to an empty array
+        //   const commentsArray = Array.isArray(currentProductList.comments)
+        //     ? currentProductList.comments
+        //     : [];
+        //   return {
+        //     ...currentProductList,
+        //     comments: [...commentsArray, data],
+        //   };
+        // });
       }
-
+      // comments = commentsData;
       formik.setFieldValue("comment", "");
     } catch (error) {
       console.error(error);
@@ -69,13 +89,20 @@ const CommentBox = ({ setTogglePopup, move, header, btnText }) => {
 
   // remove
   const removeComment = (commentId) => {
-    const updatedComments = productList.comments.filter(
-      (comment) => comment.id !== commentId
-    );
-    setProductList((prevState) => ({
-      ...prevState,
-      comments: updatedComments,
-    }));
+    // const updatedComments = comments.filter(
+    //   (comment) => comment.id !== commentId
+    // );
+    // setProductList((prevState) => ({
+    //   ...prevState,
+    //   comments: updatedComments,
+    // }));
+    console.log(commentId);
+    const filteredComments = commentsData.filter((_, i) => {
+      console.log(i, commentId);
+      return i !== commentId;
+    });
+    console.log(filteredComments);
+    setCommentsData(filteredComments);
   };
 
   //edit
@@ -83,6 +110,14 @@ const CommentBox = ({ setTogglePopup, move, header, btnText }) => {
     formik.setFieldValue("comment", text);
     formik.setFieldValue("editingId", id);
   };
+
+  useEffect(() => {
+    comments = commentsData;
+    handleProductChange(poIndex, "comments", commentsData);
+    console.log(comments);
+  }, [commentsData]);
+
+  // console.log(comments);
 
   return (
     <>
@@ -115,25 +150,23 @@ const CommentBox = ({ setTogglePopup, move, header, btnText }) => {
             <div className="py-2 px-4 text-xs">{date}</div>
             <div>
               <ul className="w-full overflow-auto">
-                {productList.comments.length > 0 ? (
-                  productList.comments.map((comment) => (
+                {commentsData.length > 0 ? (
+                  commentsData.map((comment, index) => (
                     <li
-                      key={comment.id}
+                      key={index}
                       className="flex items-center justify-between px-4 py-2 mb-2 border-b"
                     >
                       <span className="text-sm flex-grow text-lightGray">
-                        {comment.comment}
+                        {comment}
                       </span>
                       <div className="flex gap-5 ">
                         <MdModeEdit
                           className="text-xl text-black cursor-pointer"
-                          onClick={() =>
-                            editComment(comment.id, comment.comment)
-                          }
+                          onClick={() => editComment(index, comment)}
                         />
                         <AiFillDelete
                           className="text-2xl text-red-500 cursor-pointer"
-                          onClick={() => removeComment(comment.id)}
+                          onClick={() => removeComment(index)}
                         />
                       </div>
                     </li>

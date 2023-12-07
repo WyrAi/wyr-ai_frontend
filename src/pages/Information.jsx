@@ -285,7 +285,7 @@ const Information = () => {
   }, []);
   return (
     <>
-      <div className="w-full h-full overflow-y-auto xl:h-screen ">
+      <div className="w-full h-screen overflow-y-auto  ">
         <div className=" text-right download-Button  py-3 px-4 right-0">
           <button
             className="bg-[#1e96fc] rounded-md px-4 py-2  font-medium text-lg text-white"
@@ -302,14 +302,14 @@ const Information = () => {
             height="100px"
             className="py-4 ml-4"
           />
-          <div className="w-[65vw]">
-            <div className="flex justify-between items-center w-full text-2xl">
+          <div className="md:w-[75vw]">
+            <div className="flex flex-col  md:flex-row justify-between items-start md:items-center w-full text-lg md:text-2xl">
               <div className="font-bold">
                 <h2>Client Name :{"XYZ"}</h2>
                 <h2>Vender Name :{"XYZ"}</h2>
                 <h2>Factory Name :{"XYZ"}</h2>
               </div>
-              <div className="font-bold text-right">
+              <div className="font-bold md:text-right">
                 <h2>
                   Inspector Name : <span className="font-medium">{"XYZ"}</span>
                 </h2>
@@ -325,7 +325,7 @@ const Information = () => {
                 </h2>
               </div>
             </div>
-            <div className="flex justify-between items-center w-full text-2xl mt-5">
+            <div className="flex flex-col md:flex-row justify-between items-center w-full text-lg md:text-2xl mt-5">
               <div className="font-bold">
                 <h2>
                   Po Number : <span className="font-medium">{"11111"}</span>
@@ -343,7 +343,7 @@ const Information = () => {
                   </span>
                 </h2>
               </div>
-              <div className="font-bold text-right">
+              <div className="font-bold md:text-right">
                 <h2>
                   Order Quantity :{" "}
                   <span className="font-medium">{"1644 Pcs"}</span>
@@ -358,19 +358,19 @@ const Information = () => {
                 </h2>
               </div>
             </div>
-            <div className=" w-full mt-5 h-full">
+            <div className=" w-full mt-5 h-screen md:h-full">
               {data.map((e, InfoIndex) => (
-                <div className="flex py-8 h-full ">
+                <div className="flex flex-col md:flex-row py-8 h-full ">
                   <img
                     src={e.image}
                     alt="Product"
                     width={"750px"}
                     height={"400px"}
-                    className="border"
+                    className="border flex-1"
                   />
-                  <div className="p-5 w-full flex justify-between gap-5">
+                  <div className="p-5 w-full flex-1   flex justify-between gap-5">
                     <div className="flex flex-col justify-between w-full">
-                      <ul className="w-full h-[70%] overflow-auto">
+                      <ul className="w-full h-[45%]  md:h-[70%] overflow-auto">
                         {e?.comment?.length > 0 ? (
                           e?.comment?.map((comment, CommentIndex) => (
                             <li
@@ -423,7 +423,7 @@ const Information = () => {
                           labelColor={"bg-white"}
                         />
                         <PiPaperPlaneRightFill
-                          className="text-blue text-3xl absolute md:top-[1.5vh] md:right-[1vh] cursor-pointer"
+                          className="text-blue text-3xl absolute top-[18px] right-[10px]  md:top-[1.5vh] md:right-[1vh] cursor-pointer"
                           onClick={() => handleSubmit(InfoIndex, e._id)}
                         />
                       </div>

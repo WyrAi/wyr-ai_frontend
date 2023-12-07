@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InputField from "./InputField";
 import upload from "../assets/formkit_uploadcloud1.svg";
 import comment from "../assets/noun-add-comment-5035165 1.svg";
@@ -14,11 +14,13 @@ import * as Yup from "yup";
 import CommentBox from "./CommentBox";
 import { userGloabalContext } from "../UserContext";
 
-const Products = () => {
+const Products = ({ data, handleProductChange, poIndex, setImageIndex }) => {
+  const { images, ...restData } = data;
+  const productList = restData;
+  console.log(restData);
   const [collapse, setCollapse] = useState(false);
   const [togglePopup, setTogglePopup] = useState(false);
-  const { productList, setProductList, popUpload, setPopUpload } =
-    userGloabalContext();
+  const { setProductList, popUpload, setPopUpload } = userGloabalContext();
 
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -63,10 +65,10 @@ const Products = () => {
     height: "",
     heightTolerance: "",
     aql: "",
-    // comments: '', //this can have many comments so, when sent as Array of comments
+    comments: [], //this can have many comments so, when sent as Array of comments
   };
   const formik = useFormik({
-    initialValues,
+    initialValues: productList,
     onSubmit: (values) => handleSubmit(values),
     validationSchema,
   });
@@ -78,14 +80,29 @@ const Products = () => {
       console.error(error);
     }
   }
-  const handleChange = (e) => {
-    // console.log('test');
-    const { name, value } = e.target;
-    // console.log(name, value);
-    setProductList({ ...productList, [name]: value });
-    formik.handleChange(e);
-  };
+
+  async function handleInputChange(e) {
+    const name = e.target.name;
+    const value = e.target.value;
+    console.log(name, value);
+    // validationCheck(name, value);
+    handleProductChange(poIndex, name, value);
+
+    formik.setFieldValue(name, value);
+  }
+
+  // const handleChange = (e) => {
+  //   // console.log('test');
+  //   const { name, value } = e.target;
+  //   // console.log(name, value);
+  //   setProductList({ ...productList, [name]: value });
+  //   formik.handleChange(e);
+  // };
   // console.log(productList);
+
+  useEffect(() => {
+    setImageIndex(poIndex);
+  }, [popUpload]);
 
   return (
     <>
@@ -104,7 +121,9 @@ const Products = () => {
                             src={add}
                             alt="cloud"
                             className="h-12 w-12 text-blue absolute top-[0] right-[0] md:top-[-3vh] md:left-[194px] cursor-pointer"
-                            onClick={() => setPopUpload(!popUpload)}
+                            onClick={() => {
+                              setPopUpload(!popUpload);
+                            }}
                           />
                           <p className="text-center text-xs font-[600]">
                             {"Upload Approved Sample"}
@@ -124,7 +143,7 @@ const Products = () => {
                         name="styleId"
                         type="text"
                         value={formik.values.styleId}
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         onBlur={formik.handleBlur}
                         error={formik.touched.styleId && formik.errors.styleId}
                         placeholder={"ST ED BC 3220 W"}
@@ -137,7 +156,7 @@ const Products = () => {
                         name={"styleName"}
                         type="text"
                         value={formik.values.styleName}
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         onBlur={formik.handleBlur}
                         error={
                           formik.touched.styleName && formik.errors.styleName
@@ -152,7 +171,7 @@ const Products = () => {
                         name={"quantity"}
                         type="text"
                         value={formik.values.quantity}
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         onBlur={formik.handleBlur}
                         error={
                           formik.touched.quantity && formik.errors.quantity
@@ -167,7 +186,7 @@ const Products = () => {
                         name={"color"}
                         type="text"
                         value={formik.values.color}
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         onBlur={formik.handleBlur}
                         error={formik.touched.color && formik.errors.color}
                         placeholder={"Nat 75/25"}
@@ -183,7 +202,7 @@ const Products = () => {
                       label={"Weight"}
                       type="text"
                       value={formik.values.weight}
-                      onChange={handleChange}
+                      onChange={handleInputChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.weight && formik.errors.weight}
                       placeholder={"500GMS"}
@@ -196,7 +215,7 @@ const Products = () => {
                       label={"WeightTolerance"}
                       type="text"
                       value={formik.values.weightTolerance}
-                      onChange={handleChange}
+                      onChange={handleInputChange}
                       onBlur={formik.handleBlur}
                       error={
                         formik.touched.weightTolerance &&
@@ -212,7 +231,7 @@ const Products = () => {
                       label={"Length"}
                       type="text"
                       value={formik.values.length}
-                      onChange={handleChange}
+                      onChange={handleInputChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.length && formik.errors.length}
                       placeholder={"2.5"}
@@ -225,7 +244,7 @@ const Products = () => {
                       label={"Length Tolerance"}
                       type="text"
                       value={formik.values.lengthTolerance}
-                      onChange={handleChange}
+                      onChange={handleInputChange}
                       onBlur={formik.handleBlur}
                       error={
                         formik.touched.lengthTolerance &&
@@ -241,7 +260,7 @@ const Products = () => {
                       label={"Width"}
                       type="text"
                       value={formik.values.width}
-                      onChange={handleChange}
+                      onChange={handleInputChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.width && formik.errors.width}
                       placeholder={"2.5"}
@@ -254,7 +273,7 @@ const Products = () => {
                       label={"Width Tolerance"}
                       type="text"
                       value={formik.values.widthTolerance}
-                      onChange={handleChange}
+                      onChange={handleInputChange}
                       onBlur={formik.handleBlur}
                       error={
                         formik.touched.widthTolerance &&
@@ -270,7 +289,7 @@ const Products = () => {
                       label={"Height"}
                       type="text"
                       value={formik.values.height}
-                      onChange={handleChange}
+                      onChange={handleInputChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.height && formik.errors.height}
                       placeholder={"2.5"}
@@ -283,7 +302,7 @@ const Products = () => {
                       label={"Height Tolerance"}
                       type="text"
                       value={formik.values.heightTolerance}
-                      onChange={handleChange}
+                      onChange={handleInputChange}
                       onBlur={formik.handleBlur}
                       error={
                         formik.touched.heightTolerance &&
@@ -302,7 +321,7 @@ const Products = () => {
                       label={"AQL"}
                       type="text"
                       value={formik.values.aql}
-                      onChange={handleChange}
+                      onChange={handleInputChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.aql && formik.errors.aql}
                       placeholder={"1.6"}
@@ -319,7 +338,7 @@ const Products = () => {
                           <p className="flex-none">
                             {formatDate(currentDate)}{" "}
                           </p>
-                          <p className="flex-1">{item.comment}</p>
+                          <p className="flex-1">{item}</p>
                         </div>
                       ))
                     ) : (
@@ -345,9 +364,10 @@ const Products = () => {
 
                   {togglePopup && (
                     <CommentBox
+                      poIndex={poIndex}
                       header={"Comments"}
                       comments={productList.comments}
-                      setComments={setProductList}
+                      handleProductChange={handleProductChange}
                       setTogglePopup={setTogglePopup}
                     />
                   )}
@@ -385,7 +405,7 @@ const Products = () => {
                         name="styleId"
                         type="text"
                         value={formik.values.styleId}
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         onBlur={formik.handleBlur}
                         error={formik.touched.styleId && formik.errors.styleId}
                         placeholder={"ST ED BC 3220 W"}
@@ -398,7 +418,7 @@ const Products = () => {
                         name={"styleName"}
                         type="text"
                         value={formik.values.styleName}
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         onBlur={formik.handleBlur}
                         error={
                           formik.touched.styleName && formik.errors.styleName
