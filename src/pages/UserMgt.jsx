@@ -41,16 +41,18 @@ const UserMgt = () => {
 
   const handleDelete = async () => {
     console.log(checkedItems);
-    const resp = await fetch(
-      import.meta.env.VITE_BASE_URL + "/api/deleteEmploye",
-      {
-        method: "Delete",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userIds: checkedItems }),
-      }
-    );
+    // const resp = await fetch(
+    //   import.meta.env.VITE_BASE_URL + "/api/deleteEmploye",
+    //   {
+    //     method: "Delete",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({ userIds: checkedItems }),
+    //   }
+    // );
+
+    
 
     fetchData();
   };
@@ -181,12 +183,14 @@ const UserMgt = () => {
                   branchData?.map((item, index) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between pl-5 py-3 h-14 hover:bg-[#1B9BEF14] cursor-pointer "
-                      onClick={() => {
-                        handleBranchClick(item._id);
-                      }}
+                      className="flex items-center justify-between pl-5 py-3 h-14 hover:bg-[#1B9BEF14] "
                     >
-                      <div className="flex gap-3">
+                      <div
+                        className="flex gap-3 cursor-pointer "
+                        onClick={() => {
+                          handleBranchClick(item._id);
+                        }}
+                      >
                         <img src={gps} className="" alt="gps" />
                         <div className="flex flex-col ">
                           <span className="text-[14px] font-medium">
@@ -196,7 +200,10 @@ const UserMgt = () => {
                         </div>
                       </div>
 
-                      <Menu />
+                      <Menu
+                        BranchId={item._id}
+                        BranchesGetMethod={getBranches}
+                      />
                     </div>
                   ))}
               </div>
