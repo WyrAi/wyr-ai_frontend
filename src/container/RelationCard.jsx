@@ -50,6 +50,17 @@ const RelationCard = ({
   console.log(relation._id);
   console.log(relation.Status === "Unregistered");
 
+  const RelationShipHandleDelete = () => {
+    try {
+      wyraiApi
+        .delete(`/deleteRelation/${relation._id}`)
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="w-full h-full rounded overflow-hidden justify-between shadow-lg bg-white  flex flex-col items-center">
       <div className="flex justify-between w-full pt-1 pl-1  ">
@@ -94,7 +105,10 @@ const RelationCard = ({
         </div>
       </div>
       <div className="flex justify-end w-full pr-2 pb-2">
-        <FaRegTrashAlt className="text-orange" />
+        <FaRegTrashAlt
+          className="text-orange cursor-pointer"
+          onClick={() => RelationShipHandleDelete()}
+        />
       </div>
     </div>
   );
