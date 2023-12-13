@@ -4,7 +4,9 @@ import { FiEye } from "react-icons/fi";
 import DashboardNotification from "../Components/DashboardNotification";
 import userGloabalContext from "../UserContext";
 import { useEffect } from "react";
+import { useState } from "react";
 import useToast from "../Contexts/ToasterContext";
+import socket from "../Components/socket";
 
 const InspectionCard = () => {
   return (
@@ -22,6 +24,8 @@ const InspectionCard = () => {
 
 const Dashboard = () => {
   const { getUserInformation, companyId } = userGloabalContext();
+  const [notifications, setNotifications] = useState([]);
+
   const toast= useToast();
 
   const status = {
@@ -35,6 +39,17 @@ const Dashboard = () => {
       getUserInformation();
     }
   }, []);
+
+  useEffect(() => {
+
+    console.log("Notification component mounted");
+    
+    socket.on("getText", (data) => {
+        console.log("Notification component:",data.text);
+        window.alert(data.text)
+        setNotifications((prev) => [...prev, data.text]);
+    });
+  }, [socket]);
   return (
     <div className="ml-5 w-[85%] h-full box-border">
       <header className="flex justify-between mb-9">

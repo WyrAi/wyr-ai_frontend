@@ -4,6 +4,7 @@ import logout from "../assets/noun-log-out-5762374 1.svg";
 import { Link } from "react-router-dom";
 import userGloabalContext from "../UserContext";
 import React from "react";
+import socket from "../Components/socket";
 
 const Nav = () => {
   const { userInformation, userRights } = userGloabalContext();
@@ -19,6 +20,11 @@ const Nav = () => {
     }
     return [];
   }, [userInformation?.role?.SelectAccess]);
+
+  const logout =()=>{
+    console.log("disconnect the socket")
+    socket.disconnect()
+  }
 
   return (
     <>
@@ -41,7 +47,7 @@ const Nav = () => {
         </div>
 
         <div className="w-1/2 m-auto">
-          <button className="flex gap-3 items-center  ">
+          <button className="flex gap-3 items-center" onClick={() => logout()}>
             <img src={logout} alt="logout" />
             <span>Logout</span>
           </button>
