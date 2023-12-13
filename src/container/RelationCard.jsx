@@ -15,6 +15,7 @@ const RelationCard = ({
   company,
   relation,
   selectRelationmethod,
+  RelationMethod,
 }) => {
   const { companyId } = userGloabalContext();
   const [click, setClick] = useState(false);
@@ -49,6 +50,20 @@ const RelationCard = ({
   let checkRelation = companyId === relation.ReceiverRelationId;
   console.log(relation._id);
   console.log(relation.Status === "Unregistered");
+
+  const RelationShipHandleDelete = () => {
+    try {
+      wyraiApi
+        .delete(`/api/deleteRelation/${relation._id}`)
+        .then((res) => {
+          console.log(res);
+          RelationMethod();
+        })
+        .catch((err) => console.log(err));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="w-full h-full rounded overflow-hidden justify-between shadow-lg bg-white  flex flex-col items-center">
@@ -94,7 +109,10 @@ const RelationCard = ({
         </div>
       </div>
       <div className="flex justify-end w-full pr-2 pb-2">
-        <FaRegTrashAlt className="text-orange" />
+        <FaRegTrashAlt
+          className="text-orange cursor-pointer"
+          onClick={() => RelationShipHandleDelete()}
+        />
       </div>
     </div>
   );

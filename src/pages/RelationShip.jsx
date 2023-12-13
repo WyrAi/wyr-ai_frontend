@@ -186,6 +186,7 @@ const RelationShip = () => {
                   company={value.companyId}
                   relation={value.relationId}
                   selectRelationmethod={handleselectRelation}
+                  RelationMethod={fetchRelation}
                 />
               </div>
             );
