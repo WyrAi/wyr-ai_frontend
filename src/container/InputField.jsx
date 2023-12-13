@@ -16,7 +16,7 @@ const InputField = ({
 }) => {
   return (
     <>
-      <div className="h-full relative  mb-4 ">
+      <div className=" relative  mb-4 ">
         <input
           className={`mt-1 indent-2 hover:opacity-95 block w-full  ${
             padding || "pl-2 py-4 pr-10"

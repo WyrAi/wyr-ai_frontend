@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from "react";
 import { BiArrowBack, BiUserPlus } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Input from "../container/Input";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -23,6 +23,7 @@ import { userGloabalContext } from "../UserContext";
 import InputField from "../container/InputField";
 import wyraiApi from "../api/wyraiApi";
 import gps from "../assets/ion_location-outline.svg";
+import CommentBox from "../container/CommentBox";
 
 /**
  * A form component for inspection data.
@@ -30,7 +31,9 @@ import gps from "../assets/ion_location-outline.svg";
  * @returns {JSX.Element} The InspectionForm component.
  */
 
-function InspectionForm() {
+function InspectionView() {
+  const { id } = useParams();
+
   const { startTime, companyId, userInformation } = userGloabalContext();
   const [userRelations, setUserRelations] = useState("");
   const [qcUser, setQcUsers] = useState([]);
@@ -38,16 +41,20 @@ function InspectionForm() {
   const [packingListFiles, setPackingListFiles] = useState(null);
   const [inspectionDate, setInspectionDate] = useState(new Date());
   const [slotOfInspection, setSlotOfInspection] = useState([]);
-
   const [poNumber, setPoNumber] = useState([]);
   const [products, setProducts] = useState([]);
   const [added, setAdded] = useState(false);
+  const [plData, setPlData] = useState({});
   const [ids, setIds] = useState({
     buyerId: "",
     factoryId: "",
     qcId: "",
     qcHeadId: "",
   });
+
+  const [togglePopup, setTogglePopup] = useState(false);
+  console.log(togglePopup);
+  const [reject, setRejects] = useState([]);
 
   const initials = {
     images: "",
@@ -92,9 +99,9 @@ function InspectionForm() {
   const addNewPo = () => {
     setAddPurchaseOrder([...addpurchaseOrder, { ...initialPoData }]);
   };
-
+  console.log(plData);
   const initialValues = {
-    nameOfBuyer: "",
+    nameOfBuyer: plData?.buyerId?.name,
     addOfBuyer: "",
     nameOfQcAgency: "",
     nameOfQcHead: "",
@@ -172,6 +179,9 @@ function InspectionForm() {
 
   useEffect(() => {
     getAllData();
+    wyraiApi
+      .get(`/api/getPlData/${id}`)
+      .then((res) => setPlData(res.data.Response));
     if (userInformation?.companyId?.companyRole === "Factory") {
       setIds({ ...ids, factoryId: companyId });
       formik.setFieldValue("nameOfFactory", userInformation?.companyId?.name);
@@ -181,8 +191,24 @@ function InspectionForm() {
           ", " +
           userInformation?.companyId?.country
       );
+    } else if (userInformation?.companyId?.companyRole === "QC Agency") {
+      formik.setFieldValue("nameOfQcAgency", userInformation?.companyId?.name);
+      // formik.setFieldValue(
+      //   "addOfFactory",
+      //   userInformation?.companyId?.city +
+      //     ", " +
+      //     userInformation?.companyId?.country
+      // );
     }
   }, []);
+
+  useEffect(() => {
+    setAddPurchaseOrder(plData?.PurchaseOrder);
+    setSlotOfInspection(plData?.slotOfInspection);
+    setPackingListFiles(plData?.packingListFiles);
+  }, [plData]);
+  console.log(plData);
+  console.log(addpurchaseOrder);
 
   const handleDropDownSelect = (name, address, item) => {
     setPopup({ ...popup, [name]: !popup[name] });
@@ -231,9 +257,9 @@ function InspectionForm() {
           (item) => item === "Approve"
         )
       ) {
-        status = "Pending Approval";
+        status = "Approved";
       } else {
-        // status = "Pending Approval";
+        status = "Pending Approval";
       }
       const reqbody = {
         ...formik.values,
@@ -290,6 +316,7 @@ function InspectionForm() {
               onDrop={setPackingListFiles}
               multiple={true}
               message={"Upload Packing List"}
+              fileName={packingListFiles}
             />
           </div>
           <div className="relative">
@@ -297,7 +324,7 @@ function InspectionForm() {
               label="Name of Buyer"
               name="nameOfBuyer"
               type="text"
-              value={formik.values.nameOfBuyer}
+              value={plData?.buyerId?.name}
               onChange={formik.handleChange}
               handleClick={handleClick}
               onBlur={formik.handleBlur}
@@ -351,7 +378,7 @@ function InspectionForm() {
             label="Address of Buyer"
             name="addOfBuyer"
             type="text"
-            value={formik.values.addOfBuyer}
+            value={plData?.buyerId?.address}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.addOfBuyer && formik.errors.addOfBuyer}
@@ -363,7 +390,7 @@ function InspectionForm() {
               label="Name of Factory"
               name="nameOfFactory"
               type="text"
-              value={formik.values.nameOfFactory}
+              value={plData?.factoryId?.name}
               onChange={formik.handleChange}
               handleClick={handleClick}
               onBlur={formik.handleBlur}
@@ -420,7 +447,7 @@ function InspectionForm() {
             label="Address of Factory"
             name="addOfFactory"
             type="text"
-            value={formik.values.addOfFactory}
+            value={plData?.factoryId?.address}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.addOfFactory && formik.errors.addOfFactory}
@@ -432,7 +459,7 @@ function InspectionForm() {
               label="Name of QC Agency"
               name="nameOfQcAgency"
               type="text"
-              value={formik.values.nameOfQcAgency}
+              value={plData?.qcId?.name}
               onChange={formik.handleChange}
               handleClick={handleClick}
               onBlur={formik.handleBlur}
@@ -484,7 +511,7 @@ function InspectionForm() {
               label="Name Of QC Head"
               name="nameOfQcHead"
               type="text"
-              value={formik.values.nameOfQcHead}
+              value={plData?.qcHeadId?.name}
               onChange={formik.handleChange}
               handleClick={handleClick}
               onBlur={formik.handleBlur}
@@ -618,7 +645,7 @@ function InspectionForm() {
                 label="Total Carton"
                 name="totalCarton"
                 type="text"
-                value={formik.values.totalCarton}
+                value={plData?.totalCarton}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 error={formik.touched.totalCarton && formik.errors.totalCarton}
@@ -628,99 +655,118 @@ function InspectionForm() {
             </div>
           </div>
 
-          {addpurchaseOrder.map((item, poIndex) => (
-            <div
-              key={poIndex}
-              className="flex md:flex-col bg-slimeGray p-2 pt-8 rounded-md col-span-2 gap-4 items-center "
-            >
-              <div className="flex w-full items-center  ">
-                <div className=" flex-1 ">
-                  <div className="w-1/2 relative">
-                    <div
-                      className="relative flex items-center justify-between p-1 px-4 py-4 hover:opacity-95 w-full h-[60px] bg-gray-50 border border-gray-400 rounded-md shadow-sm focus:outline-none focus:bg-white"
-                      onClick={() => toggleDropDown(poIndex)}
-                    >
-                      <div className="flex flex-col h-full overflow-y-auto w-full cursor-pointer">
-                        <span>{item?.poNumber}</span>
+          {addpurchaseOrder?.map((item, poIndex) => {
+            console.log(item);
+            return (
+              <div
+                key={poIndex}
+                className="flex md:flex-col bg-slimeGray p-2 pt-8 rounded-md col-span-2 gap-4 items-center "
+              >
+                <div className="flex w-full items-center  ">
+                  <div className=" flex-1 ">
+                    <div className="w-1/2 relative">
+                      <div
+                        className="relative flex items-center justify-between p-1 px-4 py-4 hover:opacity-95 w-full h-[60px] bg-gray-50 border border-gray-400 rounded-md shadow-sm focus:outline-none focus:bg-white"
+                        // onClick={() => toggleDropDown(poIndex)}
+                      >
+                        <div className="flex flex-col h-full overflow-y-auto w-full cursor-pointer">
+                          <span>{item?.po_Number}</span>
+                        </div>
+                        <span className="absolute top-[-13px] bg-white px-2 left-[50px]">
+                          Po Number
+                        </span>
                       </div>
-                      <span className="absolute top-[-13px] bg-white px-2 left-[50px]">
-                        Po Number
-                      </span>
-                    </div>
-                    {activePoNumber === poIndex && (
-                      <DropDown>
-                        {poNumber?.map((item, index) => {
-                          return (
-                            <li
-                              key={index}
-                              className="py-2 flex items-center gap-4 mr-2 border-b"
-                              onClick={() => {
-                                toggleDropDown(poIndex);
-                                handlePoNumberChange(poIndex, item?.poList[0]);
-                              }}
-                            >
-                              {/* <span className="w-6 h-6 bg-blue flex justify-center items-center rounded-full">
+                      {activePoNumber === poIndex && (
+                        <DropDown>
+                          {poNumber?.map((item, index) => {
+                            return (
+                              <li
+                                key={index}
+                                className="py-2 flex items-center gap-4 mr-2 border-b"
+                                onClick={() => {
+                                  toggleDropDown(poIndex);
+                                  handlePoNumberChange(
+                                    poIndex,
+                                    item?.poList[0]
+                                  );
+                                }}
+                              >
+                                {/* <span className="w-6 h-6 bg-blue flex justify-center items-center rounded-full">
                                 {item?.poList?.name?.poNumber}
                               </span> */}
-                              <div className="flex flex-col flex-1 ">
-                                <span className=" text-md font-medium">
-                                  PO Number- {item?.poList[0]?.poNumber}
-                                </span>
-                                <span className=" text-xs">{item?.email}</span>
-                              </div>
-                            </li>
-                          );
-                        })}
-                      </DropDown>
-                    )}
+                                <div className="flex flex-col flex-1 ">
+                                  <span className=" text-md font-medium">
+                                    PO Number- {item?.poList[0]?.poNumber}
+                                  </span>
+                                  <span className=" text-xs">
+                                    {item?.email}
+                                  </span>
+                                </div>
+                              </li>
+                            );
+                          })}
+                        </DropDown>
+                      )}
+                    </div>
                   </div>
                 </div>
+                {item?.products?.map((item, productIndex) => {
+                  return (
+                    <PackingList
+                      key={products?._id}
+                      purchaseOrder={item}
+                      setPurchaseOrder={setPurchaseOrder}
+                      handleProductChange={handleProductChange}
+                      poNumber={poNumber}
+                      data={item}
+                      poIndex={poIndex}
+                      productIndex={productIndex}
+                    />
+                  );
+                })}
               </div>
-              {item?.products?.map((item, productIndex) => {
-                return (
-                  <PackingList
-                    key={products?._id}
-                    purchaseOrder={item}
-                    setPurchaseOrder={setPurchaseOrder}
-                    handleProductChange={handleProductChange}
-                    poNumber={poNumber}
-                    data={item}
-                    poIndex={poIndex}
-                    productIndex={productIndex}
-                  />
-                );
-              })}
-            </div>
-          ))}
+            );
+          })}
           <div className="grid col-span-2 pb-5">
-            <button
+            {/* <button
               type="button"
               onClick={addNewPo}
               className="flex bg-[#1b9aef42] p-3 text-blue font-semibold items-center gap-4"
             >
               <AiOutlinePlus size={28} />
               Add another Purchase Order
-            </button>
+            </button> */}
           </div>
           <div className="flex col-span-2 justify-end gap-4 mb-5">
             <button
               type="button"
-              className="px-8 py-2 outline rounded-md outline-2 text-[#CCCCCC] font-semibold hover:opacity-90 outline-[#CCCCCC]"
+              className="px-8 py-2 outline rounded-md outline-2 text-blue font-semibold hover:opacity-90 outline-blue"
+              onClick={() => setTogglePopup(!togglePopup)}
             >
-              Save Draft
+              Reject
             </button>
             <button
               type="submit"
-              className="px-8 py-2 outline bg-[#CCCCCC] text-white rounded-md outline-2 hover:opacity-90 outline-[#CCCCCC] font-semibold "
-              onClick={() => handleSubmit()}
+              className="px-8 py-2 outline bg-blue text-white rounded-md outline-2 hover:opacity-90 outline-[#CCCCCC] font-semibold "
+              onClick={() => ""}
             >
-              Publish
+              Approve & Send To Factory
             </button>
           </div>
         </form>
       </div>
+
+      {togglePopup && (
+        <CommentBox
+          header={"Why You Want To Reject"}
+          btnText={"Reject"}
+          comments={reject}
+          setComments={setRejects}
+          setTogglePopup={setTogglePopup}
+        />
+      )}
     </div>
   );
 }
 
-export default InspectionForm;
+export default InspectionView;

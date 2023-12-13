@@ -38,7 +38,7 @@ const TimePicker = () => {
   const handleClicks = (e) => {
     const val = e.target.innerHTML;
     const name = e.target.getAttribute("data-name");
-    console.log(e.target.innerHTML, e.target.getAttribute("data-name"));
+    // console.log(e.target.innerHTML, e.target.getAttribute("data-name"));
 
     if (name === "hour") {
       setTime({ ...time, ["hour"]: val });
@@ -78,7 +78,7 @@ const TimePicker = () => {
     setStartTime(e.target.innerHTML);
   };
   // console.log("endTime", endTime);
-  console.log(startTime, "startTime");
+  // console.log(startTime, "startTime");
 
   const formatTime = (time) => {
     // console.log(time);

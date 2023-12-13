@@ -33,6 +33,14 @@ export const sideBarData = [
     name: "packingList",
     link: "/inspection/",
   },
+  // {
+  //   icon: (
+  //     <LuPackageSearch className="text-3xl text-darkGray hover:text-white" />
+  //   ),
+  //   heading: "QC Inspection",
+  //   name: "sheduleInspection",
+  //   link: "/qcInspection/",
+  // },
   {
     icon: <img src={relation} className="" alt="" />,
     heading: "Relationship Mgmt.",

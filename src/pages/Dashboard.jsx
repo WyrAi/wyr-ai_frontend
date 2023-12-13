@@ -24,8 +24,6 @@ const InspectionCard = () => {
 
 const Dashboard = () => {
   const { getUserInformation, companyId } = userGloabalContext();
-  const [notifications, setNotifications] = useState([]);
-
   const toast= useToast();
 
   const status = {
@@ -51,15 +49,20 @@ const Dashboard = () => {
     });
   }, [socket]);
   return (
-    <div className="ml-5 w-[85%] h-full box-border">
+    <div className="ml-5 w-[85%] h-full box-border mt-7">
       <header className="flex justify-between mb-9">
         <div className="flex-col gap-1">
-          <h1 className="text-2xl font-semibold">Hey, UserName </h1>
-          <p className="text-sm font-medium">Role</p>
+          <h1 className="text-2xl font-semibold">
+            Hey, {userInformation?.name}
+          </h1>
+          <p className="text-sm font-medium">{userInformation?.role?.name}</p>
         </div>
-        <button className="py-2 px-4 bg-blue rounded-md font-semibold text-base text-white" onClick={()=>{
-          toast.error("Write function for purchase order");
-        }}>
+        <button
+          className="py-2 px-4 bg-blue rounded-md font-semibold text-base text-white"
+          onClick={() => {
+            toast.error("Write function for purchase order");
+          }}
+        >
           Create A Purchase Order
         </button>
       </header>

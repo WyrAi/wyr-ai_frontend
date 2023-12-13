@@ -69,7 +69,6 @@ function PurchaseOrder() {
   // const [buyerPopup, setBuyerPopup] = useState(false);
   // const [vendorPopup, setVendorPopup] = useState(false);
   const [count, setCount] = useState(1);
-  const [userRelations, setUserRelations] = useState();
   const { productList, imagesFiles, setImagesFiles } = userGloabalContext();
 
   const validationSchema = Yup.object().shape({
@@ -111,6 +110,7 @@ function PurchaseOrder() {
     validationSchema,
   });
   const { values } = formik;
+
   useEffect(() => {
     if (values.nameOfBuyer && values.nameOfVendor) {
       fetchpeople();
@@ -127,7 +127,7 @@ function PurchaseOrder() {
     const { data } = await axios.get(
       import.meta.env.VITE_BASE_URL + `/api/getAllCompanyByRole/${companyId}`
     );
-
+    console.log(data);
     if (userInformation?.companyId?.companyRole === "Buyer") {
       //   console.log(userInformation);
       formik.setFieldValue("nameOfBuyer", userInformation.companyId?.name);
@@ -165,7 +165,7 @@ function PurchaseOrder() {
     ) {
       status = "Published";
     } else {
-      status = "Pending";
+      status = "Pending Approval";
     }
     // console.log(slotOfProducts.length);
     let requestBody = {};
@@ -399,7 +399,7 @@ function PurchaseOrder() {
                   <DropDown>
                     {buyer &&
                       buyer?.map((item, index) => {
-                        const intials = item.name.charAt(0).toUpperCase();
+                        const intials = item?.name?.charAt(0).toUpperCase();
                         return (
                           <li
                             key={index}
@@ -472,7 +472,7 @@ function PurchaseOrder() {
                     {vendor &&
                       vendor?.map((item, index) => {
                         const intials = item?.companyId?.name
-                          .charAt(0)
+                          ?.charAt(0)
                           .toUpperCase();
                         return (
                           <li
@@ -652,7 +652,7 @@ function PurchaseOrder() {
                 <DropDown>
                   {people.length > 0 &&
                     people?.map((item, index) => {
-                      const intials = item?.name.charAt(0).toUpperCase();
+                      const intials = item?.name?.charAt(0).toUpperCase();
                       //   console.log(item._id);
                       return (
                         <li

@@ -176,7 +176,7 @@ const RelationShip = () => {
         </div>
       </div>
       <div className=" mx-2 w-full flex-1 flex flex-col">
-        <div className="flex flex-w gap-2 flex-1 mt-5">
+        <div className="flex flex-w gap-2  mt-5 flex-wrap">
           {allRelation?.map((value, index) => {
             return (
               <div className="bg-gray-50 h-[120px] w-[295px]" key={index}>
@@ -184,12 +184,13 @@ const RelationShip = () => {
                   company={value.companyId}
                   relation={value.relationId}
                   selectRelationmethod={handleselectRelation}
+                  RelationMethod={fetchRelation}
                 />
               </div>
             );
           })}
         </div>
-        <div className="text-center mb-5">Pagination</div>
+        {/* <div className="text-center mb-5">Pagination</div> */}
       </div>
     </main>
   );

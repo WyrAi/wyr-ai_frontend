@@ -1,13 +1,13 @@
 import { sideBarData } from "../assets/data/sidebarData";
 import logout from "../assets/noun-log-out-5762374 1.svg";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import userGloabalContext from "../UserContext";
 import React from "react";
-import socket from "../Components/socket";
 
 const Nav = () => {
   const { userInformation, userRights } = userGloabalContext();
+  const navigate = useNavigate()
   const accessArray = React.useMemo(() => {
     if (userRights) {
       console.log(userRights);
@@ -21,11 +21,10 @@ const Nav = () => {
     return [];
   }, [userInformation?.role?.SelectAccess]);
 
-  const logout =()=>{
-    console.log("disconnect the socket")
-    socket.disconnect()
+  const logoutHandlemethod = () =>{
+    deleteToken()
+    navigate("/login")
   }
-
   return (
     <>
       <div className="h-screen grid grid-rows-[80%_10%] justify-around border-r-[1px] border-gray-200 items-center bg-white overflow-hidden ">
@@ -47,7 +46,7 @@ const Nav = () => {
         </div>
 
         <div className="w-1/2 m-auto">
-          <button className="flex gap-3 items-center" onClick={() => logout()}>
+          <button className="flex gap-3 items-center  ">
             <img src={logout} alt="logout" />
             <span>Logout</span>
           </button>

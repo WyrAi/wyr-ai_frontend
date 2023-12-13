@@ -15,6 +15,8 @@ import useToast from "../Contexts/ToasterContext";
 import InformationDashboard from "../pages/InformationDashboard";
 import Information from "../pages/Information";
 import InspectionForm from "../Components/InspectionForm";
+import QcInspection from "../pages/QcInspection";
+import InspectionView from "../Components/InspectionView";
 
 const IsRouteAllowed = (props) => {
   const { hasPermissions, children } = props;
@@ -36,7 +38,6 @@ const ProtectedRoutes = () => {
       <Route path="/" element={<Layout />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route index element={<Dashboard />} />
-        <Route path="/Information" element={<Information />} />
         <Route
           path="/Information_Dashboard"
           element={<InformationDashboard />}
@@ -46,6 +47,8 @@ const ProtectedRoutes = () => {
         <Route path="/purchase/add" element={<PurchaseOrder />} />
         <Route path="/inspection" element={<Inspection />} />
         <Route path="/inspection/add" element={<InspectionForm />} />
+        <Route path="/qcInspection" element={<QcInspection />} />
+        <Route path="/inspection/view/:id" element={<InspectionView />} />
         {/* {userRights?.userManagement?.length ? ( */}
         <Route
           path="/user"

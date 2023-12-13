@@ -8,8 +8,8 @@ import { userGloabalContext } from "../UserContext";
 
 const AccessManagement = (props) => {
   const { userInformation } = userGloabalContext();
-  const { accessGranted, setAccessGranted } = props; 
-
+  const { accessGranted, setAccessGranted } = props;
+  // console.log(userInformation.role);
   /* useEffect(() => {
     const selectedAccessToSend = Object.entries(selectAccess).reduce(
       (acc, [category, actions]) => {
@@ -209,7 +209,9 @@ const AccessManagement = (props) => {
   return (
     <div className="overflow-auto  w-full flex flex-col gap-4 mb-5">
       {Object.keys(currentAccessPermissions).map((e, index) => {
-        return <PermissionAccordian key={index} e={currentAccessPermissions[e]} />;
+        return (
+          <PermissionAccordian key={index} e={currentAccessPermissions[e]} />
+        );
       })}
     </div>
   );

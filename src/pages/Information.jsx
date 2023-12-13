@@ -4,11 +4,23 @@ import logo from "../assets/logo.svg";
 import axios from "axios";
 import html2canvas from "html2canvas";
 import { RiDeleteBack2Fill } from "react-icons/ri";
+import { PiPaperPlaneRightFill } from "react-icons/pi";
+import { MdModeEdit } from "react-icons/md";
+import { AiFillDelete } from "react-icons/ai";
+import { RxCrossCircled } from "react-icons/rx";
+import { useFormik } from "formik";
+import InputField from "../container/InputField";
 
 const Information = () => {
   const [data, setData] = React.useState([]);
   const baseURL = import.meta.env.VITE_BASE_URL;
-  const [comment, setComment] = React.useState("");
+  const [isEditting, setIsEditting] = React.useState(null);
+  const [commentData, setCommentData] = React.useState({
+    commentIndex: "",
+    parentIndex: "",
+    text: "",
+  });
+
   const InformationGet = async () => {
     try {
       const { data } = await axios.get(`${baseURL}/api/AllInformationGet`);
@@ -42,45 +54,263 @@ const Information = () => {
     }
   };
 
+  let initialValues = data.reduce((o, key) => ({ ...o, [key._id]: "" }), {});
+
+  const formik = useFormik({
+    initialValues: initialValues,
+    onSubmit: (values) => handleSubmit(values),
+  });
+  // console.log(comments);
+
+  async function handleSubmit(parentIndex, id) {
+    try {
+      if (isEditting) {
+        //this is for editing comments
+
+        // const comments = data?.[commentData?.parentIndex]?.comment;
+        // comments[commentData.commentIndex] = formik.values[`${isEditting}`];
+
+        // console.log(data?.[commentData?.parentIndex].comment);
+        // console.log(formik.values[`${isEditting}`]);
+
+        const res = await axios.put(
+          `${baseURL}/api/InformationComentUpdate/${id}/${commentData.commentIndex}`,
+          { comment: formik.values[`${isEditting}`] }
+        );
+
+        if (res.status === 200) {
+          InformationGet();
+          formik.setFieldValue(`${id}`, "");
+        }
+        setIsEditting(null);
+      } else {
+        const comments = data?.[parentIndex]?.comment;
+        comments?.push(formik.values[`${id}`]);
+
+        const res = await axios.put(
+          `${baseURL}/api/InformationCommentAdd/${id}`,
+          { comment: formik.values[`${id}`] }
+        );
+        if (res.status === 200) {
+          InformationGet();
+          formik.setFieldValue(`${id}`, "");
+        }
+
+        // console.log(res);
+        // comments?.push(commentData.text);
+        // setProductList((currentProductList) => {
+        //   // Check if comments is an array, if not, default to an empty array
+        //   const commentsArray = Array.isArray(currentProductList.comments)
+        //     ? currentProductList.comments
+        //     : [];
+        //   return {
+        //     ...currentProductList,
+        //     comments: [...commentsArray, data],
+        //   };
+        // });
+      }
+
+      // formik.setFieldValue("comment", "");
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function editComment(parentIndex, commentIndex, newText, id) {
+    formik.setFieldValue(`${id}`, newText);
+
+    setIsEditting(id);
+    setCommentData({ commentIndex, parentIndex, text: newText });
+  }
+
+  async function deleteComment(commentIndex, id) {
+    try {
+      const { data } = await axios.delete(
+        `${baseURL}/api/InformationComentDelete/${id}/${commentIndex}`
+      );
+      if (data) InformationGet();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  //it is working code
+  // const downloadPDF = () => {
+  //   const capture = document.querySelector(".actual-receipt");
+  //   // Check if the capture element is found
+
+  //   if (capture) {
+  //     // Use html2canvas options to wait for images to load
+  //     const ignoreElements = [
+  //       ".input-comments",
+  //       ".delete-button",
+  //       ".download-Button",
+  //     ];
+
+  //     // // Remove ignored elements from the clone
+  //     // ignoreElements.forEach((selector) => {
+  //     //   const elementsToRemove = clone.querySelectorAll(selector);
+  //     //   elementsToRemove.forEach((element) =>
+  //     //     element.parentNode.removeChild(element)
+  //     //   );
+  //     // });
+  //     // window.onload = function () {
+  //     html2canvas(capture, {
+  //       useCORS: true,
+  //       quality: 1,
+  //       type: "image/png",
+  //       // width: window.innerWidth, // Set the width to the viewport width
+  //       // height: window.innerHeight,
+  //       // scale: 1, // Set the scale to 1 (no scaling)
+  //       logging: true,
+  //       allowTaint: true,
+  //       proxy: "path/to/proxy", // Provide a path to a proxy if needed
+  //       ignoreElements: (element) => {
+  //         // Check if the element should be ignored
+  //         return ignoreElements.some((selector) => element.matches(selector));
+  //       },
+  //     }).then((canvas) => {
+  //       // Create PDF using jsPDF
+  //       const imgData = canvas.toDataURL("image/png");
+  //       // const doc = new jsPDF("p", "mm", "a4");
+  //       // console.log(imgData);
+  //       // const componentWidth = doc.internal.pageSize.getWidth();
+  //       // const componentHeight = doc.internal.pageSize.getHeight();
+  //       // const imgWidth = 210; // A4 page width in mm
+  //       // const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  //       // // Add the image to the PDF
+  //       // doc.addImage(imgData, 'PNG', 0, 0);
+  //       // // doc.addImage(imgData, "PNG", 0, 0, componentWidth, componentHeight);
+  //       // doc.save("receipt.pdf");
+  //       var imgWidth = 210;
+  //       var pageHeight = 295;
+  //       var imgHeight = (canvas.height * imgWidth) / canvas.width;
+  //       var heightLeft = imgHeight;
+
+  //       var doc = new jsPDF("p", "mm");
+  //       var position = 0;
+
+  //       doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+  //       heightLeft -= pageHeight;
+
+  //       while (heightLeft >= 0) {
+  //         position = heightLeft - imgHeight;
+  //         doc.addPage();
+  //         doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+  //         heightLeft -= pageHeight;
+  //       }
+  //       doc.save("file.pdf");
+  //     });
+  //     // };
+  //   } else {
+  //     console.error("Element with class 'actual-receipt' not found.");
+  //   }
+  // };
+
   const downloadPDF = () => {
     const capture = document.querySelector(".actual-receipt");
-    // Check if the capture element is found
 
     if (capture) {
-      // Use html2canvas options to wait for images to load
       const ignoreElements = [
         ".input-comments",
         ".delete-button",
         ".download-Button",
       ];
+
       html2canvas(capture, {
         useCORS: true,
+        quality: 1,
+        type: "image/png",
         logging: true,
         allowTaint: true,
-        proxy: "path/to/proxy", // Provide a path to a proxy if needed
+        proxy: "path/to/proxy",
         ignoreElements: (element) => {
-          // Check if the element should be ignored
           return ignoreElements.some((selector) => element.matches(selector));
         },
       }).then((canvas) => {
-        // Create PDF using jsPDF
         const imgData = canvas.toDataURL("image/png");
-        const doc = new jsPDF("p", "mm", "a4");
-        const componentWidth = doc.internal.pageSize.getWidth();
-        const componentHeight = doc.internal.pageSize.getHeight();
-        doc.addImage(imgData, "PNG", 0, 0, componentWidth, componentHeight);
-        doc.save("receipt.pdf");
+        const imgWidth = 210;
+        const pageHeight = 295;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        const topMargin = 20; // Adjust top margin
+        const lowerMargin = 20; // Adjust lower margin
+
+        const doc = new jsPDF("p", "mm");
+
+        let position = topMargin;
+
+        doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        let heightLeft = imgHeight - pageHeight + topMargin + lowerMargin;
+
+        while (heightLeft >= 0) {
+          position = heightLeft - imgHeight + topMargin + lowerMargin;
+          doc.addPage();
+          doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+        }
+
+        doc.save("file.pdf");
       });
     } else {
       console.error("Element with class 'actual-receipt' not found.");
     }
   };
+
+  // const downloadPDF = () => {
+  //   const capture = document.querySelector(".actual-receipt");
+
+  //   if (capture) {
+  //     const ignoreElements = [
+  //       ".input-comments",
+  //       ".delete-button",
+  //       ".download-Button",
+  //     ];
+
+  //     html2canvas(capture, {
+  //       useCORS: true,
+  //       quality: 1,
+  //       type: "image/png",
+  //       logging: true,
+  //       allowTaint: true,
+  //       proxy: "path/to/proxy",
+  //       ignoreElements: (element) => {
+  //         return ignoreElements.some((selector) => element.matches(selector));
+  //       },
+  //     }).then((canvas) => {
+  //       const imgData = canvas.toDataURL("image/png");
+  //       const imgWidth = 210;
+  //       const pageHeight = 295;
+  //       const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  //       const topMargin = 20; // Adjust top margin
+  //       const upperMargin = 25; // Adjust upper margin
+
+  //       const doc = new jsPDF("p", "mm");
+
+  //       let position = upperMargin;
+
+  //       doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+  //       let heightLeft = imgHeight - pageHeight + upperMargin;
+
+  //       while (heightLeft >= 0) {
+  //         position = heightLeft - imgHeight + upperMargin;
+  //         doc.addPage();
+  //         doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+  //         heightLeft -= pageHeight;
+  //       }
+
+  //       doc.save("file.pdf");
+  //     });
+  //   } else {
+  //     console.error("Element with class 'actual-receipt' not found.");
+  //   }
+  // };
+
   useEffect(() => {
     InformationGet();
   }, []);
   return (
     <>
-      <div className="w-full h-[39%] overflow-y-auto ">
+      <div className="w-full h-full overflow-y-auto xl:h-screen ">
         <div className=" text-right download-Button  py-3 px-4 right-0">
           <button
             className="bg-[#1e96fc] rounded-md px-4 py-2  font-medium text-lg text-white"
@@ -97,7 +327,7 @@ const Information = () => {
             height="100px"
             className="py-4 ml-4"
           />
-          <div className="overflow-y-auto">
+          <div className="w-[90vw]">
             <div className="flex justify-between items-center w-full text-2xl">
               <div className="font-bold">
                 <h2>Client Name :{"XYZ"}</h2>
@@ -154,8 +384,8 @@ const Information = () => {
               </div>
             </div>
             <div className=" w-full mt-5 h-full">
-              {data.map((e) => (
-                <div className="flex pt-5 h-full ">
+              {data.map((e, InfoIndex) => (
+                <div className="flex py-8 h-[500px] ">
                   <img
                     src={e.image}
                     alt="Product"
@@ -165,28 +395,62 @@ const Information = () => {
                   />
                   <div className="p-5 w-full flex justify-between gap-5">
                     <div className="flex flex-col justify-between w-full">
-                      <div>
-                        {e.comment.map((c, index) => (
-                          <p className="font-medium text-[20px] capitalize">{`${
-                            index + 1
-                          }.  ${c}`}</p>
-                        ))}
-                      </div>
-                      <div className=" flex gap-5 input-comments w-full">
-                        <input
+                      <ul className="w-full h-[70%] overflow-auto">
+                        {e?.comment?.length > 0 ? (
+                          e?.comment?.map((comment, CommentIndex) => (
+                            <li
+                              key={CommentIndex}
+                              className="flex items-center justify-between px-4 py-2 mb-2 border-b"
+                            >
+                              <span className="text-2xl flex-grow text-black">
+                                {comment}
+                              </span>
+                              <div className="flex gap-5 delete-button">
+                                <MdModeEdit
+                                  className="text-xl text-black cursor-pointer delete-button"
+                                  onClick={() =>
+                                    editComment(
+                                      InfoIndex,
+                                      CommentIndex,
+                                      comment,
+                                      e._id
+                                    )
+                                  }
+                                />
+                                <AiFillDelete
+                                  className="text-2xl text-red-500 cursor-pointer delete-button"
+                                  onClick={() =>
+                                    deleteComment(CommentIndex, e._id)
+                                  }
+                                />
+                              </div>
+                            </li>
+                          ))
+                        ) : (
+                          <>
+                            <li className="text-center">Add New Comment....</li>
+                          </>
+                        )}
+                      </ul>
+
+                      <div className=" relative w-full input-comments">
+                        <InputField
+                          label={"Add Comments"}
+                          name={`${e._id}`}
                           type="text"
-                          name=""
-                          id=""
-                          className="w-full p-4 rounded-md text-base border-none outline-none"
-                          placeholder="Enter another comment"
-                          onChange={(e) => setComment(e.target.value)}
+                          value={formik.values[`${e._id}`]}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          error={
+                            formik.touched.comment && formik.errors.comment
+                          }
+                          placeholder={"Enter Comment"}
+                          labelColor={"bg-white"}
                         />
-                        <button
-                          className="bg-[#1e96fc] px-8 text-white text-lg font-medium rounded-md"
-                          onClick={() => AddNewComment(e._id)}
-                        >
-                          Submit
-                        </button>
+                        <PiPaperPlaneRightFill
+                          className="text-blue text-3xl absolute md:top-[1.5vh] md:right-[1vh] cursor-pointer"
+                          onClick={() => handleSubmit(InfoIndex, e._id)}
+                        />
                       </div>
                     </div>
 
@@ -218,3 +482,13 @@ const Information = () => {
 };
 
 export default Information;
+
+{
+  /* <div>
+{e.comment.map((c, index) => (
+  <p className="font-medium text-[20px] capitalize">{`${
+    index + 1
+  }.  ${c}`}</p>
+))}
+</div> */
+}
