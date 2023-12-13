@@ -18,12 +18,13 @@ const PackingList = ({
   handleProductChange,
 }) => {
   const { companyId, userInformation } = userGloabalContext();
-  console.log(userInformation);
-  console.log(data);
+  // console.log(userInformation);
+  // console.log(data);
   const productList = data;
   const [branchData, setBranchData] = useState(null);
   const [qcData, setQcData] = useState(null);
   const [branch, setBranch] = useState(null);
+  const [qc, setQc] = useState(null);
   const [popup, setPopup] = useState({
     branch: false,
     qc: false,
@@ -96,11 +97,13 @@ const PackingList = ({
   }
 
   const handleDropDownSelect = (item) => {
-    handleProductChange(poIndex, productIndex, "branch", item?._id);
-    setBranch(item?.branchName);
+    // console.log(item);
+    // handleProductChange(poIndex, productIndex, "branch", item?._id);
+    // setBranch(item?.branchName);
   };
 
   const qcExist = userInformation?.companyId?.companyRole === "QC Agency";
+  // console.log(qcExist);
 
   const DropDown = ({ children }) => {
     return (
@@ -113,12 +116,13 @@ const PackingList = ({
       </>
     );
   };
+  // console.log(companyId);
 
   useEffect(() => {
     if (userInformation?.companyId?.companyRole === "QC Agency") {
       wyraiApi
         .get(`/api/GetEmployeesofBranch/${userInformation?.officeBranch}`)
-        .then((res) => console.log(res))
+        .then((res) => setQcData(res.data.Data))
         .catch((err) => console.log(err));
 
       setBranch(data.branch.branchName);
@@ -128,7 +132,8 @@ const PackingList = ({
         .then((res) => setBranchData(res.data.Response.Branches))
         .catch((err) => console.log(err));
     }
-  }, []);
+  }, [companyId]);
+  // console.log(qcData);
 
   return (
     <>
@@ -155,7 +160,7 @@ const PackingList = ({
             labelColor={"bg-slimeGray"}
             labelsize={"text-[10px]"}
             padding={"pt-3 pb-1"}
-            // disable={true}
+            disable={qcExist}
           />
         </div>
         <div className="">
@@ -171,7 +176,7 @@ const PackingList = ({
             labelColor={"bg-slimeGray"}
             labelsize={"text-[10px]"}
             padding={"py-2"}
-            // disable={true}
+            disable={qcExist}
           />
         </div>
         <div className="">
@@ -204,7 +209,7 @@ const PackingList = ({
             labelColor={"bg-slimeGray"}
             labelsize={"text-[10px]"}
             padding={"py-2"}
-            // disable={true}
+            disable={true}
           />
         </div>
         <div className="">
@@ -222,7 +227,7 @@ const PackingList = ({
             labelColor={"bg-slimeGray"}
             labelsize={"text-[10px]"}
             padding={"py-2"}
-            // disable={true}
+            disable={qcExist}
           />
         </div>
         <div className="">
@@ -238,7 +243,7 @@ const PackingList = ({
             labelColor={"bg-slimeGray"}
             labelsize={"text-[10px]"}
             padding={"py-2"}
-            // disable={true}
+            disable={qcExist}
           />
         </div>
         <div className="">
@@ -254,7 +259,7 @@ const PackingList = ({
             labelColor={"bg-slimeGray"}
             labelsize={"text-[10px]"}
             padding={"py-2"}
-            // disable={true}
+            disable={qcExist}
           />
         </div>
         <div className="flex gap-2">
@@ -277,7 +282,7 @@ const PackingList = ({
               )}
             </div>
 
-            {popup.branch && (
+            {popup.branch && !qcExist && (
               <DropDown>
                 {branchData?.map((item, index) => {
                   return (
@@ -299,6 +304,59 @@ const PackingList = ({
               </DropDown>
             )}
           </div>
+
+          {qcExist && (
+            <div
+              className=" relative mb-8  cursor-pointer"
+              onClick={() => setPopup({ ...popup, qc: !popup.qc })}
+            >
+              <span className="text-[10px]">Add Qc</span>
+              <div className="flex justify-around items-center">
+                {qc ? (
+                  <span className="w-5 h-5 bg-blue flex justify-center items-center rounded-full">
+                    {qc?.charAt(0).toUpperCase()}
+                  </span>
+                ) : (
+                  <img
+                    src={addUser}
+                    alt="add"
+                    className={`w-6 h-6 ${qc ? "" : "m-auto"}`}
+                  />
+                )}
+              </div>
+
+              {popup.qc && (
+                <DropDown>
+                  {qcData?.map((item, index) => {
+                    // console.log(item);
+                    return (
+                      <li
+                        key={index}
+                        className="py-2 flex items-center gap-4 mr-2 border-b"
+                        onClick={() => {
+                          handleProductChange(
+                            poIndex,
+                            productIndex,
+                            "qc",
+                            item?._id
+                          );
+                          setQc(item?.name);
+                        }}
+                      >
+                        <span className="flex-1 text-xs">{item?.name}</span>
+                        {/* <span className="flex gap-2 items-center">
+                      <img src={gps} alt="gps" className="w-[16px] h-[16px]" />
+                      <span className="text-[10px]">
+                        {item.companyId?.city}, {item.companyId?.country}
+                      </span>
+                    </span> */}
+                      </li>
+                    );
+                  })}
+                </DropDown>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </>

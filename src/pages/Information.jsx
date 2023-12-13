@@ -133,80 +133,7 @@ const Information = () => {
       console.log(error);
     }
   }
-
-  const downloadPDF = () => {
-    const capture = document.querySelector(".actual-receipt");
-    // Check if the capture element is found
-
-    if (capture) {
-      // Use html2canvas options to wait for images to load
-      const ignoreElements = [
-        ".input-comments",
-        ".delete-button",
-        ".download-Button",
-      ];
-
-      // // Remove ignored elements from the clone
-      // ignoreElements.forEach((selector) => {
-      //   const elementsToRemove = clone.querySelectorAll(selector);
-      //   elementsToRemove.forEach((element) =>
-      //     element.parentNode.removeChild(element)
-      //   );
-      // });
-      // window.onload = function () {
-      html2canvas(capture, {
-        useCORS: true,
-        quality: 1,
-        type: "image/png",
-        // width: window.innerWidth, // Set the width to the viewport width
-        // height: window.innerHeight,
-        // scale: 1, // Set the scale to 1 (no scaling)
-        logging: true,
-        allowTaint: true,
-        proxy: "path/to/proxy", // Provide a path to a proxy if needed
-        ignoreElements: (element) => {
-          // Check if the element should be ignored
-          return ignoreElements.some((selector) => element.matches(selector));
-        },
-      }).then((canvas) => {
-        // Create PDF using jsPDF
-        const imgData = canvas.toDataURL("image/png");
-        // const doc = new jsPDF("p", "mm", "a4");
-        // console.log(imgData);
-        // const componentWidth = doc.internal.pageSize.getWidth();
-        // const componentHeight = doc.internal.pageSize.getHeight();
-        // const imgWidth = 210; // A4 page width in mm
-        // const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-        // // Add the image to the PDF
-        // doc.addImage(imgData, 'PNG', 0, 0);
-        // // doc.addImage(imgData, "PNG", 0, 0, componentWidth, componentHeight);
-        // doc.save("receipt.pdf");
-        var imgWidth = 210;
-        var pageHeight = 295;
-        var imgHeight = (canvas.height * imgWidth) / canvas.width;
-        var heightLeft = imgHeight;
-
-        var doc = new jsPDF("p", "mm");
-        var position = 0;
-
-        doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-
-        while (heightLeft >= 0) {
-          position = heightLeft - imgHeight;
-          doc.addPage();
-          doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
-        }
-        doc.save("file.pdf");
-      });
-      // };
-    } else {
-      console.error("Element with class 'actual-receipt' not found.");
-    }
-  };
-
+  //it is working code
   // const downloadPDF = () => {
   //   const capture = document.querySelector(".actual-receipt");
   //   // Check if the capture element is found
@@ -226,60 +153,158 @@ const Information = () => {
   //     //     element.parentNode.removeChild(element)
   //     //   );
   //     // });
-  //     // html2canvas(capture, {
-  //     //   useCORS: true,
-  //     //   logging: true,
-  //     //   allowTaint: true,
-  //     //   proxy: "path/to/proxy", // Provide a path to a proxy if needed
-  //     //   ignoreElements: (element) => {
-  //     //     // Check if the element should be ignored
-  //     //     return ignoreElements.some((selector) => element.matches(selector));
-  //     //   },
-  //     // }).then((canvas) => {
-  //     //   // Create PDF using jsPDF
-  //     //   const imgData = canvas.toDataURL("image/png");
-  //     //   const doc = new jsPDF("p", "mm", "a4");
-  //     //   const componentWidth = doc.internal.pageSize.getWidth();
-  //     //   const componentHeight = doc.internal.pageSize.getHeight();
-  //     //   doc.addImage(imgData, "PNG", 0, 0, componentWidth, componentHeight);
-  //     //   doc.save("receipt.pdf");
-  //     // });
-
-  //     // Create a clone of the capture element to avoid interference with the original content
-  //     const clone = capture.cloneNode(true);
-
-  //     // Use html2canvas options to exclude certain elements
-  //     html2canvas(clone, {
+  //     // window.onload = function () {
+  //     html2canvas(capture, {
   //       useCORS: true,
+  //       quality: 1,
+  //       type: "image/png",
+  //       // width: window.innerWidth, // Set the width to the viewport width
+  //       // height: window.innerHeight,
+  //       // scale: 1, // Set the scale to 1 (no scaling)
   //       logging: true,
   //       allowTaint: true,
   //       proxy: "path/to/proxy", // Provide a path to a proxy if needed
   //       ignoreElements: (element) => {
   //         // Check if the element should be ignored
-  //         return (
-  //           element.nodeName.toLowerCase() === "iframe" ||
-  //           ignoreElements.some((selector) => element.matches(selector))
-  //         );
+  //         return ignoreElements.some((selector) => element.matches(selector));
   //       },
   //     }).then((canvas) => {
-  //       // Calculate the proper scale to fit the content into the PDF page
-  //       const scale = 2; // You can adjust this value
-
   //       // Create PDF using jsPDF
   //       const imgData = canvas.toDataURL("image/png");
-  //       const pdf = new jsPDF("p", "mm", "a4");
-  //       const pdfWidth = pdf.internal.pageSize.getWidth();
-  //       const pdfHeight = pdf.internal.pageSize.getHeight();
-  //       const imgWidth = pdfWidth;
-  //       const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  //       // const doc = new jsPDF("p", "mm", "a4");
+  //       // console.log(imgData);
+  //       // const componentWidth = doc.internal.pageSize.getWidth();
+  //       // const componentHeight = doc.internal.pageSize.getHeight();
+  //       // const imgWidth = 210; // A4 page width in mm
+  //       // const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-  //       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight, "", "FAST");
-  //       pdf.save("receipt.pdf");
+  //       // // Add the image to the PDF
+  //       // doc.addImage(imgData, 'PNG', 0, 0);
+  //       // // doc.addImage(imgData, "PNG", 0, 0, componentWidth, componentHeight);
+  //       // doc.save("receipt.pdf");
+  //       var imgWidth = 210;
+  //       var pageHeight = 295;
+  //       var imgHeight = (canvas.height * imgWidth) / canvas.width;
+  //       var heightLeft = imgHeight;
+
+  //       var doc = new jsPDF("p", "mm");
+  //       var position = 0;
+
+  //       doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+  //       heightLeft -= pageHeight;
+
+  //       while (heightLeft >= 0) {
+  //         position = heightLeft - imgHeight;
+  //         doc.addPage();
+  //         doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+  //         heightLeft -= pageHeight;
+  //       }
+  //       doc.save("file.pdf");
+  //     });
+  //     // };
+  //   } else {
+  //     console.error("Element with class 'actual-receipt' not found.");
+  //   }
+  // };
+
+  const downloadPDF = () => {
+    const capture = document.querySelector(".actual-receipt");
+
+    if (capture) {
+      const ignoreElements = [
+        ".input-comments",
+        ".delete-button",
+        ".download-Button",
+      ];
+
+      html2canvas(capture, {
+        useCORS: true,
+        quality: 1,
+        type: "image/png",
+        logging: true,
+        allowTaint: true,
+        proxy: "path/to/proxy",
+        ignoreElements: (element) => {
+          return ignoreElements.some((selector) => element.matches(selector));
+        },
+      }).then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+        const imgWidth = 210;
+        const pageHeight = 295;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        const topMargin = 20; // Adjust top margin
+        const lowerMargin = 20; // Adjust lower margin
+
+        const doc = new jsPDF("p", "mm");
+
+        let position = topMargin;
+
+        doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        let heightLeft = imgHeight - pageHeight + topMargin + lowerMargin;
+
+        while (heightLeft >= 0) {
+          position = heightLeft - imgHeight + topMargin + lowerMargin;
+          doc.addPage();
+          doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+        }
+
+        doc.save("file.pdf");
+      });
+    } else {
+      console.error("Element with class 'actual-receipt' not found.");
+    }
+  };
+
+  // const downloadPDF = () => {
+  //   const capture = document.querySelector(".actual-receipt");
+
+  //   if (capture) {
+  //     const ignoreElements = [
+  //       ".input-comments",
+  //       ".delete-button",
+  //       ".download-Button",
+  //     ];
+
+  //     html2canvas(capture, {
+  //       useCORS: true,
+  //       quality: 1,
+  //       type: "image/png",
+  //       logging: true,
+  //       allowTaint: true,
+  //       proxy: "path/to/proxy",
+  //       ignoreElements: (element) => {
+  //         return ignoreElements.some((selector) => element.matches(selector));
+  //       },
+  //     }).then((canvas) => {
+  //       const imgData = canvas.toDataURL("image/png");
+  //       const imgWidth = 210;
+  //       const pageHeight = 295;
+  //       const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  //       const topMargin = 20; // Adjust top margin
+  //       const upperMargin = 25; // Adjust upper margin
+
+  //       const doc = new jsPDF("p", "mm");
+
+  //       let position = upperMargin;
+
+  //       doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+  //       let heightLeft = imgHeight - pageHeight + upperMargin;
+
+  //       while (heightLeft >= 0) {
+  //         position = heightLeft - imgHeight + upperMargin;
+  //         doc.addPage();
+  //         doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+  //         heightLeft -= pageHeight;
+  //       }
+
+  //       doc.save("file.pdf");
   //     });
   //   } else {
   //     console.error("Element with class 'actual-receipt' not found.");
   //   }
   // };
+
   useEffect(() => {
     InformationGet();
   }, []);
@@ -302,8 +327,8 @@ const Information = () => {
             height="100px"
             className="py-4 ml-4"
           />
-          <div className="md:w-[75vw]">
-            <div className="flex flex-col  md:flex-row justify-between items-start md:items-center w-full text-lg md:text-2xl">
+          <div className="w-[90vw]">
+            <div className="flex justify-between items-center w-full text-2xl">
               <div className="font-bold">
                 <h2>Client Name :{"XYZ"}</h2>
                 <h2>Vender Name :{"XYZ"}</h2>
@@ -360,7 +385,7 @@ const Information = () => {
             </div>
             <div className=" w-full mt-5 h-screen md:h-full">
               {data.map((e, InfoIndex) => (
-                <div className="flex flex-col md:flex-row py-8 h-full ">
+                <div className="flex py-8 h-[500px] ">
                   <img
                     src={e.image}
                     alt="Product"
@@ -377,12 +402,12 @@ const Information = () => {
                               key={CommentIndex}
                               className="flex items-center justify-between px-4 py-2 mb-2 border-b"
                             >
-                              <span className="text-sm flex-grow text-lightGray">
+                              <span className="text-2xl flex-grow text-black">
                                 {comment}
                               </span>
-                              <div className="flex gap-5 ">
+                              <div className="flex gap-5 delete-button">
                                 <MdModeEdit
-                                  className="text-xl text-black cursor-pointer"
+                                  className="text-xl text-black cursor-pointer delete-button"
                                   onClick={() =>
                                     editComment(
                                       InfoIndex,
@@ -393,7 +418,7 @@ const Information = () => {
                                   }
                                 />
                                 <AiFillDelete
-                                  className="text-2xl text-red-500 cursor-pointer"
+                                  className="text-2xl text-red-500 cursor-pointer delete-button"
                                   onClick={() =>
                                     deleteComment(CommentIndex, e._id)
                                   }
@@ -408,7 +433,7 @@ const Information = () => {
                         )}
                       </ul>
 
-                      <div className=" relative w-full">
+                      <div className=" relative w-full input-comments">
                         <InputField
                           label={"Add Comments"}
                           name={`${e._id}`}

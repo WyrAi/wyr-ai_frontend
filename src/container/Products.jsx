@@ -13,14 +13,16 @@ import * as Yup from "yup";
 // import DropZone from '../Components/DropZone';
 import CommentBox from "./CommentBox";
 import { userGloabalContext } from "../UserContext";
+import UploadImages from "./UploadImages";
 
-const Products = ({ data, handleProductChange, poIndex, setImageIndex }) => {
+const Products = ({ data, handleProductChange, poIndex }) => {
   const { images, ...restData } = data;
   const productList = restData;
-  console.log(restData);
+  console.log(images, productList);
   const [collapse, setCollapse] = useState(false);
   const [togglePopup, setTogglePopup] = useState(false);
-  const { setProductList, popUpload, setPopUpload } = userGloabalContext();
+  const { popUpload, setPopUpload, imagesFiles, setImagesFiles } =
+    userGloabalContext();
 
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -84,25 +86,13 @@ const Products = ({ data, handleProductChange, poIndex, setImageIndex }) => {
   async function handleInputChange(e) {
     const name = e.target.name;
     const value = e.target.value;
-    console.log(name, value);
     // validationCheck(name, value);
     handleProductChange(poIndex, name, value);
 
     formik.setFieldValue(name, value);
   }
-
-  // const handleChange = (e) => {
-  //   // console.log('test');
-  //   const { name, value } = e.target;
-  //   // console.log(name, value);
-  //   setProductList({ ...productList, [name]: value });
-  //   formik.handleChange(e);
-  // };
-  // console.log(productList);
-
-  useEffect(() => {
-    setImageIndex(poIndex);
-  }, [popUpload]);
+  // console.log(formik.errors);
+  // console.log(formik.touched);
 
   return (
     <>
@@ -115,8 +105,7 @@ const Products = ({ data, handleProductChange, poIndex, setImageIndex }) => {
                   <div className="  w-[220px] rounded-md overflow-hidden flex">
                     <div className=" w-full outline-dashed outline-gray-300 flex flex-col items-center justify-center  m-1 mb-4  bg-white">
                       <div className="flex flex-col items-center mb-4 ">
-                        <div className=" ">
-                          <img src={upload} alt="cloud" className="m-auto" />
+                        <div className="m-2 ">
                           <img
                             src={add}
                             alt="cloud"
@@ -125,12 +114,24 @@ const Products = ({ data, handleProductChange, poIndex, setImageIndex }) => {
                               setPopUpload(!popUpload);
                             }}
                           />
-                          <p className="text-center text-xs font-[600]">
-                            {"Upload Approved Sample"}
-                          </p>
-                          <p className="text-sm font-bold text-center text-blue">
-                            Or Browse
-                          </p>
+                          {images?.frontImage?.length > 0 ? (
+                            <img src={images?.frontImage} alt="" />
+                          ) : (
+                            <div>
+                              <img
+                                src={upload}
+                                alt="cloud"
+                                className="m-auto"
+                              />
+
+                              <p className="text-center text-xs font-[600]">
+                                {"Upload Approved Sample"}
+                              </p>
+                              <p className="text-sm font-bold text-center text-blue">
+                                Or Browse
+                              </p>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -145,10 +146,15 @@ const Products = ({ data, handleProductChange, poIndex, setImageIndex }) => {
                         value={formik.values.styleId}
                         onChange={handleInputChange}
                         onBlur={formik.handleBlur}
-                        error={formik.touched.styleId && formik.errors.styleId}
+                        error={formik.errors.styleId}
                         placeholder={"ST ED BC 3220 W"}
                         labelColor={"bg-slimeGray"}
                       />
+                      {/* {formik.touched.styleId && formik.errors.styleId && (
+                        <p className="text-red-800 text-left">
+                          {errors[i.bname]}
+                        </p>
+                      )} */}
                     </div>
                     <div className="">
                       <InputField
@@ -158,12 +164,15 @@ const Products = ({ data, handleProductChange, poIndex, setImageIndex }) => {
                         value={formik.values.styleName}
                         onChange={handleInputChange}
                         onBlur={formik.handleBlur}
-                        error={
-                          formik.touched.styleName && formik.errors.styleName
-                        }
+                        error={formik.errors.styleName}
                         placeholder={"BH1222 Marri Welcome"}
                         labelColor={"bg-slimeGray"}
                       />
+                      {/* {formik.errors?.styleName?.length > 0 && (
+                        <p className="text-red-800 text-left">
+                          {formik.errors.styleName}
+                        </p>
+                      )} */}
                     </div>
                     <div className="">
                       <InputField
@@ -173,9 +182,7 @@ const Products = ({ data, handleProductChange, poIndex, setImageIndex }) => {
                         value={formik.values.quantity}
                         onChange={handleInputChange}
                         onBlur={formik.handleBlur}
-                        error={
-                          formik.touched.quantity && formik.errors.quantity
-                        }
+                        error={formik.errors.quantity}
                         placeholder={"600"}
                         labelColor={"bg-slimeGray"}
                       />
@@ -188,7 +195,7 @@ const Products = ({ data, handleProductChange, poIndex, setImageIndex }) => {
                         value={formik.values.color}
                         onChange={handleInputChange}
                         onBlur={formik.handleBlur}
-                        error={formik.touched.color && formik.errors.color}
+                        error={formik.errors.color}
                         placeholder={"Nat 75/25"}
                         labelColor={"bg-slimeGray"}
                       />
@@ -380,22 +387,29 @@ const Products = ({ data, handleProductChange, poIndex, setImageIndex }) => {
                 <div className="flex flex-col md:flex-row gap-5 items-center ">
                   <div className="relative p-7 w-[220px] h-[88px] rounded-md  flex outline-dashed outline-gray-300  flex-col items-center justify-center m-1  bg-white">
                     <img
-                      src={upload}
-                      alt="cloud"
-                      className="m-auto h-10 w-10"
-                    />
-                    <img
                       src={add}
                       alt="cloud"
                       className="h-10 w-10 text-blue absolute top-[0%] right-[1%] md:top-[-24px] md:left-[198px] cursor-pointer"
                       onClick={() => setPopUpload(!popUpload)}
                     />
-                    <p className="text-center text-xs font-[600]">
-                      {"Upload Approved Sample"}
-                    </p>
-                    <p className="text-xs font-bold text-center text-blue">
-                      Or Browse
-                    </p>
+                    {images?.frontImage?.length > 0 ? (
+                      <img src={images?.frontImage} alt="" />
+                    ) : (
+                      <div>
+                        <img
+                          src={upload}
+                          alt="cloud"
+                          className="m-auto h-10 w-10"
+                        />
+
+                        <p className="text-center text-xs font-[600]">
+                          {"Upload Approved Sample"}
+                        </p>
+                        <p className="text-sm font-bold text-center text-blue">
+                          Or Browse
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 flex-1 gap-5 w-full">
@@ -450,6 +464,16 @@ const Products = ({ data, handleProductChange, poIndex, setImageIndex }) => {
             </div>
           )}
         </div>
+        {popUpload && (
+          <UploadImages
+            popup={popUpload}
+            setPopup={setPopUpload}
+            imagesData={images}
+            setImagesFiles={setImagesFiles}
+            handleProductChange={handleProductChange}
+            poIndex={poIndex}
+          />
+        )}
       </div>
     </>
   );

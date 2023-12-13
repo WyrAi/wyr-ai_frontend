@@ -6,7 +6,7 @@ import sample from "../assets/Rectangle 25.png";
 const InspectionCard = ({ id, plDoc, buyer, status, statusLabel }) => {
   const statusUi = statusLabel.find((item) => item.text === status);
   const color = statusUi?.color || "";
-  console.log(color, statusLabel);
+  // console.log(color, statusLabel);
   const maxLength = 6;
   function trimString(inputString) {
     return inputString.length > maxLength

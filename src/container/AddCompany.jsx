@@ -54,20 +54,26 @@ const AddCompany = () => {
           //   role: selectedData[0].name,
           // };
 
-          // console.log(requestBody);
-          wyraiApi
-            .post(`/api/companyRelationShip`, {
-              reciverEmail: values.email,
-              role: selectedData[0].name,
-              senderCompanyId: companyId,
-            })
-            .then((res) => {
-              console.log(res);
-              document.getElementById(modalID).close();
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+          console.log({
+            reciverEmail: values.email,
+            role: selectedData[0].name,
+            senderCompanyId: companyId,
+          });
+          document.getElementById("addCompany").close();
+
+          // wyraiApi
+          //   .post(`/api/companyRelationShip`, {
+          //     reciverEmail: values.email,
+          //     role: selectedData[0].name,
+          //     senderCompanyId: companyId,
+          //   })
+          //   .then((res) => {
+          //     console.log(res);
+          //     document.getElementById(modalID).close();
+          //   })
+          //   .catch((err) => {
+          //     console.log(err);
+          //   });
         }
       },
       validationSchema,

@@ -15,6 +15,7 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 import AddCompany from "../container/AddCompany";
 import wyraiApi from "../api/wyraiApi";
 import userGloabalContext from "../UserContext";
+import SuccessRelation from "../container/SuccessRelation";
 
 const filters = [
   {
@@ -73,6 +74,7 @@ const RelationShip = () => {
   const [selectRelation, setSelectRelation] = useState({
     id: "",
   });
+  const [sucessRelation, setSuccessRelation] = useState(false);
 
   const navigate = useNavigate();
   console.log("selectRelation._id:", selectRelation.id);
@@ -176,7 +178,7 @@ const RelationShip = () => {
         </div>
       </div>
       <div className=" mx-2 w-full flex-1 flex flex-col">
-        <div className="flex flex-w gap-2 flex-1 mt-5">
+        <div className="flex flex-w gap-2  mt-5 flex-wrap">
           {allRelation?.map((value, index) => {
             return (
               <div className="bg-gray-50 h-[120px] w-[295px]" key={index}>
@@ -189,8 +191,9 @@ const RelationShip = () => {
             );
           })}
         </div>
-        <div className="text-center mb-5">Pagination</div>
+        {/* <div className="text-center mb-5">Pagination</div> */}
       </div>
+      {true && <SuccessRelation />}
     </main>
   );
 };

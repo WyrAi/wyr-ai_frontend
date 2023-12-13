@@ -29,11 +29,12 @@ const DropZone = ({
       if (onDrop) {
         const file = acceptedFiles[0];
         // console.log(file.type);
-
+        console.log(file);
         const reader = new FileReader();
         reader.onload = (e) => {
           // Use reader.result
           onDrop(e.target.result);
+          setPreview(e.target.result);
         };
         reader.readAsDataURL(file);
       }
@@ -51,13 +52,6 @@ const DropZone = ({
     maxSize: maxSize || 5242880,
   });
 
-  useEffect(() => {
-    if (fileName?.length > 0) {
-      setPreview([fileName]);
-    }
-  }, [fileName]);
-
-  console.log(files, fileName);
   return (
     <div
       {...getRootProps()}
@@ -65,18 +59,24 @@ const DropZone = ({
         isDragActive ? "active" : ""
       }`}
     >
-      <AiOutlineCloudUpload size={iconSize || 50} />
       <input {...getInputProps()} />
-      {files.length > 0 && (
-        <p
-          className={`flex gap-2 text-[#333333] text-center ${
-            textSize || "font-semibold"
-          }`}
-        >
-          {files.map((file) => (
-            <span key={file?.name}>{file?.name}</span>
-          ))}
-        </p>
+
+      {files.length > 0 ? (
+        <img
+          src={preview}
+          className="object-cover overflow-hidden w-full"
+        ></img>
+      ) : (
+        // <p
+        //   className={`flex gap-2 text-[#333333] text-center ${
+        //     textSize || "font-semibold"
+        //   }`}
+        // >
+        //   {files.map((file) => (
+        //     <span key={file?.name}>{file?.name}</span>
+        //   ))}
+        // </p>
+        <AiOutlineCloudUpload size={iconSize || 50} />
       )}
       {!files.length && (
         <p
@@ -93,8 +93,6 @@ const DropZone = ({
       {isDragActive && (
         <div className="absolute inset-0 bg-gray-300 opacity-50 z-10"></div>
       )}
-
-      {preview.length > 0 && <img src={preview} className="object-cover"></img>}
     </div>
   );
 };

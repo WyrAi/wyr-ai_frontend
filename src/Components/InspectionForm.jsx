@@ -69,7 +69,7 @@ function InspectionForm() {
 
   const handlePoNumberChange = (index, item) => {
     setProducts([item]);
-    console.log(item);
+    // console.log(item);
     const newPurchaseOrder = [...addpurchaseOrder];
 
     newPurchaseOrder[index].poNumber = item?.poNumber;
@@ -148,7 +148,7 @@ function InspectionForm() {
     const clearedData = Object.fromEntries(
       Object.keys(data).map((key) => [key, ""])
     );
-    console.log(clearedData);
+    // console.log(clearedData);
     setData(clearedData);
   };
 
@@ -312,7 +312,7 @@ function InspectionForm() {
                   const intials = item?.companyId?.name
                     ?.charAt(0)
                     .toUpperCase();
-                  console.log(item);
+                  // console.log(item);
                   return (
                     <li
                       key={index}
@@ -679,7 +679,7 @@ function InspectionForm() {
                 </div>
               </div>
               {item?.products?.map((item, productIndex) => {
-                console.log(item);
+                // console.log(item);
                 return (
                   <PackingList
                     key={products?._id}

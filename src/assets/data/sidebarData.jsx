@@ -37,8 +37,8 @@ export const sideBarData = [
     icon: (
       <LuPackageSearch className="text-3xl text-darkGray hover:text-white" />
     ),
-    heading: "Inspection",
-    name: "sheduleInspection",
+    heading: "QC Inspection",
+    name: "qaAssignment",
     link: "/qcInspection/",
   },
   {

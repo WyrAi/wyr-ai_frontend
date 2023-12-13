@@ -20,7 +20,6 @@ import { IoIosCloseCircle } from "react-icons/io";
 import Preview from "../container/Preview";
 import img from "../assets/sara-kurfess-ltE8bDLjX9E-unsplash.jpeg";
 import { userGloabalContext } from "../UserContext";
-import UploadImages from "../container/UploadImages";
 import Datepicker from "./DatepickerComponent";
 import gps from "../assets/ion_location-outline.svg";
 import axios from "axios";
@@ -47,10 +46,12 @@ function PurchaseOrder() {
   const [vendor, setVendor] = useState([]);
   const [people, setPeople] = useState([]);
   const [imageIndex, setImageIndex] = useState("");
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const [peopleOfInterest, setPeopelOfInterest] = useState([
     { id: userInformation?._id, name: userInformation?.name },
   ]);
+
   // console.log(...peopleOfInterest);
   const [ids, setIds] = useState({
     buyerId: "",
@@ -58,7 +59,7 @@ function PurchaseOrder() {
   });
 
   const [slotOfProducts, setSlotOfProducts] = useState([
-    { ...productList, imagesFiles },
+    { ...productList, images: imagesFiles },
   ]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
@@ -122,7 +123,7 @@ function PurchaseOrder() {
     shiptoName: "",
     shiptoAdd: "",
     shipVia: "",
-    shipDate: new Date(),
+    shipDate: selectedDate,
     totalCarton: "",
     inv_number: "",
     assignPeople: "",
@@ -142,17 +143,12 @@ function PurchaseOrder() {
     }
   }, [values.nameOfBuyer, values.nameOfVendor]);
 
-  useEffect(() => {
-    getUser();
-  }, []);
-
   const getUser = async () => {
     const { data } = await axios.get(
       import.meta.env.VITE_BASE_URL + `/api/getAllCompanyByRole/${companyId}`
     );
     console.log(data);
     if (userInformation?.companyId?.companyRole === "Buyer") {
-      //   console.log(userInformation);
       formik.setFieldValue("nameOfBuyer", userInformation.companyId?.name);
       formik.setFieldValue("addOfBuyer", userInformation.companyId?.city);
       setIds({ ...ids, buyerId: companyId });
@@ -165,21 +161,16 @@ function PurchaseOrder() {
   useEffect(() => {
     getUser();
     fetchpeople();
-  }, []);
+    setPeopelOfInterest([
+      { id: userInformation?._id, name: userInformation?.name },
+    ]);
+    const userRole = userInformation?.companyId?.companyRole;
+  }, [companyId]);
 
-  //   getUser();
-  // console.log(buyer);
+  // console.log(buyer, companyId);
   // console.log(vendor);
-  // console.log(ids);
-
-  // console.log('formik', formik);
-  //  there is options of creating a single 'productList' and 'slotOfProducts' change according to its
-  // console.log(slotOfProducts);
 
   async function handleSubmit(e) {
-    // console.log(userInformation);
-    // console.log(peopleOfInterest);
-    console.log(e.target.type);
     let status = "";
     if (
       userInformation?.role?.SelectAccess?.purchaseOrder?.some(
@@ -236,17 +227,17 @@ function PurchaseOrder() {
     };
     console.log(requestBody);
 
-    if (e.target.type === "submit") {
-      wyraiApi
-        .post("/api/purchaseOrder", requestBody)
-        .then((res) => navigate(-1))
-        .catch((err) => console.log(err));
-    } else {
-      wyraiApi
-        .post(`/api/PuracheseOrderDraft/${userInformation?._id}`, requestBody)
-        .then((res) => navigate(-1))
-        .catch((err) => console.log(err));
-    }
+    // if (e.target.type === "submit") {
+    //   wyraiApi
+    //     .post("/api/purchaseOrder", requestBody)
+    //     .then((res) => navigate(-1))
+    //     .catch((err) => console.log(err));
+    // } else {
+    //   wyraiApi
+    //     .post(`/api/PuracheseOrderDraft/${userInformation?._id}`, requestBody)
+    //     .then((res) => navigate(-1))
+    //     .catch((err) => console.log(err));
+    // }
     // console.log(requestBody);
 
     // const resp = await fetch(
@@ -269,56 +260,71 @@ function PurchaseOrder() {
     const allFieldsFilled = Object.values(productList).every(
       (value) => value !== ""
     );
-    console.log(allFieldsFilled, productList);
 
     if (allFieldsFilled) {
       setSlotOfProducts([
         ...slotOfProducts,
         { ...productList, images: imagesFiles },
       ]);
-      console.log(slotOfProducts);
+      setSlotOfProducts([
+        ...slotOfProducts,
+        {
+          ...intials,
+          ["images"]: {
+            backImage: undefined,
+            frontImage: undefined,
+            careLabel: undefined,
+            sizeLabel: undefined,
+          },
+        },
+      ]);
       // setProductList(intials);
     }
   }, [productList]);
 
   // console.log(imagesFiles, imageIndex);
-  useEffect(() => {
-    console.log(imageIndex, typeof imageIndex === "number");
-    if (typeof imageIndex === "number") {
-      console.log("first");
-      handleProductChange(imageIndex, "images", imagesFiles);
-      // setImagesFiles([]);
-    }
-  }, [imageIndex, imagesFiles]);
+  // useEffect(() => {
+  //   console.log("here");
+  //   if (typeof imageIndex === "number") {
+  //     handleProductChange(imageIndex, "images", imagesFiles);
+  //   }
+  // }, [imageIndex, imagesFiles]);
 
   const handleProductChange = (poIndex, field, value) => {
-    console.log(poIndex, field, value);
     const newPurchaseOrders = [...slotOfProducts];
-    // if (field === "images") {
-    //   const img = newPurchaseOrders[poIndex][field];
-    //   console.log(newPurchaseOrders[poIndex][field]);
-    //   // newPurchaseOrders[poIndex][field] = [...img, ...value];
-    // } else {
-    //   newPurchaseOrders[poIndex][field] = value;
-    // }
-    newPurchaseOrders[poIndex][field] = value;
-    console.log(newPurchaseOrders);
+    if (field === "images") {
+      console.log(poIndex, field);
+      const img = newPurchaseOrders[poIndex][field];
+      console.log(newPurchaseOrders[poIndex][field], value);
+      newPurchaseOrders[poIndex][field] = value;
+    } else {
+      newPurchaseOrders[poIndex][field] = value;
+    }
+
+    // console.log(newPurchaseOrders);
     setSlotOfProducts(newPurchaseOrders);
   };
-  console.log(slotOfProducts);
+
   const addSlotOfProduct = () => {
     try {
-      // setProductList(intials);
-      // setImagesFiles([]);
-      // // setSlotOfProducts([
-      //   ...slotOfProducts,
-      //   { ...productList, images: imagesFiles },
-      // ]);
-      setSlotOfProducts([...slotOfProducts, { ...intials, images: [] }]);
+      console.log(slotOfProducts);
+      setSlotOfProducts([
+        ...slotOfProducts,
+        {
+          ...intials,
+          ["images"]: {
+            backImage: undefined,
+            frontImage: undefined,
+            careLabel: undefined,
+            sizeLabel: undefined,
+          },
+        },
+      ]);
     } catch (error) {
       console.log(error);
     }
   };
+  // console.log(slotOfProducts);
 
   const addAssignPeople = (id, name, value) => {
     try {
@@ -362,7 +368,6 @@ function PurchaseOrder() {
   }
 
   const handleClick = (e) => {
-    // console.log(e.target.name);
     setPopup({ ...popup, [e.target.name]: !popup[e.target.name] });
   };
 
@@ -391,13 +396,8 @@ function PurchaseOrder() {
         .then((res) => setPeople(res.data))
         .then((err) => console.log(err));
     }
-
-    // console.log(data);
-    // setPeople(data);
   };
-  // console.log(people);
-
-  //   getEmploy and clear console.log from PO
+  console.log(userInformation);
 
   const DropDown = ({ children }) => {
     return (
@@ -427,21 +427,21 @@ function PurchaseOrder() {
           onSubmit={formik.handleSubmit}
           className="flex-1 flex-cols gap-10  w-full h-[45%] bg-white p-2 overflow-y-auto  "
         >
-          <div className=" relative z-10 h-[500px] rounded-md  flex mb-11 border-dashed border-2 border-[#666666]">
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className=" relative z-10 h-[500px] rounded-md  flex mb-11 border-dashed border-2 border-[rgb(102,102,102)]">
+            <div className="w-full h-full">
               <DropZone
                 onDrop={setPurchaseDoc}
                 multiple={true}
                 message={"Upload Purchase Order"}
               />
             </div>
-            {purchaseDoc && (
+            {/* {purchaseDoc && (
               <img
                 src={purchaseDoc}
                 alt="Preview"
                 className="w-full h-full  "
               />
-            )}
+            )} */}
           </div>
           <div className="w-1/2">
             <h1 className="text-xl font-bold mb-5">PO Number</h1>
@@ -475,6 +475,7 @@ function PurchaseOrder() {
                   }
                   placeholder={"Name Of Buyer"}
                   labelColor={"bg-white"}
+                  disable={userInformation?.role?.name === "Buyer"}
                 />
 
                 {popup.nameOfBuyer && (
@@ -657,8 +658,8 @@ function PurchaseOrder() {
 
               <div className="flex-1 relative">
                 <Datepicker
-                  selectedDate={formik.values.shipDate}
-                  setSelectedDate={formik}
+                  selectedDate={selectedDate}
+                  setSelectedDate={setSelectedDate}
                   name={"shipDate"}
                   className={
                     "form-input border border-gray-400 mt-1 pl-4 py-4 pr-10  rounded-md w-full outline-none"
@@ -777,7 +778,6 @@ function PurchaseOrder() {
             <h1 className="text-xl font-bold mb-4">Products</h1>
             {slotOfProducts.map((item, index) => {
               console.log(item);
-
               return (
                 <Products
                   setImageIndex={setImageIndex}
@@ -826,7 +826,7 @@ function PurchaseOrder() {
           {purchaseDoc && (
             <button
               type="button"
-              className="bg-blue flex gap-2 items-center z-10 absolute right-[4.5vh] top-[21vh] py-2 px-4 rounded text-white"
+              className="bg-blue flex gap-2 items-center z-10 absolute right-[4.5vh] top-[90px] py-2 px-4 rounded text-white"
               onClick={() => setShowPurchaseOrder(true)}
             >
               <AiOutlineSearch className="text-white text-2xl" />
@@ -835,23 +835,15 @@ function PurchaseOrder() {
           )}
         </form>
       </div>
-      {popUpload && (
-        <UploadImages
-          popup={popUpload}
-          setPopup={setPopUpload}
-          imagesFiles={imagesFiles}
-          setImagesFiles={setImagesFiles}
-        />
-      )}
 
-      {purchaseDoc && (
+      {/* {purchaseDoc && (
         <img
           title="PDF Viewer"
           src={purchaseDoc}
           width="600"
           height="400"
         ></img>
-      )}
+      )} */}
     </>
   );
 }

@@ -23,20 +23,18 @@ const DatepickerComponent = ({
   open,
 }) => {
   return (
-    <>
-      <DatePicker
-        selected={selectedDate}
-        onChange={(date) => setSelectedDate(date)}
-        name={name}
-        minDate={new Date()}
-        wrapperClassName={"w-full relative"}
-        className={className || ""}
-        onClickOutside={onClickOutside}
-        onFocus={onClickOutside}
-        open={open}
-        inline={inline || false}
-      ></DatePicker>
-    </>
+    <DatePicker
+      selected={selectedDate}
+      onChange={(date) => setSelectedDate(date)}
+      name={name}
+      minDate={new Date()}
+      wrapperClassName={"w-full relative"}
+      className={className || ""}
+      onClickOutside={onClickOutside}
+      onFocus={onClickOutside}
+      open={open}
+      inline={inline || false}
+    ></DatePicker>
   );
 };
 

@@ -31,6 +31,7 @@ const IsRouteAllowed = (props) => {
 
 const ProtectedRoutes = () => {
   const { userRights } = userGloabalContext();
+  console.log(userRights);
 
   return (
     <Routes>
@@ -38,6 +39,7 @@ const ProtectedRoutes = () => {
       <Route path="/" element={<Layout />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route index element={<Dashboard />} />
+        <Route path="/Information" element={<Information />} />
         <Route
           path="/Information_Dashboard"
           element={<InformationDashboard />}
