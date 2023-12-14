@@ -14,6 +14,9 @@ import Prompt from "../DasiyUIComponents/Prompt";
 import SuccessRelation from "./SuccessRelation";
 import axios from "axios";
 import wyraiApi from "../api/wyraiApi";
+
+
+const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
 import socket from "../Components/socket";
 const AddCompany = () => {
   const { role, companyId } = userGloabalContext();
@@ -26,6 +29,7 @@ const AddCompany = () => {
   const [error, setError] = React.useState({ role: "" });
 
   const UserRolesRelation = roles.filter((item) => item.name != role);
+  console.log(role, UserRolesRelation);
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
@@ -49,32 +53,17 @@ const AddCompany = () => {
           document.getElementById("modalID").close();
         } else {
           setError({ role: "" });
-          // const requestBody = {
-          //   email: values.email,
-          //   role: selectedData[0].name,
-          // };
-
-          console.log({
-            reciverEmail: values.email,
+          const requestBody = {
+            email: values.email,
             role: selectedData[0].name,
-            senderCompanyId: companyId,
-          });
-          document.getElementById("addCompany").close();
+          };
 
-          // wyraiApi
-          //   .post(`/api/companyRelationShip`, {
-          //     reciverEmail: values.email,
-          //     role: selectedData[0].name,
-          //     senderCompanyId: companyId,
-          //   })
-          //   .then((res) => {
-          //     console.log(res);
-          //     document.getElementById(modalID).close();
-          //   })
-          //   .catch((err) => {
-          //     console.log(err);
-          //   });
-          // console.log(requestBody);
+          // console.log({
+          //   reciverEmail: values.email,
+          //   role: selectedData[0].name,
+          //   senderCompanyId: companyId,
+          // });
+
           wyraiApi
             .post(`/api/companyRelationShip`, {
               reciverEmail: values.email,
@@ -83,17 +72,24 @@ const AddCompany = () => {
             })
             .then((res) => {
               console.log(res);
-              console.log("before document");
+
+              document.getElementById("addCompany").close();
+              setSuccessRelation(true);
+              fetchRelation();
+            })
+            .catch((err) => {
+              console.log("before document")
               document.getElementById(modalID).close();
               console.log("After document");
               socket.emit("sendText", {
                 senderName: values.email,
                 receiverName: values.email,
-                text: `connection request form the ${values.email} `,
-              });
-              console.log("After socket document");
-            })
-            .catch((err) => {
+                text:`connection request form the ${values.email} `,
+              }); 
+              console.log("After socket document")
+
+            }).catch((err) => {
+
               console.log(err);
             });
         }
@@ -205,7 +201,6 @@ const AddCompany = () => {
               handleSubmit();
             }}
           >
-            {" "}
             Invite
           </div>
         </div>

@@ -20,6 +20,8 @@ const RequiredAuth = (props) => {
   const { children } = props;
   const isLoggedIn = !!auth || getAuthToken();
 
+  // things to look out for later check if userLogin, and does it need to allow to redirect back if its goes to signup after login
+
   return isLoggedIn ? (
     children
   ) : (

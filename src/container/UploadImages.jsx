@@ -1,10 +1,13 @@
 /* eslint-disable react/prop-types */
 
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { IoMdCloseCircle } from "react-icons/io";
 import { useDropzone } from "react-dropzone";
+import { MdOutlineModeEditOutline } from "react-icons/md";
+import { FaRegCircleCheck } from "react-icons/fa6";
 import userGloabalContext from "../UserContext";
+import DropZone from "../Components/DropZone";
 
 const UploadImages = ({
   popup,
@@ -24,6 +27,9 @@ const UploadImages = ({
   const { imagesFiles } = userGloabalContext();
   // console.log(test);
   const [images, setImages] = useState(imagesData);
+  const [files, setFiles] = useState([]);
+  const [img, setImg] = useState(null);
+  const [imgName, setImgName] = useState("");
   console.log(imagesData, imagesFiles);
 
   const zones = [
@@ -34,63 +40,140 @@ const UploadImages = ({
     // Add more zones as needed
   ];
 
-  const onDrop = (acceptedFiles, fieldName) => {
-    const file = acceptedFiles[0];
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      // Use reader.result
-      // onDrop(e.target.result);
-      // setPreview(e.target.result);
-      setImages((prevImages) => ({
-        ...prevImages,
-        [fieldName]: e.target.result,
-      }));
-    };
-    reader.readAsDataURL(file);
+  // const onDropHandler = useCallback(
+  //   (acceptedFiles) => {
+  //     if (onDrop) {
+  //       const file = acceptedFiles[0];
+  //       // console.log(file);
+  //       // console.log(file.type);
+  //       const reader = new FileReader();
+  //       reader.onload = (e) => {
+  //         // Use reader.result
+  //         onDrop(e.target.result);
+  //         setPreview(e.target.result);
+  //       };
+  //       reader.readAsDataURL(file);
+  //     }
+  //   },
+  //   [onDrop]
+  // );
+
+  // const onDrop = (acceptedFiles, fieldName) => {
+  //   const file = acceptedFiles[0];
+  //   const reader = new FileReader();
+  //   reader.onload = (e) => {
+  //     setImages((prevImages) => ({
+  //       ...prevImages,
+  //       [fieldName]: e.target.result,
+  //     }));
+  //   };
+  //   reader.readAsDataURL(file);
+  // };
+  // console.log(images);
+
+  // const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  //   onDrop: (acceptedFiles) => {
+  //     console.log(acceptedFiles);
+  //     setFiles(acceptedFiles);
+  //     onDropHandler(acceptedFiles);
+  //   },
+  //   accept: accept || "image/*",
+  //   multiple: multiple || false,
+  //   maxSize: maxSize || 5242880,
+  // });
+
+  // const removeImage = (fieldName, e) => {
+  //   e.stopPropagation(); // Prevent event propagation
+  //   setImages((prevImages) => ({
+  //     ...prevImages,
+  //     [fieldName]: undefined,
+  //   }));
+  // };
+
+  // const getDropZoneProps = (zone) =>
+  //   useDropzone({
+  //     accept: zone.accept,
+  //     onDrop: (acceptedFiles) => onDrop(acceptedFiles, zone.name),
+  //   });
+
+  // React.useEffect(() => {
+  //   console.log(images);
+  //   setImagesFiles(images);
+  //   handleProductChange(poIndex, "images", images);
+  // }, [images]);
+  // console.log(imagesFiles, poIndex);
+  const handleInputChange = (e) => {
+    // console.log(e.target.value);
+    setImgName(e.target.value);
   };
-  console.log(images);
 
-  const removeImage = (fieldName, e) => {
-    e.stopPropagation(); // Prevent event propagation
-    setImages((prevImages) => ({
-      ...prevImages,
-      [fieldName]: undefined,
-    }));
+  const addImageFile = () => {
+    setFiles([...files, { name: imgName, file: img }]);
+    setImg(null);
+    setImgName("");
   };
-
-  const getDropZoneProps = (zone) =>
-    useDropzone({
-      accept: zone.accept,
-      onDrop: (acceptedFiles) => onDrop(acceptedFiles, zone.name),
-    });
-
-  React.useEffect(() => {
-    console.log(images);
-    setImagesFiles(images);
-    handleProductChange(poIndex, "images", images);
-  }, [images]);
-  console.log(imagesFiles, poIndex);
-
-  // React.useEffect(() => {
-  //   console.log("here");
-
-  // }, [ imagesFiles]);
-
-  // React.useEffect(() => {
-  //   setImages(imagesData);
-  // }, [imagesData]);
-
-  // React.useEffect(() => {
-  //   // setImages(imagesFiles);
-  // }, []);
-
-  // console.log(images, imagesFiles);
+  console.log(img, files);
 
   return (
     <div className="fixed inset-0 bg-[#00000080] h-screen w-screen pt-[100px]">
       <div className=" relative bg-white w-[70vw] h-[80vh] m-auto  bg-[#00000080] rounded-2xl p-5 flex flex-col">
         <h1 className="text-center mb-5 ">Upload Images</h1>
-        <div className="flex-1 grid grid-cols-4 gap-5">
+
+        <div className="flex-1 grid grid-cols md:grid-cols-5 gap-5 overflow-y-auto">
+          <div className="h-[240px] w-[200px]">
+            <label className="flex justify-center items-center mb-2 gap-5">
+              <input
+                type="text"
+                placeholder="Add here..."
+                className="w-2/3 outline-none focus:border-b-2 focus:border-blue pl-5"
+                value={imgName}
+                onChange={handleInputChange}
+              />
+              {imgName.length > 0 ? (
+                <FaRegCircleCheck
+                  className="text-xl cursor-pointer"
+                  onClick={addImageFile}
+                />
+              ) : (
+                <MdOutlineModeEditOutline
+                  className="text-xl cursor-pointer"
+                  onClick={""}
+                />
+              )}
+            </label>
+            <div className=" relative  rounded-md  flex mb-11 border-dashed border-2 border-[rgb(102,102,102)]">
+              <div className="w-full h-[160px]">
+                <DropZone
+                  onDrop={setImg}
+                  multiple={true}
+                  message={"Upload Product Images"}
+
+                  // method={ImageHandler}
+                />
+              </div>
+            </div>
+          </div>
+          {files?.map((item, index) => {
+            console.log(item);
+            return (
+              <div
+                key={index}
+                className="h-[240px] w-[200px] flex flex-col items-center"
+              >
+                <span>{item?.name}</span>
+                <div className=" border-dashed border-2 border-[rgb(102,102,102)] p-6">
+                  <img
+                    src={item?.file}
+                    alt={item?.name}
+                    className="w-[150px] h-[150px]"
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* <div className="flex-1 grid grid-cols-4 gap-5">
           {zones.map((zone, index) => {
             const { getRootProps, getInputProps } = getDropZoneProps(zone);
             const image =
@@ -133,7 +216,7 @@ const UploadImages = ({
               </div>
             );
           })}
-        </div>
+        </div> */}
 
         <div className="flex justify-center ">
           <button

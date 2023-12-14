@@ -403,7 +403,7 @@ function InspectionView() {
               <img
                 src={plData?.packingListFiles}
                 alt=""
-                className="w-[90%] m-auto"
+                className="w-[90%] m-auto object-cover"
               />
             ) : (
               <DropZone

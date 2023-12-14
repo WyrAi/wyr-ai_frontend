@@ -57,9 +57,9 @@ function PurchaseOrder() {
     buyerId: "",
     vendorId: "",
   });
-
+  const [ApiImage, setApiImage] = useState();
   const [slotOfProducts, setSlotOfProducts] = useState([
-    { ...productList, images: imagesFiles },
+    { ...productList, images: [] },
   ]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
@@ -148,7 +148,7 @@ function PurchaseOrder() {
     const { data } = await axios.get(
       import.meta.env.VITE_BASE_URL + `/api/getAllCompanyByRole/${companyId}`
     );
-    console.log(data);
+    // console.log(data);
     if (userInformation?.companyId?.companyRole === "Buyer") {
       formik.setFieldValue("nameOfBuyer", userInformation.companyId?.name);
       formik.setFieldValue("addOfBuyer", userInformation.companyId?.city);
@@ -226,8 +226,10 @@ function PurchaseOrder() {
       products: [...slotOfProducts],
       status,
     };
-    console.log(requestBody);
+    // console.log(requestBody);
 
+    // uncomment below api to set submit and draft , told backend guy images files has been changed
+    console.log(requestBody);
     // if (e.target.type === "submit") {
     //   wyraiApi
     //     .post("/api/purchaseOrder", requestBody)
@@ -239,7 +241,6 @@ function PurchaseOrder() {
     //     .then((res) => navigate(-1))
     //     .catch((err) => console.log(err));
     // }
-    // console.log(requestBody);
 
     // const resp = await fetch(
     //   import.meta.env.VITE_BASE_URL + "/api/purchaseOrder",
@@ -256,6 +257,103 @@ function PurchaseOrder() {
     //   navigate(-1);
     // }
   }
+  // const conversionImage = (baseUrl) => {
+  //   const base64URL = baseUrl; // Your Base64 URL
+
+  //   // Remove the prefix (e.g., 'data:image/jpeg;base64,') from the Base64 URL to get only the Base64-encoded data
+  //   console.log(base64URL);
+  //   const base64Data = base64URL?.split(";base64,").pop();
+  //   if (base64Data) {
+  //     const blob = (() => {
+  //       const byteCharacters = atob(base64Data);
+  //       const byteArrays = [];
+
+  //       for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+  //         const slice = byteCharacters.slice(offset, offset + 512);
+
+  //         const byteNumbers = new Array(slice.length);
+  //         for (let i = 0; i < slice.length; i++) {
+  //           byteNumbers[i] = slice.charCodeAt(i);
+  //         }
+
+  //         const byteArray = new Uint8Array(byteNumbers);
+  //         byteArrays.push(byteArray);
+  //       }
+
+  //       return new Blob(byteArrays, { type: "image/jpeg" });
+  //     })();
+
+  //     console.log(blob);
+  //     const file = new File([blob], "PurchaseOrder.jpg", {
+  //       type: "image/jpeg",
+  //     });
+  //     const config = {
+  //       headers: {
+  //         "Content-Type": "multipart/form-data", // Set your content type or other required headers
+  //         "Access-Control-Allow-Origin": "*", // You can set the specific domain instead of '*'
+  //       },
+  //     };
+  //     const formData = new FormData();
+  //     formData.append("image_file", file);
+  //     axios
+  //       .post("http://35.154.0.66:5000/detect", formData, config)
+  //       .then((res) => console.log(res));
+  //     console.log(file);
+  //   }
+
+  //   // const base64Data = base64URL?.replace(/^data:image\/\w+;base64,/, "");
+
+  //   // Convert the Base64-encoded data to binary data
+  //   // const binaryData = atob(base64Data);
+
+  //   // // Create a Blob from the binary data
+  //   // const blob = new Blob(
+  //   //   [new Uint8Array(Array.from(binaryData, (char) => char.charCodeAt(0)))],
+  //   //   { type: "image/jpeg" }
+  //   // );
+
+  //   // // Construct a file from the Blob
+  //   // const file = new File([blob], "filename.jpg", { type: "image/jpeg" });
+
+  //   // console.log(file); // The constructed File object
+  //   // return file;
+  // };
+
+  useEffect(() => {
+    // wyraiApi.post()
+    // // conversionImage(purchaseDoc);
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data", // Set your content type or other required headers
+        "Access-Control-Allow-Origin": "*", // You can set the specific domain instead of '*'
+      },
+    };
+    // const formData = new FormData();
+    // console.log(ApiImage?.name);
+    // formData.append("image_file", ApiImage);
+    // console.log(formData);
+    // axios
+    //   .post("http://35.154.0.66:5000/detect", formData, config)
+    //   .then((res) => console.log(res));
+    fetch(ApiImage)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const formData = new FormData();
+        formData.append("image_file", blob, "filename.jpg"); // Provide a filename here
+
+        axios
+          .post("http://3.110.187.181:5000/detect", formData, config)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error fetching or converting the image:", error);
+      });
+  }, [purchaseDoc]);
 
   useEffect(() => {
     const allFieldsFilled = Object.values(productList).every(
@@ -263,20 +361,12 @@ function PurchaseOrder() {
     );
 
     if (allFieldsFilled) {
-      setSlotOfProducts([
-        ...slotOfProducts,
-        { ...productList, images: imagesFiles },
-      ]);
+      setSlotOfProducts([...slotOfProducts, { ...productList, images: [] }]);
       setSlotOfProducts([
         ...slotOfProducts,
         {
           ...intials,
-          ["images"]: {
-            backImage: undefined,
-            frontImage: undefined,
-            careLabel: undefined,
-            sizeLabel: undefined,
-          },
+          ["images"]: [],
         },
       ]);
       // setProductList(intials);
@@ -294,10 +384,10 @@ function PurchaseOrder() {
   const handleProductChange = (poIndex, field, value) => {
     const newPurchaseOrders = [...slotOfProducts];
     if (field === "images") {
-      console.log(poIndex, field);
+      // console.log(poIndex, field);
       const img = newPurchaseOrders[poIndex][field];
       console.log(newPurchaseOrders[poIndex][field], value);
-      newPurchaseOrders[poIndex][field] = value;
+      newPurchaseOrders[poIndex][field] = [value];
     } else {
       newPurchaseOrders[poIndex][field] = value;
     }
@@ -308,16 +398,14 @@ function PurchaseOrder() {
 
   const addSlotOfProduct = () => {
     try {
-      console.log(slotOfProducts);
+      // console.log(slotOfProducts);
       setSlotOfProducts([
         ...slotOfProducts,
         {
           ...intials,
           ["images"]: {
-            backImage: undefined,
-            frontImage: undefined,
-            careLabel: undefined,
-            sizeLabel: undefined,
+            name: "",
+            file: "",
           },
         },
       ]);
@@ -426,7 +514,7 @@ function PurchaseOrder() {
         .then((err) => console.log(err));
     }
   };
-  console.log(userInformation);
+  // console.log(userInformation);
 
   const DropDown = ({ children }) => {
     return (
@@ -440,6 +528,10 @@ function PurchaseOrder() {
     );
   };
 
+  const ImageHandler = async (value) => {
+    setApiImage(value);
+  };
+  console.log(ApiImage);
   return (
     <>
       <div className=" h-[94vh] w-[95%] pt-2 mx-auto flex flex-col">
@@ -456,7 +548,7 @@ function PurchaseOrder() {
           onSubmit={formik.handleSubmit}
           className="flex-1 flex-cols gap-10  w-full h-[45%] bg-white p-2 overflow-y-auto  "
         >
-          <div className=" relative z-10 h-[500px] rounded-md  flex mb-11 border-dashed border-2 border-[rgb(102,102,102)]">
+          <div className=" relative h-[500px] rounded-md  flex mb-11 border-dashed border-2 border-[rgb(102,102,102)]">
             <div className="w-full h-full">
               <DropZone
                 onDrop={setPurchaseDoc}
@@ -807,7 +899,7 @@ function PurchaseOrder() {
           <div className="mb-4">
             <h1 className="text-xl font-bold mb-4">Products</h1>
             {slotOfProducts.map((item, index) => {
-              console.log(item);
+              // console.log(item);
               return (
                 <Products
                   setImageIndex={setImageIndex}

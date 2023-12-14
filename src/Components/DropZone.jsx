@@ -28,8 +28,8 @@ const DropZone = ({
     (acceptedFiles) => {
       if (onDrop) {
         const file = acceptedFiles[0];
+        // console.log(file);
         // console.log(file.type);
-        console.log(file);
         const reader = new FileReader();
         reader.onload = (e) => {
           // Use reader.result
@@ -50,6 +50,7 @@ const DropZone = ({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: (acceptedFiles) => {
+      console.log(acceptedFiles);
       setFiles(acceptedFiles);
       onDropHandler(acceptedFiles);
     },
@@ -57,6 +58,11 @@ const DropZone = ({
     multiple: multiple || false,
     maxSize: maxSize || 5242880,
   });
+
+  useEffect(() => {
+    // console.log(files[0]);
+    if (method) method(files[0]);
+  }, [files]);
 
   return (
     <div
@@ -70,26 +76,26 @@ const DropZone = ({
       {files.length > 0 ? (
         <img
           src={preview}
-          className="object-cover overflow-hidden w-full"
+          className="object-cover overflow-hidden w-full flex-1"
         ></img>
       ) : (
-        // <p
-        //   className={`flex gap-2 text-[#333333] text-center ${
-        //     textSize || "font-semibold"
-        //   }`}
-        // >
-        //   {files.map((file) => (
-        //     <span key={file?.name}>{file?.name}</span>
-        //   ))}
-        // </p>
-        <AiOutlineCloudUpload size={iconSize || 50} />
+        <p
+          className={`flex gap-2 text-[#333333] text-center ${
+            textSize || "font-semibold"
+          }`}
+        >
+          {files.map((file) => (
+            <span key={file?.name}>{file?.name}</span>
+          ))}
+        </p>
       )}
       {!files.length && (
         <p
           className={`text-[#333333] text-center ${
-            textSize || "font-semibold"
+            textSize || "font-semibold flex flex-col items-center"
           }`}
         >
+          <AiOutlineCloudUpload size={iconSize || 50} />
           {message
             ? message
             : "Drag & drop files here, or click to select files"}
