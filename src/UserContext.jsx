@@ -48,12 +48,16 @@ export const UserContextProvider = ({ children }) => {
   // PO popup and images file
   const [popUpload, setPopUpload] = useState(false);
   const [imagesFiles, setImagesFiles] = useState({
+    name: "",
+    file: "",
+  }); // set imnages file for products in purchase Order
+
+  const reqimg = {
     backImage: undefined,
     frontImage: undefined,
     careLabel: undefined,
     sizeLabel: undefined,
-  }); // set imnages file for products in purchase Order
-
+  };
   //time setter
   const [startTime, setStartTime] = useState("");
 
@@ -165,9 +169,9 @@ export const UserContextProvider = ({ children }) => {
 
   const { companyId, role, userRights } = React.useMemo(() => {
     const companyId = userInformation?.companyId?._id;
-    const role = userInformation?.role?.name;
+    const role = userInformation?.companyId?.companyRole;
     const rights = userInformation?.role?.SelectAccess;
-    console.log(rights);
+    console.log(rights, role);
     return { companyId, role, userRights: rights };
   }, [userInformation]);
 

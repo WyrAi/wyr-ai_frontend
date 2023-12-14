@@ -23,7 +23,11 @@ const Prompt = ({ children, btnText, modalID, btnClasses, isDisabled }) => {
       <dialog id={modalID} className="modal">
         <div className="modal-box md:w-fit md:min-w-[50vw] w-[90%] p-[35px]">
           <form method="dialog">
-            <button className="btn btn-sm btn-circle absolute right-2 top-2">
+            <button
+              type="button"
+              className="btn btn-sm btn-circle absolute right-2 top-2"
+              onClick={() => closeModal(modalID)}
+            >
               ✕
             </button>
             {children}

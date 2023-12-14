@@ -84,7 +84,10 @@ const RelationShip = () => {
       if (selectRelation) {
         wyraiApi
           .put(`/api/rejectedRelationship/${selectRelation.id}`)
-          .then((res) => console.log(res))
+          .then((res) => {
+            console.log(res);
+            fetchRelation();
+          })
           .catch((err) => console.log(err));
       }
     } catch (error) {
@@ -96,7 +99,10 @@ const RelationShip = () => {
       if (selectRelation) {
         wyraiApi
           .put(`/api/approvedRelationship/${selectRelation.id}`)
-          .then((res) => console.log(res))
+          .then((res) => {
+            console.log(res);
+            fetchRelation();
+          })
           .catch((err) => console.log(err));
       }
     } catch (error) {
@@ -124,6 +130,27 @@ const RelationShip = () => {
   }, []);
   console.log(selectRelation.id);
 
+  useEffect(() => {
+    document.addEventListener("keydown", handleEscKeyPress);
+
+    // window.addEventListener("click", handleClickOutside);
+
+    // Cleanup: remove event listener when the component unmounts
+    return () => {
+      document.removeEventListener("keydown", handleEscKeyPress);
+      // window.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  const handleEscKeyPress = (event) => {
+    if (event.key === "Escape") {
+      console.log("escape");
+      setSuccessRelation(false);
+      // Do something when the Esc key is pressed
+      // setAddBranchPopUp(false);
+    }
+  };
+
   return (
     <main className="flex flex-col h-full">
       <div className="flex flex-col m-5">
@@ -147,7 +174,10 @@ const RelationShip = () => {
             modalID={"addCompany"}
           >
             <div className="w-[60%] mx-auto ">
-              <AddCompany />
+              <AddCompany
+                setSuccessRelation={setSuccessRelation}
+                fetchRelation={fetchRelation}
+              />
             </div>
           </Prompt>
         </div>
@@ -186,7 +216,8 @@ const RelationShip = () => {
                   company={value.companyId}
                   relation={value.relationId}
                   selectRelationmethod={handleselectRelation}
-                  RelationMethod={fetchRelation}
+                  Rel
+                  ationMethod={fetchRelation}
                 />
               </div>
             );
@@ -194,7 +225,11 @@ const RelationShip = () => {
         </div>
         {/* <div className="text-center mb-5">Pagination</div> */}
       </div>
-      {true && <SuccessRelation />}
+      {sucessRelation && (
+        <div className="fixed top-0 left-0 w-full h-full bg-[#00000080] flex justify-center items-center">
+          <SuccessRelation />
+        </div>
+      )}
     </main>
   );
 };

@@ -15,7 +15,7 @@ import SuccessRelation from "./SuccessRelation";
 import axios from "axios";
 import wyraiApi from "../api/wyraiApi";
 
-const AddCompany = () => {
+const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
   const { role, companyId } = userGloabalContext();
   const [roles, setRoles] = React.useState([
     { id: 0, name: "Buyer", icon: Buyer, selected: false },
@@ -26,6 +26,7 @@ const AddCompany = () => {
   const [error, setError] = React.useState({ role: "" });
 
   const UserRolesRelation = roles.filter((item) => item.name != role);
+  console.log(role, UserRolesRelation);
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
@@ -45,35 +46,34 @@ const AddCompany = () => {
         );
         if (selectedData.length === 0) {
           setError({ role: "Please select role before sending email " });
-          console.log(document.getElementById(modalID));
-          document.getElementById(modalID).close();
         } else {
           setError({ role: "" });
-          // const requestBody = {
-          //   email: values.email,
-          //   role: selectedData[0].name,
-          // };
-
-          console.log({
-            reciverEmail: values.email,
+          const requestBody = {
+            email: values.email,
             role: selectedData[0].name,
-            senderCompanyId: companyId,
-          });
-          document.getElementById("addCompany").close();
+          };
 
-          // wyraiApi
-          //   .post(`/api/companyRelationShip`, {
-          //     reciverEmail: values.email,
-          //     role: selectedData[0].name,
-          //     senderCompanyId: companyId,
-          //   })
-          //   .then((res) => {
-          //     console.log(res);
-          //     document.getElementById(modalID).close();
-          //   })
-          //   .catch((err) => {
-          //     console.log(err);
-          //   });
+          // console.log({
+          //   reciverEmail: values.email,
+          //   role: selectedData[0].name,
+          //   senderCompanyId: companyId,
+          // });
+
+          wyraiApi
+            .post(`/api/companyRelationShip`, {
+              reciverEmail: values.email,
+              role: selectedData[0].name,
+              senderCompanyId: companyId,
+            })
+            .then((res) => {
+              console.log(res);
+              document.getElementById("addCompany").close();
+              setSuccessRelation(true);
+              fetchRelation();
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         }
       },
       validationSchema,
@@ -183,7 +183,6 @@ const AddCompany = () => {
               handleSubmit();
             }}
           >
-            {" "}
             Invite
           </div>
         </div>
