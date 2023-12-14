@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 // import DropDown from "../DasiyUIComponents/DropDown";
 
 const TimePicker = () => {
-  const { startTime, endTime, setEndTime, setStartTime } = userGloabalContext();
+  const { startTime, setStartTime } = userGloabalContext();
 
   const [time, setTime] = useState({
     hour: "00",
@@ -118,7 +118,7 @@ const TimePicker = () => {
             <div
               key={index}
               data-time={setSpecificTime(item)}
-              className="h-[40px] w-[120px]"
+              className="h-[40px] w-full"
             >
               <span
                 className="h-full w-full border bg-white flex items-center justify-center hover:border-2 hover:border-blue cursor-pointer"

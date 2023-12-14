@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InputField from "./InputField";
 import upload from "../assets/formkit_uploadcloud1.svg";
 import comment from "../assets/noun-add-comment-5035165 1.svg";
@@ -13,11 +13,15 @@ import * as Yup from "yup";
 // import DropZone from '../Components/DropZone';
 import CommentBox from "./CommentBox";
 import { userGloabalContext } from "../UserContext";
+import UploadImages from "./UploadImages";
 
-const Products = () => {
+const Products = ({ data, handleProductChange, poIndex }) => {
+  const { images, ...restData } = data;
+  const productList = restData;
+  console.log(images, productList);
   const [collapse, setCollapse] = useState(false);
   const [togglePopup, setTogglePopup] = useState(false);
-  const { productList, setProductList, popUpload, setPopUpload } =
+  const { popUpload, setPopUpload, imagesFiles, setImagesFiles } =
     userGloabalContext();
 
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -63,10 +67,10 @@ const Products = () => {
     height: "",
     heightTolerance: "",
     aql: "",
-    // comments: '', //this can have many comments so, when sent as Array of comments
+    comments: [], //this can have many comments so, when sent as Array of comments
   };
   const formik = useFormik({
-    initialValues,
+    initialValues: productList,
     onSubmit: (values) => handleSubmit(values),
     validationSchema,
   });
@@ -78,14 +82,17 @@ const Products = () => {
       console.error(error);
     }
   }
-  const handleChange = (e) => {
-    // console.log('test');
-    const { name, value } = e.target;
-    // console.log(name, value);
-    setProductList({ ...productList, [name]: value });
-    formik.handleChange(e);
-  };
-  // console.log(productList);
+
+  async function handleInputChange(e) {
+    const name = e.target.name;
+    const value = e.target.value;
+    // validationCheck(name, value);
+    handleProductChange(poIndex, name, value);
+
+    formik.setFieldValue(name, value);
+  }
+  // console.log(formik.errors);
+  // console.log(formik.touched);
 
   return (
     <>
@@ -98,20 +105,33 @@ const Products = () => {
                   <div className="  w-[220px] rounded-md overflow-hidden flex">
                     <div className=" w-full outline-dashed outline-gray-300 flex flex-col items-center justify-center  m-1 mb-4  bg-white">
                       <div className="flex flex-col items-center mb-4 ">
-                        <div className=" ">
-                          <img src={upload} alt="cloud" className="m-auto" />
+                        <div className="m-2 ">
                           <img
                             src={add}
                             alt="cloud"
                             className="h-12 w-12 text-blue absolute top-[0] right-[0] md:top-[-3vh] md:left-[194px] cursor-pointer"
-                            onClick={() => setPopUpload(!popUpload)}
+                            onClick={() => {
+                              setPopUpload(!popUpload);
+                            }}
                           />
-                          <p className="text-center text-xs font-[600]">
-                            {"Upload Approved Sample"}
-                          </p>
-                          <p className="text-sm font-bold text-center text-blue">
-                            Or Browse
-                          </p>
+                          {images?.frontImage?.length > 0 ? (
+                            <img src={images?.frontImage} alt="" />
+                          ) : (
+                            <div>
+                              <img
+                                src={upload}
+                                alt="cloud"
+                                className="m-auto"
+                              />
+
+                              <p className="text-center text-xs font-[600]">
+                                {"Upload Approved Sample"}
+                              </p>
+                              <p className="text-sm font-bold text-center text-blue">
+                                Or Browse
+                              </p>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -124,12 +144,17 @@ const Products = () => {
                         name="styleId"
                         type="text"
                         value={formik.values.styleId}
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         onBlur={formik.handleBlur}
-                        error={formik.touched.styleId && formik.errors.styleId}
+                        error={formik.errors.styleId}
                         placeholder={"ST ED BC 3220 W"}
                         labelColor={"bg-slimeGray"}
                       />
+                      {/* {formik.touched.styleId && formik.errors.styleId && (
+                        <p className="text-red-800 text-left">
+                          {errors[i.bname]}
+                        </p>
+                      )} */}
                     </div>
                     <div className="">
                       <InputField
@@ -137,14 +162,17 @@ const Products = () => {
                         name={"styleName"}
                         type="text"
                         value={formik.values.styleName}
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         onBlur={formik.handleBlur}
-                        error={
-                          formik.touched.styleName && formik.errors.styleName
-                        }
+                        error={formik.errors.styleName}
                         placeholder={"BH1222 Marri Welcome"}
                         labelColor={"bg-slimeGray"}
                       />
+                      {/* {formik.errors?.styleName?.length > 0 && (
+                        <p className="text-red-800 text-left">
+                          {formik.errors.styleName}
+                        </p>
+                      )} */}
                     </div>
                     <div className="">
                       <InputField
@@ -152,11 +180,9 @@ const Products = () => {
                         name={"quantity"}
                         type="text"
                         value={formik.values.quantity}
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         onBlur={formik.handleBlur}
-                        error={
-                          formik.touched.quantity && formik.errors.quantity
-                        }
+                        error={formik.errors.quantity}
                         placeholder={"600"}
                         labelColor={"bg-slimeGray"}
                       />
@@ -167,9 +193,9 @@ const Products = () => {
                         name={"color"}
                         type="text"
                         value={formik.values.color}
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         onBlur={formik.handleBlur}
-                        error={formik.touched.color && formik.errors.color}
+                        error={formik.errors.color}
                         placeholder={"Nat 75/25"}
                         labelColor={"bg-slimeGray"}
                       />
@@ -183,7 +209,7 @@ const Products = () => {
                       label={"Weight"}
                       type="text"
                       value={formik.values.weight}
-                      onChange={handleChange}
+                      onChange={handleInputChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.weight && formik.errors.weight}
                       placeholder={"500GMS"}
@@ -196,7 +222,7 @@ const Products = () => {
                       label={"WeightTolerance"}
                       type="text"
                       value={formik.values.weightTolerance}
-                      onChange={handleChange}
+                      onChange={handleInputChange}
                       onBlur={formik.handleBlur}
                       error={
                         formik.touched.weightTolerance &&
@@ -212,7 +238,7 @@ const Products = () => {
                       label={"Length"}
                       type="text"
                       value={formik.values.length}
-                      onChange={handleChange}
+                      onChange={handleInputChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.length && formik.errors.length}
                       placeholder={"2.5"}
@@ -225,7 +251,7 @@ const Products = () => {
                       label={"Length Tolerance"}
                       type="text"
                       value={formik.values.lengthTolerance}
-                      onChange={handleChange}
+                      onChange={handleInputChange}
                       onBlur={formik.handleBlur}
                       error={
                         formik.touched.lengthTolerance &&
@@ -241,7 +267,7 @@ const Products = () => {
                       label={"Width"}
                       type="text"
                       value={formik.values.width}
-                      onChange={handleChange}
+                      onChange={handleInputChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.width && formik.errors.width}
                       placeholder={"2.5"}
@@ -254,7 +280,7 @@ const Products = () => {
                       label={"Width Tolerance"}
                       type="text"
                       value={formik.values.widthTolerance}
-                      onChange={handleChange}
+                      onChange={handleInputChange}
                       onBlur={formik.handleBlur}
                       error={
                         formik.touched.widthTolerance &&
@@ -270,7 +296,7 @@ const Products = () => {
                       label={"Height"}
                       type="text"
                       value={formik.values.height}
-                      onChange={handleChange}
+                      onChange={handleInputChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.height && formik.errors.height}
                       placeholder={"2.5"}
@@ -283,7 +309,7 @@ const Products = () => {
                       label={"Height Tolerance"}
                       type="text"
                       value={formik.values.heightTolerance}
-                      onChange={handleChange}
+                      onChange={handleInputChange}
                       onBlur={formik.handleBlur}
                       error={
                         formik.touched.heightTolerance &&
@@ -302,7 +328,7 @@ const Products = () => {
                       label={"AQL"}
                       type="text"
                       value={formik.values.aql}
-                      onChange={handleChange}
+                      onChange={handleInputChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.aql && formik.errors.aql}
                       placeholder={"1.6"}
@@ -319,7 +345,7 @@ const Products = () => {
                           <p className="flex-none">
                             {formatDate(currentDate)}{" "}
                           </p>
-                          <p className="flex-1">{item.comment}</p>
+                          <p className="flex-1">{item}</p>
                         </div>
                       ))
                     ) : (
@@ -345,9 +371,10 @@ const Products = () => {
 
                   {togglePopup && (
                     <CommentBox
+                      poIndex={poIndex}
                       header={"Comments"}
                       comments={productList.comments}
-                      setComments={setProductList}
+                      handleProductChange={handleProductChange}
                       setTogglePopup={setTogglePopup}
                     />
                   )}
@@ -360,22 +387,29 @@ const Products = () => {
                 <div className="flex flex-col md:flex-row gap-5 items-center ">
                   <div className="relative p-7 w-[220px] h-[88px] rounded-md  flex outline-dashed outline-gray-300  flex-col items-center justify-center m-1  bg-white">
                     <img
-                      src={upload}
-                      alt="cloud"
-                      className="m-auto h-10 w-10"
-                    />
-                    <img
                       src={add}
                       alt="cloud"
                       className="h-10 w-10 text-blue absolute top-[0%] right-[1%] md:top-[-24px] md:left-[198px] cursor-pointer"
                       onClick={() => setPopUpload(!popUpload)}
                     />
-                    <p className="text-center text-xs font-[600]">
-                      {"Upload Approved Sample"}
-                    </p>
-                    <p className="text-xs font-bold text-center text-blue">
-                      Or Browse
-                    </p>
+                    {images?.frontImage?.length > 0 ? (
+                      <img src={images?.frontImage} alt="" />
+                    ) : (
+                      <div>
+                        <img
+                          src={upload}
+                          alt="cloud"
+                          className="m-auto h-10 w-10"
+                        />
+
+                        <p className="text-center text-xs font-[600]">
+                          {"Upload Approved Sample"}
+                        </p>
+                        <p className="text-sm font-bold text-center text-blue">
+                          Or Browse
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 flex-1 gap-5 w-full">
@@ -385,7 +419,7 @@ const Products = () => {
                         name="styleId"
                         type="text"
                         value={formik.values.styleId}
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         onBlur={formik.handleBlur}
                         error={formik.touched.styleId && formik.errors.styleId}
                         placeholder={"ST ED BC 3220 W"}
@@ -398,7 +432,7 @@ const Products = () => {
                         name={"styleName"}
                         type="text"
                         value={formik.values.styleName}
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         onBlur={formik.handleBlur}
                         error={
                           formik.touched.styleName && formik.errors.styleName
@@ -430,6 +464,16 @@ const Products = () => {
             </div>
           )}
         </div>
+        {popUpload && (
+          <UploadImages
+            popup={popUpload}
+            setPopup={setPopUpload}
+            imagesData={images}
+            setImagesFiles={setImagesFiles}
+            handleProductChange={handleProductChange}
+            poIndex={poIndex}
+          />
+        )}
       </div>
     </>
   );

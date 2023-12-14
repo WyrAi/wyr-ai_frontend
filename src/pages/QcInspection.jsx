@@ -78,7 +78,7 @@ const QcInspection = () => {
         .get(`/api/PlDisplay/${userInformation?._id}`)
         .then((res) => setPlData(res.data.Response));
     }
-  }, []);
+  }, [userInformation?._id]);
 
   console.log(plData);
 
@@ -112,14 +112,19 @@ const QcInspection = () => {
           <div className="flex flex-wrap w-full h-24 gap-6">
             {plData?.map((value, index) => {
               const { packingListFiles, buyerId, status, _id } = value;
-              console.log(value);
+              let qcStatus = "";
+              if (status === "Approved") {
+                qcStatus = "Pending QC Assign";
+              } else {
+                qcStatus = "Completed";
+              }
               return (
                 <InspectionCard
                   k={index}
                   id={_id}
                   plDoc={packingListFiles}
                   buyer={buyerId?.name}
-                  status={status}
+                  status={qcStatus}
                   statusLabel={sortFilter_Opt}
                 />
               );
