@@ -14,7 +14,7 @@ import Prompt from "../DasiyUIComponents/Prompt";
 import SuccessRelation from "./SuccessRelation";
 import axios from "axios";
 import wyraiApi from "../api/wyraiApi";
-
+import socket from "../Components/socket";
 const AddCompany = () => {
   const { role, companyId } = userGloabalContext();
   const [roles, setRoles] = React.useState([
@@ -46,7 +46,7 @@ const AddCompany = () => {
         if (selectedData.length === 0) {
           setError({ role: "Please select role before sending email " });
           console.log(document.getElementById(modalID));
-          document.getElementById(modalID).close();
+          document.getElementById("modalID").close();
         } else {
           setError({ role: "" });
           // const requestBody = {
@@ -74,6 +74,28 @@ const AddCompany = () => {
           //   .catch((err) => {
           //     console.log(err);
           //   });
+          // console.log(requestBody);
+          wyraiApi
+            .post(`/api/companyRelationShip`, {
+              reciverEmail: values.email,
+              role: selectedData[0].name,
+              senderCompanyId: companyId,
+            })
+            .then((res) => {
+              console.log(res);
+              console.log("before document");
+              document.getElementById(modalID).close();
+              console.log("After document");
+              socket.emit("sendText", {
+                senderName: values.email,
+                receiverName: values.email,
+                text: `connection request form the ${values.email} `,
+              });
+              console.log("After socket document");
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         }
       },
       validationSchema,
