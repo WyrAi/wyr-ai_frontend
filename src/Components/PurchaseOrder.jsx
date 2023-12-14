@@ -70,7 +70,7 @@ function PurchaseOrder() {
   // const [vendorPopup, setVendorPopup] = useState(false);
   const [count, setCount] = useState(1);
   const { productList, imagesFiles, setImagesFiles } = userGloabalContext();
-
+  const [ApiImage, setApiImage] = useState();
   const validationSchema = Yup.object().shape({
     poNumber: Yup.number().required("PO Number is required"),
     nameOfBuyer: Yup.string().required("Name of Buyer is required"),
@@ -302,6 +302,34 @@ function PurchaseOrder() {
     setPopup({ ...popup, [name]: !popup[name] });
   };
 
+  const ImageHandler = async (value) => {
+    setApiImage(value);
+  };
+
+  useEffect(() => {
+    const POAIData = async () => {
+      try {
+        console.log("Hello");
+        const formData = new FormData();
+        formData.append("image_file", ApiImage);
+        const response = await axios.post(
+          "http://3.110.187.181:5000/detect",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log(response, "hfddd");
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    console.log(ApiImage, "gfffcf");
+    if (ApiImage) POAIData();
+  }, [ApiImage]);
+
   const fetchpeople = async () => {
     if (ids.buyerId.length > 0 && ids.vendorId.length > 0) {
       wyraiApi
@@ -351,6 +379,7 @@ function PurchaseOrder() {
                 onDrop={setPurchaseDoc}
                 multiple={true}
                 message={"Upload Purchase Order"}
+                method={ImageHandler}
               />
             </div>
             {purchaseDoc && (

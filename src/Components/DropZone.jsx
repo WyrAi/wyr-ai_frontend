@@ -14,11 +14,11 @@ const DropZone = ({
   textSize,
   className,
   fileName,
+  method
 }) => {
   const [files, setFiles] = useState([]);
   const [preview, setPreview] = useState("");
-
-  /**
+  /** 
    * Callback function for handling dropped files.
    *
    * @callback onDropHandler
@@ -40,6 +40,12 @@ const DropZone = ({
     },
     [onDrop]
   );
+
+  useEffect(() => {
+    // console.log(files[0]);
+    if (method) method(files[0]);
+  }, [files]);
+  
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: (acceptedFiles) => {
