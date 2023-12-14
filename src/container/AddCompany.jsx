@@ -15,7 +15,10 @@ import SuccessRelation from "./SuccessRelation";
 import axios from "axios";
 import wyraiApi from "../api/wyraiApi";
 
+
 const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
+import socket from "../Components/socket";
+const AddCompany = () => {
   const { role, companyId } = userGloabalContext();
   const [roles, setRoles] = React.useState([
     { id: 0, name: "Buyer", icon: Buyer, selected: false },
@@ -46,6 +49,8 @@ const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
         );
         if (selectedData.length === 0) {
           setError({ role: "Please select role before sending email " });
+          console.log(document.getElementById(modalID));
+          document.getElementById('modalID').close();
         } else {
           setError({ role: "" });
           const requestBody = {
@@ -64,14 +69,26 @@ const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
               reciverEmail: values.email,
               role: selectedData[0].name,
               senderCompanyId: companyId,
-            })
-            .then((res) => {
+            }).then((res) => {
               console.log(res);
+
               document.getElementById("addCompany").close();
               setSuccessRelation(true);
               fetchRelation();
             })
             .catch((err) => {
+              console.log("before document")
+              document.getElementById(modalID).close();
+              console.log("After document")
+              socket.emit("sendText", {
+                senderName: values.email,
+                receiverName: values.email,
+                text:`connection request form the ${values.email} `,
+              }); 
+              console.log("After socket document")
+
+            }).catch((err) => {
+
               console.log(err);
             });
         }
