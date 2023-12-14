@@ -77,8 +77,7 @@ function PurchaseOrder() {
   // const [buyerPopup, setBuyerPopup] = useState(false);
   // const [vendorPopup, setVendorPopup] = useState(false);
   const [count, setCount] = useState(1);
-  const { productList, imagesFiles, setImagesFiles } = userGloabalContext();
-  const [ApiImage, setApiImage] = useState();
+  // const { productList, imagesFiles, setImagesFiles } = userGloabalContext();
   const validationSchema = Yup.object().shape({
     poNumber: Yup.number().required("PO Number is required"),
     nameOfBuyer: Yup.string().required("Name of Buyer is required"),
@@ -476,10 +475,6 @@ function PurchaseOrder() {
       setIds({ ...ids, vendorId: item.companyId?._id });
     }
     setPopup({ ...popup, [name]: !popup[name] });
-  };
-
-  const ImageHandler = async (value) => {
-    setApiImage(value);
   };
 
   useEffect(() => {
