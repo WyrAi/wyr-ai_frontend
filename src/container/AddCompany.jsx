@@ -63,13 +63,15 @@ const AddCompany = () => {
             }).then((res) => {
               console.log(res);
               console.log("before document")
-              document.getElementById(modalID).close();
+              // document.getElementById('modalID').close();
               console.log("After document")
-              socket.emit("sendText", {
+
+              const data ={
                 senderName: values.email,
                 receiverName: values.email,
                 text:`connection request form the ${values.email} `,
-              }); 
+              }
+              socket.emit("sendText", {data}); 
               console.log("After socket document")
 
             }).catch((err) => {

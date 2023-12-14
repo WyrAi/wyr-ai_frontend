@@ -10,10 +10,7 @@ import { userGloabalContext } from "../UserContext";
 import socket from "../Components/socket";
 import io from "socket.io-client";
 
-
 const Login = () => {
-
-
   // const [socket, setSocket] = useState("");
   // const navigate = useNavigate();
   const { setAuth } = useContext(AuthContext);
@@ -28,13 +25,33 @@ const Login = () => {
   // useEffect(() => {
   //   // const socketInstance = io("http://localhost:5000");
   //   setSocket(socket);
-  
+
   //   return () => {
   //     // Cleanup function: disconnect the socket when the component is unmounted
   //     socketInstance.disconnect();
   //   };
   // }, []);
-  
+
+  const saveNotificationUser = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/socketuser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user:formData.email, socket:socket.id }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("NotificationUser saved successfully:", data);
+      } else {
+        console.error("Failed to save NotificationUser");
+      }
+    } catch (error) {
+      console.error("Error saving NotificationUser:", error);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,19 +66,19 @@ const Login = () => {
     wyraiApi
       .post(`/api/login`, formData)
       .then((res) => {
-        console.log("got token");
+        console.log(res.data.token);
         setToken(res.data.token);
         setAuth(res.data.token);
-        console.log("userInfo",formData.email)
+        console.log("userInfo", formData.email);
+        saveNotificationUser();
+        // socket?.emit("newUser", formData.email);
         navigate("/dashboard");
-        socket?.emit("newUser", formData.email);
       })
       .catch((err) => {
         console.log(err);
       });
-
-
   };
+
   return (
     <>
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

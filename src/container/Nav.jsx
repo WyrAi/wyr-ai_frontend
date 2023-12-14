@@ -4,6 +4,7 @@ import logout from "../assets/noun-log-out-5762374 1.svg";
 import { Link, useNavigate } from "react-router-dom";
 import userGloabalContext from "../UserContext";
 import React from "react";
+import socket from "../Components/socket";
 
 const Nav = () => {
   const { userInformation, userRights } = userGloabalContext();
@@ -22,7 +23,9 @@ const Nav = () => {
   }, [userInformation?.role?.SelectAccess]);
 
   const logoutHandlemethod = () =>{
-    deleteToken()
+    console.log("logout emit")
+    // deleteToken()
+    socket.emit("remove",(socket.id))
     navigate("/login")
   }
   return (
@@ -46,7 +49,7 @@ const Nav = () => {
         </div>
 
         <div className="w-1/2 m-auto">
-          <button className="flex gap-3 items-center  ">
+          <button className="flex gap-3 items-center" onClick={()=>{logoutHandlemethod()}}>
             <img src={logout} alt="logout" />
             <span>Logout</span>
           </button>

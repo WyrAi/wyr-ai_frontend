@@ -131,6 +131,7 @@ export const UserContextProvider = ({ children }) => {
     wyraiApi
       .get(`/api/UserInformation`)
       .then((res) => {
+        console.log(res);
         const userInformation = res.data.UserInfo;
         setUserInformation(userInformation);
         const companyId = userInformation?.companyId?._id;
@@ -153,7 +154,9 @@ export const UserContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    console.log(token, userInformation);
     if (token && !userInformation) {
+      console.log("here");
       getUserInformation();
     }
   }, [userInformation, token]);
@@ -162,7 +165,7 @@ export const UserContextProvider = ({ children }) => {
     const companyId = userInformation?.companyId?._id;
     const role = userInformation?.role?.name;
     const rights = userInformation?.role?.SelectAccess;
-    console.log(rights);
+    console.log(rights, userInformation);
     return { companyId, role, userRights: rights };
   }, [userInformation]);
 

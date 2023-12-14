@@ -23,8 +23,9 @@ const InspectionCard = () => {
 };
 
 const Dashboard = () => {
-  const { getUserInformation, companyId } = userGloabalContext();
-  const toast= useToast();
+  const { getUserInformation, companyId, userInformation } =
+    userGloabalContext();
+  const toast = useToast();
 
   const status = {
     active: { name: "Active", Current: 0, color: "#EFD780" },
@@ -39,14 +40,19 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-
-    console.log("Notification component mounted");
-    
+    console.log("Notification component mounted",socket.id);
+     
     socket.on("getText", (data) => {
-        console.log("Notification component:",data.text);
-        window.alert(data.text)
-        setNotifications((prev) => [...prev, data.text]);
+      console.log("Notification component:", data.text);
+      window.alert(data.text);
+      setNotifications((prev) => [...prev, data.text]);
     });
+socket.on("receive",(message)=>{
+
+  console.log("message received")
+})
+console.log("fas;ldkfjsaldkjflkasdjf;lkasdjf;lkasdjf;lkasdjfd")
+
   }, [socket]);
   return (
     <div className="ml-5 w-[85%] h-full box-border mt-7">
