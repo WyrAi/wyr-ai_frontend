@@ -7,7 +7,8 @@ import { useDropzone } from "react-dropzone";
 import { MdOutlineModeEditOutline } from "react-icons/md";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import userGloabalContext from "../UserContext";
-import DropZone from "../Components/DropZone";
+
+// import DropZone from "../Components/DropZone";
 
 const UploadImages = ({
   popup,
@@ -17,17 +18,10 @@ const UploadImages = ({
   handleProductChange,
   poIndex,
 }) => {
-  // const [images, setImages] = useState({
-  //   backImage: undefined,
-  //   frontImage: undefined,
-  //   careLabel: undefined,
-  //   sizeLabel: undefined,
-  // });
-  // console.log(imagesFiles);
   const { imagesFiles } = userGloabalContext();
   // console.log(test);
-  const [images, setImages] = useState(imagesData);
-  const [files, setFiles] = useState([]);
+  const [images, setImages] = useState("");
+  const [files, setFiles] = useState(imagesData);
   const [img, setImg] = useState(null);
   const [imgName, setImgName] = useState("");
   console.log(imagesData, imagesFiles);
@@ -40,23 +34,32 @@ const UploadImages = ({
     // Add more zones as needed
   ];
 
-  // const onDropHandler = useCallback(
-  //   (acceptedFiles) => {
-  //     if (onDrop) {
-  //       const file = acceptedFiles[0];
-  //       // console.log(file);
-  //       // console.log(file.type);
-  //       const reader = new FileReader();
-  //       reader.onload = (e) => {
-  //         // Use reader.result
-  //         onDrop(e.target.result);
-  //         setPreview(e.target.result);
-  //       };
-  //       reader.readAsDataURL(file);
-  //     }
-  //   },
-  //   [onDrop]
-  // );
+  const onDropHandler = useCallback((acceptedFiles) => {
+    // if (img) {
+    //   const file = acceptedFiles[0];
+    //   // console.log(file);
+    //   // console.log(file.type);
+    //   const reader = new FileReader();
+    //   reader.onload = (e) => {
+    //     // Use reader.result
+    //     console.log(e.target);
+    //     setImg(e.target.result);
+    //     // setPreview(e.target.result);
+    //   };
+    //   reader.readAsDataURL(file);
+    // }
+    const file = acceptedFiles[0];
+    // console.log(file);
+    // console.log(file.type);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      // Use reader.result
+      // console.log(e.target);
+      setImg(e.target.result);
+      // setPreview(e.target.result);
+    };
+    reader.readAsDataURL(file);
+  }, []);
 
   // const onDrop = (acceptedFiles, fieldName) => {
   //   const file = acceptedFiles[0];
@@ -71,16 +74,16 @@ const UploadImages = ({
   // };
   // console.log(images);
 
-  // const { getRootProps, getInputProps, isDragActive } = useDropzone({
-  //   onDrop: (acceptedFiles) => {
-  //     console.log(acceptedFiles);
-  //     setFiles(acceptedFiles);
-  //     onDropHandler(acceptedFiles);
-  //   },
-  //   accept: accept || "image/*",
-  //   multiple: multiple || false,
-  //   maxSize: maxSize || 5242880,
-  // });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: (acceptedFiles) => {
+      console.log(acceptedFiles);
+      // setFiles(acceptedFiles);
+      onDropHandler(acceptedFiles);
+    },
+    accept: "image/*",
+    multiple: false,
+    maxSize: 5242880,
+  });
 
   // const removeImage = (fieldName, e) => {
   //   e.stopPropagation(); // Prevent event propagation
@@ -96,11 +99,13 @@ const UploadImages = ({
   //     onDrop: (acceptedFiles) => onDrop(acceptedFiles, zone.name),
   //   });
 
-  // React.useEffect(() => {
-  //   console.log(images);
-  //   setImagesFiles(images);
-  //   handleProductChange(poIndex, "images", images);
-  // }, [images]);
+  React.useEffect(() => {
+    // console.log("images", files);
+    // setImagesFiles(images);
+    if (files?.length > 0) {
+      handleProductChange(poIndex, "images", files);
+    }
+  }, [files]);
   // console.log(imagesFiles, poIndex);
   const handleInputChange = (e) => {
     // console.log(e.target.value);
@@ -108,11 +113,12 @@ const UploadImages = ({
   };
 
   const addImageFile = () => {
+    console.log(imgName, img, "ADD");
     setFiles([...files, { name: imgName, file: img }]);
     setImg(null);
     setImgName("");
   };
-  console.log(img, files);
+  console.log(files);
 
   return (
     <div className="fixed inset-0 bg-[#00000080] h-screen w-screen pt-[100px]">
@@ -120,39 +126,6 @@ const UploadImages = ({
         <h1 className="text-center mb-5 ">Upload Images</h1>
 
         <div className="flex-1 grid grid-cols md:grid-cols-5 gap-5 overflow-y-auto">
-          <div className="h-[240px] w-[200px]">
-            <label className="flex justify-center items-center mb-2 gap-5">
-              <input
-                type="text"
-                placeholder="Add here..."
-                className="w-2/3 outline-none focus:border-b-2 focus:border-blue pl-5"
-                value={imgName}
-                onChange={handleInputChange}
-              />
-              {imgName.length > 0 ? (
-                <FaRegCircleCheck
-                  className="text-xl cursor-pointer"
-                  onClick={addImageFile}
-                />
-              ) : (
-                <MdOutlineModeEditOutline
-                  className="text-xl cursor-pointer"
-                  onClick={""}
-                />
-              )}
-            </label>
-            <div className=" relative  rounded-md  flex mb-11 border-dashed border-2 border-[rgb(102,102,102)]">
-              <div className="w-full h-[160px]">
-                <DropZone
-                  onDrop={setImg}
-                  multiple={true}
-                  message={"Upload Product Images"}
-
-                  // method={ImageHandler}
-                />
-              </div>
-            </div>
-          </div>
           {files?.map((item, index) => {
             console.log(item);
             return (
@@ -171,6 +144,61 @@ const UploadImages = ({
               </div>
             );
           })}
+
+          <div className="h-[240px] w-[200px]">
+            <label className="flex justify-center items-center mb-2 gap-5">
+              <input
+                type="text"
+                placeholder="Add here..."
+                className="w-2/3 outline-none focus:border-b-2 focus:border-blue pl-5"
+                value={imgName}
+                onChange={handleInputChange}
+              />
+              {imgName.length > 0 ? (
+                <FaRegCircleCheck
+                  className="text-xl cursor-pointer"
+                  onClick={() => addImageFile()}
+                />
+              ) : (
+                <MdOutlineModeEditOutline
+                  className="text-xl cursor-pointer"
+                  onClick={() => {}}
+                />
+              )}
+            </label>
+            <div className=" relative  rounded-md  flex mb-11 border-dashed border-2 border-[rgb(102,102,102)]">
+              <div className="w-full h-[160px]">
+                <div
+                  {...getRootProps()}
+                  className={`flex cursor-pointer flex-col  p-6 h-full text-[#666666] gap-2 justify-center  items-center w-full relative ${
+                    isDragActive ? "active" : ""
+                  }`}
+                >
+                  <input {...getInputProps()} />
+
+                  {img ? (
+                    <img
+                      src={img}
+                      alt=""
+                      className="object-cover overflow-hidden w-full flex-1"
+                    />
+                  ) : (
+                    <p
+                      className={`text-[#333333] text-center ${"font-semibold flex flex-col items-center"}`}
+                    >
+                      <AiOutlineCloudUpload size={30} />
+                      Drag & drop files here, or click to select files
+                      <span className="text-blue block"> Browse</span>
+                    </p>
+                  )}
+
+                  {isDragActive && (
+                    <div className="absolute inset-0 bg-gray-300 opacity-50 z-10"></div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* <div className="flex-1 grid grid-cols-4 gap-5">
@@ -223,7 +251,7 @@ const UploadImages = ({
             type="button"
             className="border text-blue border-blue rounded py-2 px-5"
             onClick={() => {
-              setImagesFiles(imagesFiles);
+              // setImagesFiles(imagesFiles);
               setPopup(!popup);
             }}
           >
@@ -382,3 +410,29 @@ export default UploadImages;
 // };
 
 // export default UploadImages;
+
+// {img.length > 0 ? (
+//   <img
+//     src={img}
+//     className="object-cover overflow-hidden w-full flex-1"
+//   ></img>
+// ) : (
+//   <p
+//     className={`flex gap-2 text-[#333333] text-center  font-semibold}`}
+//   >
+//     {/* {files.map((file) => (
+//       <span key={file?.name}>{file?.name}</span>
+//     ))} */}
+//     {imgName}
+//   </p>
+// )}
+
+// {img && (
+// <p
+//   className={`text-[#333333] text-center ${"font-semibold flex flex-col items-center"}`}
+// >
+//   <AiOutlineCloudUpload size={30} />
+//   Drag & drop files here, or click to select files
+//   <span className="text-blue block"> Browse</span>
+// </p>
+// )}

@@ -47,10 +47,7 @@ export const UserContextProvider = ({ children }) => {
 
   // PO popup and images file
   const [popUpload, setPopUpload] = useState(false);
-  const [imagesFiles, setImagesFiles] = useState({
-    name: "",
-    file: "",
-  }); // set imnages file for products in purchase Order
+  const [imagesFiles, setImagesFiles] = useState([]); // set imnages file for products in purchase Order
 
   const reqimg = {
     backImage: undefined,

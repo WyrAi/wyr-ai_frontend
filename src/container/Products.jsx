@@ -18,7 +18,7 @@ import UploadImages from "./UploadImages";
 const Products = ({ data, handleProductChange, poIndex }) => {
   const { images, ...restData } = data;
   const productList = restData;
-  console.log(images, productList);
+  // console.log(images, productList, data, poIndex);
   const [collapse, setCollapse] = useState(false);
   const [togglePopup, setTogglePopup] = useState(false);
   const { popUpload, setPopUpload, imagesFiles, setImagesFiles } =
@@ -77,7 +77,7 @@ const Products = ({ data, handleProductChange, poIndex }) => {
 
   async function handleSubmit(values) {
     try {
-      console.log(values);
+      // console.log(values);
     } catch (error) {
       console.error(error);
     }
@@ -114,8 +114,12 @@ const Products = ({ data, handleProductChange, poIndex }) => {
                               setPopUpload(!popUpload);
                             }}
                           />
-                          {images?.frontImage?.length > 0 ? (
-                            <img src={images?.frontImage} alt="" />
+                          {images?.length > 0 ? (
+                            <img
+                              src={images?.[0]?.file}
+                              alt=""
+                              className="object-cover overflow-hidden w-full flex-1"
+                            />
                           ) : (
                             <div>
                               <img
@@ -385,15 +389,19 @@ const Products = ({ data, handleProductChange, poIndex }) => {
             <div className={` bg-gray-50 p-10`}>
               <div className="  flex flex-col gap-5">
                 <div className="flex flex-col md:flex-row gap-5 items-center ">
-                  <div className="relative p-7 w-[220px] h-[88px] rounded-md  flex outline-dashed outline-gray-300  flex-col items-center justify-center m-1  bg-white">
+                  <div className="relative p-3 w-[220px] h-[88px] rounded-md  flex outline-dashed outline-gray-300  flex-col items-center justify-center m-1  bg-white">
                     <img
                       src={add}
                       alt="cloud"
                       className="h-10 w-10 text-blue absolute top-[0%] right-[1%] md:top-[-24px] md:left-[198px] cursor-pointer"
                       onClick={() => setPopUpload(!popUpload)}
                     />
-                    {images?.frontImage?.length > 0 ? (
-                      <img src={images?.frontImage} alt="" />
+                    {images?.length > 0 ? (
+                      <img
+                        src={images?.[0]?.file}
+                        alt=""
+                        className="object-cover overflow-hidden w-full flex-1"
+                      />
                     ) : (
                       <div>
                         <img

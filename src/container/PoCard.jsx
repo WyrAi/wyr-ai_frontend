@@ -5,7 +5,7 @@ import sample from "../assets/Rectangle 25.png";
 const PoCard = ({ id, purchaseDoc, buyer, status, statusLabel }) => {
   const statusUi = statusLabel.find((item) => item.text === status);
   const color = statusUi.color || "";
-  console.log(color, statusLabel);
+  // console.log(color, statusLabel);
 
   return (
     <>

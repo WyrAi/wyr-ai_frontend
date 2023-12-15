@@ -256,67 +256,6 @@ function PurchaseOrder() {
     //   navigate(-1);
     // }
   }
-  // const conversionImage = (baseUrl) => {
-  //   const base64URL = baseUrl; // Your Base64 URL
-
-  //   // Remove the prefix (e.g., 'data:image/jpeg;base64,') from the Base64 URL to get only the Base64-encoded data
-  //   console.log(base64URL);
-  //   const base64Data = base64URL?.split(";base64,").pop();
-  //   if (base64Data) {
-  //     const blob = (() => {
-  //       const byteCharacters = atob(base64Data);
-  //       const byteArrays = [];
-
-  //       for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-  //         const slice = byteCharacters.slice(offset, offset + 512);
-
-  //         const byteNumbers = new Array(slice.length);
-  //         for (let i = 0; i < slice.length; i++) {
-  //           byteNumbers[i] = slice.charCodeAt(i);
-  //         }
-
-  //         const byteArray = new Uint8Array(byteNumbers);
-  //         byteArrays.push(byteArray);
-  //       }
-
-  //       return new Blob(byteArrays, { type: "image/jpeg" });
-  //     })();
-
-  //     console.log(blob);
-  //     const file = new File([blob], "PurchaseOrder.jpg", {
-  //       type: "image/jpeg",
-  //     });
-  //     const config = {
-  //       headers: {
-  //         "Content-Type": "multipart/form-data", // Set your content type or other required headers
-  //         "Access-Control-Allow-Origin": "*", // You can set the specific domain instead of '*'
-  //       },
-  //     };
-  //     const formData = new FormData();
-  //     formData.append("image_file", file);
-  //     axios
-  //       .post("http://35.154.0.66:5000/detect", formData, config)
-  //       .then((res) => console.log(res));
-  //     console.log(file);
-  //   }
-
-  //   // const base64Data = base64URL?.replace(/^data:image\/\w+;base64,/, "");
-
-  //   // Convert the Base64-encoded data to binary data
-  //   // const binaryData = atob(base64Data);
-
-  //   // // Create a Blob from the binary data
-  //   // const blob = new Blob(
-  //   //   [new Uint8Array(Array.from(binaryData, (char) => char.charCodeAt(0)))],
-  //   //   { type: "image/jpeg" }
-  //   // );
-
-  //   // // Construct a file from the Blob
-  //   // const file = new File([blob], "filename.jpg", { type: "image/jpeg" });
-
-  //   // console.log(file); // The constructed File object
-  //   // return file;
-  // };
 
   useEffect(() => {
     // wyraiApi.post()
@@ -339,9 +278,9 @@ function PurchaseOrder() {
       .then((blob) => {
         const formData = new FormData();
         formData.append("image_file", blob, "filename.jpg"); // Provide a filename here
-
+        console.log(blob);
         axios
-          .post("http://3.110.187.181:5000/detect", formData, config)
+          .post("http://13.201.96.92:5000/detect", formData, config)
           .then((res) => {
             console.log(res);
           })
@@ -354,23 +293,27 @@ function PurchaseOrder() {
       });
   }, [purchaseDoc]);
 
-  useEffect(() => {
-    const allFieldsFilled = Object.values(productList).every(
-      (value) => value !== ""
-    );
-
-    if (allFieldsFilled) {
-      setSlotOfProducts([...slotOfProducts, { ...productList, images: [] }]);
-      setSlotOfProducts([
-        ...slotOfProducts,
-        {
-          ...intials,
-          ["images"]: [],
-        },
-      ]);
-      // setProductList(intials);
-    }
-  }, [productList]);
+  // useEffect(() => {
+  //   const allFieldsFilled = Object.values(productList).every(
+  //     (value) => value !== ""
+  //   );
+  //   console.log(allFieldsFilled);
+  //   if (allFieldsFilled) {
+  //     console.log("filled");
+  //     setSlotOfProducts([
+  //       ...slotOfProducts,
+  //       { ...productList, images: imagesFiles },
+  //     ]);
+  //     setSlotOfProducts([
+  //       ...slotOfProducts,
+  //       {
+  //         ...intials,
+  //         ["images"]: [],
+  //       },
+  //     ]);
+  //     // setProductList(intials);
+  //   }
+  // }, [productList]);
 
   // console.log(imagesFiles, imageIndex);
   // useEffect(() => {
@@ -383,14 +326,16 @@ function PurchaseOrder() {
   const handleProductChange = (poIndex, field, value) => {
     const newPurchaseOrders = [...slotOfProducts];
     if (field === "images") {
-      // console.log(poIndex, field);
+      console.log(value);
+
       const img = newPurchaseOrders[poIndex][field];
-      console.log(newPurchaseOrders[poIndex][field], value);
-      newPurchaseOrders[poIndex][field] = [value];
+      console.log(newPurchaseOrders[poIndex][field], value, poIndex);
+      newPurchaseOrders[poIndex][field] = [...value];
+      // setSlotOfProducts(newPurchaseOrders);
     } else {
       newPurchaseOrders[poIndex][field] = value;
     }
-
+    // console.log(newPurchaseOrders);
     // console.log(newPurchaseOrders);
     setSlotOfProducts(newPurchaseOrders);
   };
@@ -402,10 +347,7 @@ function PurchaseOrder() {
         ...slotOfProducts,
         {
           ...intials,
-          ["images"]: {
-            name: "",
-            file: "",
-          },
+          ["images"]: [],
         },
       ]);
     } catch (error) {
@@ -502,7 +444,7 @@ function PurchaseOrder() {
   const ImageHandler = async (value) => {
     setApiImage(value);
   };
-  console.log(ApiImage);
+  // console.log(ApiImage);
   return (
     <>
       <div className=" h-[94vh] w-[95%] pt-2 mx-auto flex flex-col">
