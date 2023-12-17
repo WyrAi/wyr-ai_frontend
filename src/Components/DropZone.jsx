@@ -31,10 +31,11 @@ const DropZone = ({
         const file = acceptedFiles[0];
         // console.log(file);
         // console.log(file.type);
+        onDrop(file);
         const reader = new FileReader();
         reader.onload = (e) => {
           // Use reader.result
-          onDrop(e.target.result);
+          // onDrop(e.target.result);
           setPreview(e.target.result);
         };
         reader.readAsDataURL(file);
@@ -49,7 +50,9 @@ const DropZone = ({
       setFiles(acceptedFiles);
       onDropHandler(acceptedFiles);
     },
-    accept: accept || "image/*",
+    accept: accept || {
+      "image/*": [".jpeg", ".jpg", ".png"],
+    },
     multiple: multiple || false,
     maxSize: maxSize || 5242880,
   });

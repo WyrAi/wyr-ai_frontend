@@ -24,6 +24,7 @@ import Datepicker from "./DatepickerComponent";
 import gps from "../assets/ion_location-outline.svg";
 import axios from "axios";
 import wyraiApi from "../api/wyraiApi";
+import Prompt from "../DasiyUIComponents/Prompt";
 
 // import DropdownSelect from '../container/DropdownSelect';
 
@@ -58,8 +59,18 @@ function PurchaseOrder() {
     vendorId: "",
   });
   const [ApiImage, setApiImage] = useState();
+
+  const intialImages = [
+    { name: "Back", file: "" },
+    { name: "Front", file: "" },
+    { name: "Care Label", file: "" },
+    { name: "Size Label", file: "" },
+    { name: "Brand Label", file: "" },
+    { name: "Price Label", file: "" },
+  ];
+
   const [slotOfProducts, setSlotOfProducts] = useState([
-    { ...productList, images: [] },
+    { ...productList, images: intialImages },
   ]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
@@ -79,7 +90,7 @@ function PurchaseOrder() {
   const [count, setCount] = useState(1);
 
   const validationSchema = Yup.object().shape({
-    poNumber: Yup.number().required("PO Number is required"),
+    poNumber: Yup.string().required("PO Number is required"),
     nameOfBuyer: Yup.string().required("Name of Buyer is required"),
     addOfBuyer: Yup.string().required("Address of Buyer is required"),
     nameOfVendor: Yup.string().required("Name of Factory is required"),
@@ -229,6 +240,24 @@ function PurchaseOrder() {
 
     // uncomment below api to set submit and draft , told backend guy images files has been changed
     console.log(requestBody);
+
+    const formData = new FormData();
+
+    Object.keys(requestBody).forEach((key) => {
+      if (Array.isArray(requestBody[key])) {
+        requestBody[key].forEach((item, index) => {
+          // If the item is an object or array, you might need to stringify it before appending
+          formData.append(`${key}[${index}]`, JSON.stringify(item));
+        });
+      } else {
+        formData.append(key, requestBody[key]);
+      }
+    });
+
+    for (let pair of formData.entries()) {
+      console.log(pair);
+    }
+
     // if (e.target.type === "submit") {
     //   wyraiApi
     //     .post("/api/purchaseOrder", requestBody)
@@ -240,58 +269,43 @@ function PurchaseOrder() {
     //     .then((res) => navigate(-1))
     //     .catch((err) => console.log(err));
     // }
-
-    // const resp = await fetch(
-    //   import.meta.env.VITE_BASE_URL + "/api/purchaseOrder",
-    //   {
-    //     method: "post",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(requestBody),
-    //   }
-    // );
-
-    // if (resp.ok) {
-    //   navigate(-1);
-    // }
   }
 
-  useEffect(() => {
-    // wyraiApi.post()
-    // // conversionImage(purchaseDoc);
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data", // Set your content type or other required headers
-        "Access-Control-Allow-Origin": "*", // You can set the specific domain instead of '*'
-      },
-    };
-    // const formData = new FormData();
-    // console.log(ApiImage?.name);
-    // formData.append("image_file", ApiImage);
-    // console.log(formData);
-    // axios
-    //   .post("http://35.154.0.66:5000/detect", formData, config)
-    //   .then((res) => console.log(res));
-    fetch(ApiImage)
-      .then((response) => response.blob())
-      .then((blob) => {
-        const formData = new FormData();
-        formData.append("image_file", blob, "filename.jpg"); // Provide a filename here
-        console.log(blob);
-        axios
-          .post("http://13.201.96.92:5000/detect", formData, config)
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-      })
-      .catch((error) => {
-        console.error("Error fetching or converting the image:", error);
-      });
-  }, [purchaseDoc]);
+  // useEffect(() => {
+  //   // wyraiApi.post()
+  //   // // conversionImage(purchaseDoc);
+  //   const config = {
+  //     headers: {
+  //       "Content-Type": "multipart/form-data", // Set your content type or other required headers
+  //       "Access-Control-Allow-Origin": "*", // You can set the specific domain instead of '*'
+  //     },
+  //   };
+  //   // const formData = new FormData();
+  //   // console.log(ApiImage?.name);
+  //   // formData.append("image_file", ApiImage);
+  //   // console.log(formData);
+  //   // axios
+  //   //   .post("http://35.154.0.66:5000/detect", formData, config)
+  //   //   .then((res) => console.log(res));
+  //   fetch(ApiImage)
+  //     .then((response) => response.blob())
+  //     .then((blob) => {
+  //       const formData = new FormData();
+  //       formData.append("image_file", blob, "filename.jpg"); // Provide a filename here
+  //       console.log(blob);
+  //       axios
+  //         .post("http://13.201.96.92:5000/detect", formData, config)
+  //         .then((res) => {
+  //           console.log(res);
+  //         })
+  //         .catch((error) => {
+  //           console.error("Error:", error);
+  //         });
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching or converting the image:", error);
+  //     });
+  // }, [purchaseDoc]);
 
   // useEffect(() => {
   //   const allFieldsFilled = Object.values(productList).every(
@@ -326,7 +340,7 @@ function PurchaseOrder() {
   const handleProductChange = (poIndex, field, value) => {
     const newPurchaseOrders = [...slotOfProducts];
     if (field === "images") {
-      console.log(value);
+      // console.log(value);
 
       const img = newPurchaseOrders[poIndex][field];
       console.log(newPurchaseOrders[poIndex][field], value, poIndex);
@@ -347,7 +361,7 @@ function PurchaseOrder() {
         ...slotOfProducts,
         {
           ...intials,
-          ["images"]: [],
+          ["images"]: intialImages,
         },
       ]);
     } catch (error) {
@@ -387,15 +401,16 @@ function PurchaseOrder() {
     }
   };
 
-  if (showPurchaseOrder) {
-    return (
-      <Preview
-        photos={purchaseDoc}
-        check={showPurchaseOrder}
-        onChange={setShowPurchaseOrder}
-      />
-    );
-  }
+  // if (showPurchaseOrder) {
+  //   return (
+  //     <Preview
+  //       photos={purchaseDoc}
+  //       check={showPurchaseOrder}
+  //       onChange={setShowPurchaseOrder}
+  //     />
+  //   );
+  // }
+  //  this preview has bug in it , need to resolve just have to put this component into prompt component
 
   const handleClick = (e) => {
     setPopup({ ...popup, [e.target.name]: !popup[e.target.name] });
@@ -418,6 +433,30 @@ function PurchaseOrder() {
     }
     setPopup({ ...popup, [name]: !popup[name] });
   };
+
+  // useEffect(() => {
+  //   const POAIData = async () => {
+  //     try {
+  //       console.log("Hello");
+  //       const formData = new FormData();
+  //       formData.append("image_file", ApiImage);
+  //       const response = await axios.post(
+  //         "http://13.201.96.92:5000/detect",
+  //         formData,
+  //         {
+  //           headers: {
+  //             "Content-Type": "multipart/form-data",
+  //           },
+  //         }
+  //       );
+  //       console.log(response, "hfddd");
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   console.log(ApiImage, "gfffcf");
+  //   if (ApiImage) POAIData();
+  // }, [ApiImage]);
 
   const fetchpeople = async () => {
     if (ids.buyerId.length > 0 && ids.vendorId.length > 0) {
@@ -858,7 +897,7 @@ function PurchaseOrder() {
               Publish
             </button>
           </div>
-          {purchaseDoc && (
+          {/* {purchaseDoc && (
             <button
               type="button"
               className="bg-blue flex gap-2 items-center z-10 absolute right-[4.5vh] top-[90px] py-2 px-4 rounded text-white"
@@ -867,7 +906,28 @@ function PurchaseOrder() {
               <AiOutlineSearch className="text-white text-2xl" />
               Preview
             </button>
-          )}
+          )} */}
+          <div className="bg-gray-300">
+            <Prompt
+              btnText={
+                <button
+                  type="button"
+                  className="bg-blue flex gap-2 items-center z-10 absolute right-[4.5vh] top-[90px] py-2 px-4 rounded text-white"
+                  // onClick={() => setShowPurchaseOrder(true)}
+                >
+                  <AiOutlineSearch className="text-white text-2xl" />
+                  Preview
+                </button>
+              }
+              modalID={"preview"}
+            >
+              <Preview
+                photos={purchaseDoc}
+                check={showPurchaseOrder}
+                onChange={setShowPurchaseOrder}
+              />
+            </Prompt>
+          </div>
         </form>
       </div>
 

@@ -64,6 +64,7 @@ const Purchase = () => {
   const [selectedFilter, setSelectedFilter] = useState(filters[0]);
   const [sortFilter, setSortFilter] = useState(sortFilter_Opt[0]);
   const [allPOrder, setAllPOrder] = useState([]);
+  const [filterData, setFilterData] = useState([]);
   const navigate = useNavigate();
   const { userInformation } = userGloabalContext();
 
@@ -76,21 +77,40 @@ const Purchase = () => {
   }
 
   const FetchAllPOrders = async () => {
-    console.log(userInformation);
+    // console.log(userInformation);
     const id = userInformation._id;
 
     wyraiApi
       .get(`api/purchaseOrder/${id}`)
-      .then((res) => setAllPOrder(res?.data?.Response?.poList))
+      .then((res) => {
+        setAllPOrder(res?.data?.Response?.poList);
+        setFilterData(res?.data?.Response?.poList);
+      })
       .catch((err) => console.log(err));
 
     // // if (data.Order) setAllPOrder(data.Order);
   };
-  console.log(allPOrder);
 
+  const filterDataByStatus = (status) => {
+    const filtered = allPOrder.filter((item) => item.status === status);
+    setFilterData(filtered);
+  };
+  // console.log(allPOrder);
+  // console.log(sor);
   useEffect(() => {
+    console.log("first");
     FetchAllPOrders();
   }, [selectedFilter]);
+
+  useEffect(() => {
+    if (sortFilter.text !== "All") {
+      console.log("here");
+      filterDataByStatus(sortFilter.text);
+    } else {
+      FetchAllPOrders();
+    }
+  }, [sortFilter]);
+  console.log(filterData);
 
   return (
     <main className="flex flex-col h-full">
@@ -120,7 +140,7 @@ const Purchase = () => {
       </div>
       <div className=" ml-5 w-full flex-1 flex flex-col">
         <div className="flex flex-wrap w-full h-24 gap-6">
-          {allPOrder?.map((value, index) => {
+          {filterData?.map((value, index) => {
             const { poNumber, purchaseDoc, buyer, status } = value;
             return (
               <PoCard
