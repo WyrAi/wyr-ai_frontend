@@ -14,7 +14,7 @@ import Prompt from "../DasiyUIComponents/Prompt";
 import SuccessRelation from "./SuccessRelation";
 import axios from "axios";
 import wyraiApi from "../api/wyraiApi";
-import socket from "../Components/socket";
+// import socket from "../Components/socket";
 
 const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
   const AddCompany = () => {
@@ -80,11 +80,11 @@ const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
                 console.log("before document");
                 document.getElementById(modalID).close();
                 console.log("After document");
-                socket.emit("sendText", {
-                  senderName: values.email,
-                  receiverName: values.email,
-                  text: `connection request form the ${values.email} `,
-                });
+                // socket.emit("sendText", {
+                //   senderName: values.email,
+                //   receiverName: values.email,
+                //   text: `connection request form the ${values.email} `,
+                // });
                 console.log("After socket document");
               })
               .catch((err) => {
