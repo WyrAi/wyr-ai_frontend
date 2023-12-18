@@ -23,6 +23,8 @@ const AddCompany = () => {
     { id: 2, name: "Factory", icon: factory, selected: false },
     { id: 3, name: "QC Agency", icon: QC, selected: false },
   ]);
+
+  const receivers=["sk9313725@gmail.com","neittazoujeutou-4286@yopmail.com",];
   const [error, setError] = React.useState({ role: "" });
 
   const UserRolesRelation = roles.filter((item) => item.name != role);
@@ -66,11 +68,17 @@ const AddCompany = () => {
               // document.getElementById('modalID').close();
               console.log("After document")
 
-              const data ={
-                senderName: values.email,
-                receiverName: values.email,
-                text:`connection request form the ${values.email} `,
+              // const data ={
+              //   senderName: values.email,
+              //   receiverName: receivers,
+              //   text:`connection request form the ${values.email} `,
+              // }
+
+              const data={
+                senderName:values.email,
+                text:`connection request from the ${values.email}`
               }
+
               socket.emit("sendText", {data}); 
               console.log("After socket document")
 
