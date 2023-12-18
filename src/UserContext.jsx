@@ -17,6 +17,7 @@ const userContext = createContext();
 export const UserContextProvider = ({ children }) => {
   const navigate = useNavigate();
   const [branchData, setBranchData] = useState(null);
+  const [activeMenu, setActiveMenu] = useState(true);
   const [comments, setComments] = useState([]);
   const [productList, setProductList] = useState({
     styleId: "",
@@ -197,6 +198,8 @@ export const UserContextProvider = ({ children }) => {
           startTime,
           branchData,
           role,
+          activeMenu,
+          setActiveMenu,
           setStartTime,
           setImagesFiles,
           setPopUpload,

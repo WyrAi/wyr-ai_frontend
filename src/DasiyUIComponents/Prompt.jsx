@@ -9,14 +9,7 @@ export function openModal(modalID) {
 
 // GIVE IT A UNIQUE MODAL ID AND A BUTTON TEXT AND IT WILL OPEN THE MODAL WHEN CLICKED
 
-const Prompt = ({
-  children,
-  btnText,
-  modalID,
-  btnClasses,
-  isDisabled,
-  promptWidth = 50,
-}) => {
+const Prompt = ({ children, btnText, modalID, btnClasses, isDisabled }) => {
   return (
     <div>
       <button
@@ -28,9 +21,7 @@ const Prompt = ({
         {btnText}
       </button>
       <dialog id={modalID} className="modal">
-        <div
-          className={`modal-box md:w-fit md:min-w-[${promptWidth}vw] w-[90%] p-[35px]`}
-        >
+        <div className="modal-box md:w-fit md:min-w-[60vw] w-[90%] p-[35px]">
           <form method="dialog">
             <button
               type="button"

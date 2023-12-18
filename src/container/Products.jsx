@@ -7,7 +7,7 @@ import up from "../assets/mingcute_up-fill.svg";
 import add from "../assets/noun-add-5479406 1.svg";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { formatDate } from "../Utils/formatDate";
-import Prompt from "../DasiyUIComponents/Prompt";
+import Prompt, { closeModal } from "../DasiyUIComponents/Prompt";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -117,7 +117,7 @@ const Products = ({ data, handleProductChange, poIndex }) => {
 
     formik.setFieldValue(name, value);
   }
-  console.log(Object.keys(images?.[0]?.file).length > 0);
+  // console.log(Object.keys(images?.[0]?.file).length > 0);
 
   return (
     <>
@@ -147,6 +147,7 @@ const Products = ({ data, handleProductChange, poIndex }) => {
                               setImagesFiles={setImagesFiles}
                               handleProductChange={handleProductChange}
                               poIndex={poIndex}
+                              closeModal={closeModal}
                             />
                           </Prompt>
 
@@ -426,7 +427,7 @@ const Products = ({ data, handleProductChange, poIndex }) => {
                           <img src={add} alt="cloud" className="text-blue" />
                         }
                         modalID={`uploadImg_${poIndex}`}
-                        promptWidth={60}
+                        promptWidth={80}
                       >
                         <UploadImages
                           imagesData={images}

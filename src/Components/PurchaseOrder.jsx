@@ -48,6 +48,7 @@ function PurchaseOrder() {
   const [people, setPeople] = useState([]);
   const [imageIndex, setImageIndex] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
+  console.log(purchaseDoc);
 
   const [peopleOfInterest, setPeopelOfInterest] = useState([
     { id: userInformation?._id, name: userInformation?.name },
@@ -142,7 +143,7 @@ function PurchaseOrder() {
   const formik = useFormik({
     initialValues,
     onSubmit: (values) => handleSubmit(),
-    validationSchema,
+    // validationSchema,
   });
   const { values } = formik;
 
@@ -239,24 +240,46 @@ function PurchaseOrder() {
     // console.log(requestBody);
 
     // uncomment below api to set submit and draft , told backend guy images files has been changed
-    console.log(requestBody);
+    // console.log(requestBody.pr);
 
     const formData = new FormData();
+
+    // requestBody.products.map((product) => {
+    //   product.images.map((e, index) => {
+    //     const imgData = new FormData();
+    //     imgData.append(`${e.name}`, e.file);
+    //     product.images[index] = imgData;
+    //   });
+    // });
 
     Object.keys(requestBody).forEach((key) => {
       if (Array.isArray(requestBody[key])) {
         requestBody[key].forEach((item, index) => {
           // If the item is an object or array, you might need to stringify it before appending
           formData.append(`${key}[${index}]`, JSON.stringify(item));
+          if (requestBody[key] === "products") {
+          }
         });
       } else {
         formData.append(key, requestBody[key]);
       }
     });
 
+    // console.log(requestBody);
     for (let pair of formData.entries()) {
       console.log(pair);
     }
+
+    const response = await axios.post(
+      import.meta.env.VITE_BASE_URL + `/api/purchaseOrder`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    console.log(response, "PO");
 
     // if (e.target.type === "submit") {
     //   wyraiApi
@@ -345,7 +368,7 @@ function PurchaseOrder() {
       const img = newPurchaseOrders[poIndex][field];
       console.log(newPurchaseOrders[poIndex][field], value, poIndex);
       newPurchaseOrders[poIndex][field] = [...value];
-      // setSlotOfProducts(newPurchaseOrders);
+      setSlotOfProducts(newPurchaseOrders);
     } else {
       newPurchaseOrders[poIndex][field] = value;
     }
@@ -503,7 +526,8 @@ function PurchaseOrder() {
           <div className=" relative h-[500px] rounded-md  flex mb-11 border-dashed border-2 border-[rgb(102,102,102)]">
             <div className="w-full h-full">
               <DropZone
-                onDrop={setPurchaseDoc}
+                // onDrop={setPurchaseDoc}
+                setFormData={setPurchaseDoc}
                 multiple={true}
                 message={"Upload Purchase Order"}
                 method={ImageHandler}
