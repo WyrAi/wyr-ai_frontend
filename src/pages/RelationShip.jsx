@@ -216,7 +216,7 @@ const RelationShip = () => {
                   company={value.companyId}
                   relation={value.relationId}
                   selectRelationmethod={handleselectRelation}
-                  Rel
+                  RelationMethod={fetchRelation}
                   ationMethod={fetchRelation}
                 />
               </div>
