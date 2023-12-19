@@ -32,6 +32,7 @@ const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
 
     const validationSchema = Yup.object().shape({
       email: Yup.string().email("Invalid email").required("Email is required"),
+
     });
 
     const initialValues = {

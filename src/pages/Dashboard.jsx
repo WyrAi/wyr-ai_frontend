@@ -23,8 +23,8 @@ const InspectionCard = () => {
 };
 
 const Dashboard = () => {
-  const { getUserInformation, companyId, userInformation } =
-    userGloabalContext();
+
+  const { getUserInformation, companyId, userInformation,notification ,setNotifications} = userGloabalContext();
   const toast = useToast();
 
   const status = {
@@ -39,16 +39,26 @@ const Dashboard = () => {
     }
   }, []);
 
-  // useEffect(() => {
+  useEffect(() => {
+    console.log("Notification component mounted", socket.id);
+    socket.on("getText", async (data) => {
+      const response = await fetch(
+        `http://localhost:5000/api/getnotificationMessage/sk9313725@gmail.com`
+      );
 
-  //   console.log("Notification component mounted");
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const result = await response.json();
+      const notyData = result?.map((item) => item.text);
+      console.log(notyData);
+      setNotifications((prev) => [...prev, ...notyData]);
 
-  //   socket.on("getText", (data) => {
-  //       console.log("Notification component:",data.text);
-  //       window.alert(data.text)
-  //       setNotifications((prev) => [...prev, data.text]);
-  //   });
-  // }, [socket]);
+      console.log("Notification component:", result);
+      window.alert(data.text);
+    });
+  }, [socket]);
+
   return (
     <div className="ml-5 w-[85%] h-full box-border mt-7">
       <header className="flex justify-between mb-9">

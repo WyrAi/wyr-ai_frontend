@@ -4,7 +4,43 @@ import notify from "../assets/noun-notification-1040085 (1) 1.svg";
 import setting from "../assets/noun-setting-1835295 1.svg";
 import search from "../assets/Search.svg";
 import logo from "../assets/logo.svg";
+import userGloabalContext from "../UserContext";
+import { useState } from "react";
+import '../App.css'
+// DropDown.js
+const DropDown = ({ children }) => {
+  return (
+    <div className="relative">
+      <div className="dropdown-notch"></div>
+      <div className="absolute top-2 right-0 mt-2 w-96 bg-white rounded-xl shadow-2xl border z-50">
+        <div className="flex justify-between items-center px-4 py-2 ">
+          <h2 className="text-lg  text-gray-700 ">Notification</h2>
+          <button className="text-md text-blue-600  text-blue underline underline-offset-1">Mark All As Read</button>
+        </div>
+        <ul className="overflow-y-auto max-h-56 px-4">
+          {children}
+          <p className="relative">flksadkk</p>
+          <p className="relative">flksadkkkkkk</p>
+          <p className="relative">flksadkkkkkk</p>
+          <p className="relative">flksadkkkkkk</p>
+          {/* Add more <p> tags as needed */}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+
+
+
+
+
+
 const Header = () => {
+  const { notification, setNotifications } = userGloabalContext();
+  const [popup, setPopup] = useState(true);
+  console.log(notification);
+
   return (
     <header className="bg-white h-full mb-5 ">
       <div className="grid grid-cols-[1fr_1fr_1fr] items-center pt-2 md:justify-start md:space-x-10">
@@ -33,7 +69,47 @@ const Header = () => {
         <div className=" flex items-center justify-start ">
           <Link href="#" className="text-gray-600 hover:text-gray-900">
             {/* <ShoppingBagIcon className="h-6 w-6" aria-hidden="true" /> */}
-            <img src={notify} alt="help" className="block" />
+            <img src={notify} alt="help" className="block" onClick={() => {}} />
+
+            <div className="relative flex-1 cursor-pointer">
+              {popup && (
+                <DropDown>
+                  {notification.length > 0 &&
+                    notification?.map((item, index) => {
+                      // const intials = item?.name?.charAt(0).toUpperCase();
+                      return (
+                        <li
+                          key={index}
+                          className="py-2 flex items-center gap-4 mr-2 border-b w-[150px]"
+                          onClick={
+                            () => {}
+                            // handleDropDownSelect(
+                            //   "nameOfBuyer",
+                            //   "addOfBuyer",
+                            //   item
+                            // )
+                          }
+                        >
+                          {/* <span className="w-6 h-6 bg-blue flex justify-center items-center rounded-full">
+                            {intials}
+                          </span> */}
+                          <span className="flex-1 text-xs">{item}</span>
+                          {/* <span className="flex gap-2 items-center">
+                            <img
+                              src={gps}
+                              alt="gps"
+                              className="w-[16px] h-[16px]"
+                            />
+                            <span className="text-[10px]">
+                              {item.city}, {item.country}
+                            </span>
+                          </span> */}
+                        </li>
+                      );
+                    })}
+                </DropDown>
+              )}
+            </div>
           </Link>
           <Link href="#" className="ml-6 text-gray-600 hover:text-gray-900">
             {/* <UserIcon className="h-6 w-6" aria-hidden="true" /> */}
