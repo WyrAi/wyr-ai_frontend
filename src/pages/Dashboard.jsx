@@ -6,7 +6,7 @@ import userGloabalContext from "../UserContext";
 import { useEffect } from "react";
 import { useState } from "react";
 import useToast from "../Contexts/ToasterContext";
-// import socket from "../Components/socket";
+import socket from "../Components/socket";
 
 const InspectionCard = () => {
   return (
@@ -23,8 +23,13 @@ const InspectionCard = () => {
 };
 
 const Dashboard = () => {
-
-  const { getUserInformation, companyId, userInformation,notification ,setNotifications} = userGloabalContext();
+  const {
+    getUserInformation,
+    companyId,
+    userInformation,
+    notification,
+    setNotifications,
+  } = userGloabalContext();
   const toast = useToast();
 
   const status = {
