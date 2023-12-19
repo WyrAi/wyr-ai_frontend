@@ -6,7 +6,7 @@ import userGloabalContext from "../UserContext";
 import { useEffect } from "react";
 import { useState } from "react";
 import useToast from "../Contexts/ToasterContext";
-// import socket from "../Components/socket";
+import socket from "../Components/socket";
 
 const InspectionCard = () => {
   return (
