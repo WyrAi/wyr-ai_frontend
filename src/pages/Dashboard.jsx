@@ -6,7 +6,7 @@ import userGloabalContext from "../UserContext";
 import { useEffect } from "react";
 import { useState } from "react";
 import useToast from "../Contexts/ToasterContext";
-import socket from "../Components/socket";
+// import socket from "../Components/socket";
 
 const InspectionCard = () => {
   return (
@@ -24,8 +24,7 @@ const InspectionCard = () => {
 
 const Dashboard = () => {
 
-  const { getUserInformation, companyId, userInformation,notification ,setNotifications} =
-    userGloabalContext();
+  const { getUserInformation, companyId, userInformation,notification ,setNotifications} = userGloabalContext();
   const toast = useToast();
 
   const status = {
@@ -59,6 +58,7 @@ const Dashboard = () => {
       window.alert(data.text);
     });
   }, [socket]);
+
   return (
     <div className="ml-5 w-[85%] h-full box-border mt-7">
       <header className="flex justify-between mb-9">

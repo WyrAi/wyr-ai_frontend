@@ -14,11 +14,11 @@ const DropZone = ({
   textSize,
   className,
   fileName,
+  method
 }) => {
   const [files, setFiles] = useState([]);
   const [preview, setPreview] = useState("");
-
-  /**
+  /** 
    * Callback function for handling dropped files.
    *
    * @callback onDropHandler
@@ -28,12 +28,13 @@ const DropZone = ({
     (acceptedFiles) => {
       if (onDrop) {
         const file = acceptedFiles[0];
+        // console.log(file);
         // console.log(file.type);
-
         const reader = new FileReader();
         reader.onload = (e) => {
           // Use reader.result
           onDrop(e.target.result);
+          setPreview(e.target.result);
         };
         reader.readAsDataURL(file);
       }
@@ -41,8 +42,15 @@ const DropZone = ({
     [onDrop]
   );
 
+  useEffect(() => {
+    // console.log(files[0]);
+    if (method) method(files[0]);
+  }, [files]);
+  
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: (acceptedFiles) => {
+      console.log(acceptedFiles);
       setFiles(acceptedFiles);
       onDropHandler(acceptedFiles);
     },
@@ -52,12 +60,10 @@ const DropZone = ({
   });
 
   useEffect(() => {
-    if (fileName?.length > 0) {
-      setPreview([fileName]);
-    }
-  }, [fileName]);
+    // console.log(files[0]);
+    if (method) method(files[0]);
+  }, [files]);
 
-  console.log(files, fileName);
   return (
     <div
       {...getRootProps()}
@@ -65,9 +71,14 @@ const DropZone = ({
         isDragActive ? "active" : ""
       }`}
     >
-      <AiOutlineCloudUpload size={iconSize || 50} />
       <input {...getInputProps()} />
-      {files.length > 0 && (
+
+      {files.length > 0 ? (
+        <img
+          src={preview}
+          className="object-cover overflow-hidden w-full flex-1"
+        ></img>
+      ) : (
         <p
           className={`flex gap-2 text-[#333333] text-center ${
             textSize || "font-semibold"
@@ -81,9 +92,10 @@ const DropZone = ({
       {!files.length && (
         <p
           className={`text-[#333333] text-center ${
-            textSize || "font-semibold"
+            textSize || "font-semibold flex flex-col items-center"
           }`}
         >
+          <AiOutlineCloudUpload size={iconSize || 50} />
           {message
             ? message
             : "Drag & drop files here, or click to select files"}
@@ -93,8 +105,6 @@ const DropZone = ({
       {isDragActive && (
         <div className="absolute inset-0 bg-gray-300 opacity-50 z-10"></div>
       )}
-
-      {preview.length > 0 && <img src={preview} className="object-cover"></img>}
     </div>
   );
 };

@@ -20,7 +20,6 @@ import { IoIosCloseCircle } from "react-icons/io";
 import Preview from "../container/Preview";
 import img from "../assets/sara-kurfess-ltE8bDLjX9E-unsplash.jpeg";
 import { userGloabalContext } from "../UserContext";
-import UploadImages from "../container/UploadImages";
 import Datepicker from "./DatepickerComponent";
 import gps from "../assets/ion_location-outline.svg";
 import axios from "axios";
@@ -37,22 +36,31 @@ import wyraiApi from "../api/wyraiApi";
 function PurchaseOrder() {
   const { setPopUpload, popUpload, userInformation, companyId, role } =
     userGloabalContext();
+  const { productList, setProductList, imagesFiles, setImagesFiles } =
+    userGloabalContext();
+
   const navigate = useNavigate();
   const [purchaseDoc, setPurchaseDoc] = useState(null);
   const [showPurchaseOrder, setShowPurchaseOrder] = useState(false);
   const [buyer, setBuyer] = useState([]);
   const [vendor, setVendor] = useState([]);
   const [people, setPeople] = useState([]);
+  const [imageIndex, setImageIndex] = useState("");
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
   const [peopleOfInterest, setPeopelOfInterest] = useState([
     { id: userInformation?._id, name: userInformation?.name },
   ]);
+
   // console.log(...peopleOfInterest);
   const [ids, setIds] = useState({
     buyerId: "",
     vendorId: "",
   });
-
-  const [slotOfProducts, setSlotOfProducts] = useState([]);
+  const [ApiImage, setApiImage] = useState();
+  const [slotOfProducts, setSlotOfProducts] = useState([
+    { ...productList, images: [] },
+  ]);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   const toggleCalendar = () => {
@@ -69,8 +77,7 @@ function PurchaseOrder() {
   // const [buyerPopup, setBuyerPopup] = useState(false);
   // const [vendorPopup, setVendorPopup] = useState(false);
   const [count, setCount] = useState(1);
-  const { productList, imagesFiles, setImagesFiles } = userGloabalContext();
-
+  // const { productList, imagesFiles, setImagesFiles } = userGloabalContext();
   const validationSchema = Yup.object().shape({
     poNumber: Yup.number().required("PO Number is required"),
     nameOfBuyer: Yup.string().required("Name of Buyer is required"),
@@ -90,6 +97,23 @@ function PurchaseOrder() {
     // slotOfInspection: Add validation for the array if needed
   });
 
+  const intials = {
+    styleId: "",
+    styleName: "",
+    quantity: "",
+    color: "",
+    weight: "",
+    weightTolerance: "",
+    length: "",
+    lengthTolerance: "",
+    width: "",
+    widthTolerance: "",
+    height: "",
+    heightTolerance: "",
+    aql: "",
+    comments: [], //this can have many comments so, when sent as Array of comments
+  };
+
   const initialValues = {
     poNumber: null,
     nameOfBuyer: "",
@@ -99,7 +123,7 @@ function PurchaseOrder() {
     shiptoName: "",
     shiptoAdd: "",
     shipVia: "",
-    shipDate: new Date(),
+    shipDate: selectedDate,
     totalCarton: "",
     inv_number: "",
     assignPeople: "",
@@ -119,17 +143,12 @@ function PurchaseOrder() {
     }
   }, [values.nameOfBuyer, values.nameOfVendor]);
 
-  useEffect(() => {
-    getUser();
-  }, []);
-
   const getUser = async () => {
     const { data } = await axios.get(
       import.meta.env.VITE_BASE_URL + `/api/getAllCompanyByRole/${companyId}`
     );
-    console.log(data);
+    // console.log(data);
     if (userInformation?.companyId?.companyRole === "Buyer") {
-      //   console.log(userInformation);
       formik.setFieldValue("nameOfBuyer", userInformation.companyId?.name);
       formik.setFieldValue("addOfBuyer", userInformation.companyId?.city);
       setIds({ ...ids, buyerId: companyId });
@@ -142,21 +161,16 @@ function PurchaseOrder() {
   useEffect(() => {
     getUser();
     fetchpeople();
-  }, []);
+    setPeopelOfInterest([
+      { id: userInformation?._id, name: userInformation?.name },
+    ]);
+    const userRole = userInformation?.companyId?.companyRole;
+  }, [companyId]);
 
-  //   getUser();
-  // console.log(buyer);
+  // console.log(buyer, companyId);
   // console.log(vendor);
-  // console.log(ids);
-
-  // console.log('formik', formik);
-  //  there is options of creating a single 'productList' and 'slotOfProducts' change according to its
-  // console.log(slotOfProducts);
 
   async function handleSubmit(e) {
-    // console.log(userInformation);
-    // console.log(peopleOfInterest);
-    console.log(e.target.type);
     let status = "";
     if (
       userInformation?.role?.SelectAccess?.purchaseOrder?.some(
@@ -169,48 +183,63 @@ function PurchaseOrder() {
     }
     // console.log(slotOfProducts.length);
     let requestBody = {};
-    if (slotOfProducts.length > 0) {
-      requestBody = {
-        purchaseDoc,
-        buyer: ids.buyerId,
-        vendor: ids.vendorId,
-        shiptoName: formik.values.shiptoName,
-        shiptoAdd: formik.values.shiptoAdd,
-        shipVia: formik.values.shipVia,
-        shipDate: formik.values.shipDate,
-        assignedPeople: peopleOfInterest.map((item) => item.id),
-        poNumber: formik.values.poNumber,
-        products: [...slotOfProducts],
-        status,
-      };
-    } else {
-      requestBody = {
-        purchaseDoc,
-        buyer: ids.buyerId,
-        vendor: ids.vendorId,
-        shiptoName: formik.values.shiptoName,
-        shiptoAdd: formik.values.shiptoAdd,
-        shipVia: formik.values.shipVia,
-        shipDate: formik.values.shipDate,
-        assignedPeople: peopleOfInterest.map((item) => item.id),
-        poNumber: formik.values.poNumber,
-        products: [{ ...productList, images: imagesFiles }],
-        status,
-      };
-    }
-
-    if (e.target.type === "submit") {
-      wyraiApi
-        .post("/api/purchaseOrder", requestBody)
-        .then((res) => navigate(-1))
-        .catch((err) => console.log(err));
-    } else {
-      wyraiApi
-        .post(`/api/PuracheseOrderDraft/${userInformation?._id}`, requestBody)
-        .then((res) => navigate(-1))
-        .catch((err) => console.log(err));
-    }
+    // if (slotOfProducts.length > 0) {
+    //   requestBody = {
+    //     purchaseDoc,
+    //     buyer: ids.buyerId,
+    //     vendor: ids.vendorId,
+    //     shiptoName: formik.values.shiptoName,
+    //     shiptoAdd: formik.values.shiptoAdd,
+    //     shipVia: formik.values.shipVia,
+    //     shipDate: formik.values.shipDate,
+    //     assignedPeople: peopleOfInterest.map((item) => item.id),
+    //     poNumber: formik.values.poNumber,
+    //     products: [...slotOfProducts],
+    //     status,
+    //   };
+    // } else {
+    //   requestBody = {
+    //     purchaseDoc,
+    //     buyer: ids.buyerId,
+    //     vendor: ids.vendorId,
+    //     shiptoName: formik.values.shiptoName,
+    //     shiptoAdd: formik.values.shiptoAdd,
+    //     shipVia: formik.values.shipVia,
+    //     shipDate: formik.values.shipDate,
+    //     assignedPeople: peopleOfInterest.map((item) => item.id),
+    //     poNumber: formik.values.poNumber,
+    //     products: [{ ...productList, images: imagesFiles }],
+    //     status,
+    //   };
+    // }
+    requestBody = {
+      purchaseDoc,
+      buyer: ids.buyerId,
+      vendor: ids.vendorId,
+      shiptoName: formik.values.shiptoName,
+      shiptoAdd: formik.values.shiptoAdd,
+      shipVia: formik.values.shipVia,
+      shipDate: formik.values.shipDate,
+      assignedPeople: peopleOfInterest.map((item) => item.id),
+      poNumber: formik.values.poNumber,
+      products: [...slotOfProducts],
+      status,
+    };
     // console.log(requestBody);
+
+    // uncomment below api to set submit and draft , told backend guy images files has been changed
+    console.log(requestBody);
+    // if (e.target.type === "submit") {
+    //   wyraiApi
+    //     .post("/api/purchaseOrder", requestBody)
+    //     .then((res) => navigate(-1))
+    //     .catch((err) => console.log(err));
+    // } else {
+    //   wyraiApi
+    //     .post(`/api/PuracheseOrderDraft/${userInformation?._id}`, requestBody)
+    //     .then((res) => navigate(-1))
+    //     .catch((err) => console.log(err));
+    // }
 
     // const resp = await fetch(
     //   import.meta.env.VITE_BASE_URL + "/api/purchaseOrder",
@@ -227,17 +256,164 @@ function PurchaseOrder() {
     //   navigate(-1);
     // }
   }
+  // const conversionImage = (baseUrl) => {
+  //   const base64URL = baseUrl; // Your Base64 URL
+
+  //   // Remove the prefix (e.g., 'data:image/jpeg;base64,') from the Base64 URL to get only the Base64-encoded data
+  //   console.log(base64URL);
+  //   const base64Data = base64URL?.split(";base64,").pop();
+  //   if (base64Data) {
+  //     const blob = (() => {
+  //       const byteCharacters = atob(base64Data);
+  //       const byteArrays = [];
+
+  //       for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+  //         const slice = byteCharacters.slice(offset, offset + 512);
+
+  //         const byteNumbers = new Array(slice.length);
+  //         for (let i = 0; i < slice.length; i++) {
+  //           byteNumbers[i] = slice.charCodeAt(i);
+  //         }
+
+  //         const byteArray = new Uint8Array(byteNumbers);
+  //         byteArrays.push(byteArray);
+  //       }
+
+  //       return new Blob(byteArrays, { type: "image/jpeg" });
+  //     })();
+
+  //     console.log(blob);
+  //     const file = new File([blob], "PurchaseOrder.jpg", {
+  //       type: "image/jpeg",
+  //     });
+  //     const config = {
+  //       headers: {
+  //         "Content-Type": "multipart/form-data", // Set your content type or other required headers
+  //         "Access-Control-Allow-Origin": "*", // You can set the specific domain instead of '*'
+  //       },
+  //     };
+  //     const formData = new FormData();
+  //     formData.append("image_file", file);
+  //     axios
+  //       .post("http://35.154.0.66:5000/detect", formData, config)
+  //       .then((res) => console.log(res));
+  //     console.log(file);
+  //   }
+
+  //   // const base64Data = base64URL?.replace(/^data:image\/\w+;base64,/, "");
+
+  //   // Convert the Base64-encoded data to binary data
+  //   // const binaryData = atob(base64Data);
+
+  //   // // Create a Blob from the binary data
+  //   // const blob = new Blob(
+  //   //   [new Uint8Array(Array.from(binaryData, (char) => char.charCodeAt(0)))],
+  //   //   { type: "image/jpeg" }
+  //   // );
+
+  //   // // Construct a file from the Blob
+  //   // const file = new File([blob], "filename.jpg", { type: "image/jpeg" });
+
+  //   // console.log(file); // The constructed File object
+  //   // return file;
+  // };
+
+  useEffect(() => {
+    // wyraiApi.post()
+    // // conversionImage(purchaseDoc);
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data", // Set your content type or other required headers
+        "Access-Control-Allow-Origin": "*", // You can set the specific domain instead of '*'
+      },
+    };
+    // const formData = new FormData();
+    // console.log(ApiImage?.name);
+    // formData.append("image_file", ApiImage);
+    // console.log(formData);
+    // axios
+    //   .post("http://35.154.0.66:5000/detect", formData, config)
+    //   .then((res) => console.log(res));
+    fetch(ApiImage)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const formData = new FormData();
+        formData.append("image_file", blob, "filename.jpg"); // Provide a filename here
+
+        axios
+          .post("http://3.110.187.181:5000/detect", formData, config)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error fetching or converting the image:", error);
+      });
+  }, [purchaseDoc]);
+
+  useEffect(() => {
+    const allFieldsFilled = Object.values(productList).every(
+      (value) => value !== ""
+    );
+
+    if (allFieldsFilled) {
+      setSlotOfProducts([...slotOfProducts, { ...productList, images: [] }]);
+      setSlotOfProducts([
+        ...slotOfProducts,
+        {
+          ...intials,
+          ["images"]: [],
+        },
+      ]);
+      // setProductList(intials);
+    }
+  }, [productList]);
+
+  // console.log(imagesFiles, imageIndex);
+  // useEffect(() => {
+  //   console.log("here");
+  //   if (typeof imageIndex === "number") {
+  //     handleProductChange(imageIndex, "images", imagesFiles);
+  //   }
+  // }, [imageIndex, imagesFiles]);
+
+  const handleProductChange = (poIndex, field, value) => {
+    const newPurchaseOrders = [...slotOfProducts];
+    if (field === "images") {
+      // console.log(poIndex, field);
+      const img = newPurchaseOrders[poIndex][field];
+      console.log(newPurchaseOrders[poIndex][field], value);
+      newPurchaseOrders[poIndex][field] = [value];
+    } else {
+      newPurchaseOrders[poIndex][field] = value;
+    }
+
+    // console.log(newPurchaseOrders);
+    setSlotOfProducts(newPurchaseOrders);
+  };
 
   const addSlotOfProduct = () => {
     try {
+      // console.log(slotOfProducts);
       setSlotOfProducts([
         ...slotOfProducts,
-        { ...productList, images: imagesFiles },
+        {
+          ...intials,
+          ["images"]: {
+            name: "",
+            file: "",
+          },
+        },
       ]);
     } catch (error) {
       console.log(error);
     }
   };
+  // console.log(slotOfProducts);
+
   const addAssignPeople = (id, name, value) => {
     try {
       const isExisting = peopleOfInterest.some((item) => item.id === id);
@@ -280,7 +456,6 @@ function PurchaseOrder() {
   }
 
   const handleClick = (e) => {
-    // console.log(e.target.name);
     setPopup({ ...popup, [e.target.name]: !popup[e.target.name] });
   };
 
@@ -302,6 +477,30 @@ function PurchaseOrder() {
     setPopup({ ...popup, [name]: !popup[name] });
   };
 
+  useEffect(() => {
+    const POAIData = async () => {
+      try {
+        console.log("Hello");
+        const formData = new FormData();
+        formData.append("image_file", ApiImage);
+        const response = await axios.post(
+          "http://3.110.187.181:5000/detect",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log(response, "hfddd");
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    console.log(ApiImage, "gfffcf");
+    if (ApiImage) POAIData();
+  }, [ApiImage]);
+
   const fetchpeople = async () => {
     if (ids.buyerId.length > 0 && ids.vendorId.length > 0) {
       wyraiApi
@@ -309,13 +508,8 @@ function PurchaseOrder() {
         .then((res) => setPeople(res.data))
         .then((err) => console.log(err));
     }
-
-    // console.log(data);
-    // setPeople(data);
   };
-  // console.log(people);
-
-  //   getEmploy and clear console.log from PO
+  // console.log(userInformation);
 
   const DropDown = ({ children }) => {
     return (
@@ -329,6 +523,10 @@ function PurchaseOrder() {
     );
   };
 
+  const ImageHandler = async (value) => {
+    setApiImage(value);
+  };
+  console.log(ApiImage);
   return (
     <>
       <div className=" h-[94vh] w-[95%] pt-2 mx-auto flex flex-col">
@@ -345,21 +543,22 @@ function PurchaseOrder() {
           onSubmit={formik.handleSubmit}
           className="flex-1 flex-cols gap-10  w-full h-[45%] bg-white p-2 overflow-y-auto  "
         >
-          <div className=" relative z-10 h-[500px] rounded-md  flex mb-11 border-dashed border-2 border-[#666666]">
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className=" relative h-[500px] rounded-md  flex mb-11 border-dashed border-2 border-[rgb(102,102,102)]">
+            <div className="w-full h-full">
               <DropZone
                 onDrop={setPurchaseDoc}
                 multiple={true}
                 message={"Upload Purchase Order"}
+                method={ImageHandler}
               />
             </div>
-            {purchaseDoc && (
+            {/* {purchaseDoc && (
               <img
                 src={purchaseDoc}
                 alt="Preview"
                 className="w-full h-full  "
               />
-            )}
+            )} */}
           </div>
           <div className="w-1/2">
             <h1 className="text-xl font-bold mb-5">PO Number</h1>
@@ -393,6 +592,7 @@ function PurchaseOrder() {
                   }
                   placeholder={"Name Of Buyer"}
                   labelColor={"bg-white"}
+                  disable={userInformation?.role?.name === "Buyer"}
                 />
 
                 {popup.nameOfBuyer && (
@@ -575,8 +775,8 @@ function PurchaseOrder() {
 
               <div className="flex-1 relative">
                 <Datepicker
-                  selectedDate={formik.values.shipDate}
-                  setSelectedDate={formik}
+                  selectedDate={selectedDate}
+                  setSelectedDate={setSelectedDate}
                   name={"shipDate"}
                   className={
                     "form-input border border-gray-400 mt-1 pl-4 py-4 pr-10  rounded-md w-full outline-none"
@@ -693,10 +893,19 @@ function PurchaseOrder() {
 
           <div className="mb-4">
             <h1 className="text-xl font-bold mb-4">Products</h1>
-            {[...Array(count)].map((_, index) => (
-              <Products key={index} />
+            {slotOfProducts.map((item, index) => {
+              // console.log(item);
+              return (
+                <Products
+                  setImageIndex={setImageIndex}
+                  key={index}
+                  data={item}
+                  handleProductChange={handleProductChange}
+                  poIndex={index}
+                />
+              );
               // <CounterComponent key={index} />
-            ))}
+            })}
           </div>
 
           <button
@@ -734,7 +943,7 @@ function PurchaseOrder() {
           {purchaseDoc && (
             <button
               type="button"
-              className="bg-blue flex gap-2 items-center z-10 absolute right-[4.5vh] top-[21vh] py-2 px-4 rounded text-white"
+              className="bg-blue flex gap-2 items-center z-10 absolute right-[4.5vh] top-[90px] py-2 px-4 rounded text-white"
               onClick={() => setShowPurchaseOrder(true)}
             >
               <AiOutlineSearch className="text-white text-2xl" />
@@ -743,23 +952,15 @@ function PurchaseOrder() {
           )}
         </form>
       </div>
-      {popUpload && (
-        <UploadImages
-          popup={popUpload}
-          setPopup={setPopUpload}
-          imagesFiles={imagesFiles}
-          setImagesFiles={setImagesFiles}
-        />
-      )}
 
-      {purchaseDoc && (
+      {/* {purchaseDoc && (
         <img
           title="PDF Viewer"
           src={purchaseDoc}
           width="600"
           height="400"
         ></img>
-      )}
+      )} */}
     </>
   );
 }
