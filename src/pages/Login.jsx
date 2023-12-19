@@ -84,6 +84,7 @@ const Login = () => {
       .catch((err) => {
         console.log(err);
       });
+  }
 
   // const loginUser = async (e) => {
   //   e.preventDefault();
