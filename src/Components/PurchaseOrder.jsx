@@ -35,8 +35,14 @@ import Prompt from "../DasiyUIComponents/Prompt";
  */
 
 function PurchaseOrder() {
-  const { setPopUpload, popUpload, userInformation, companyId, role } =
-    userGloabalContext();
+  const {
+    setPopUpload,
+    popUpload,
+    userInformation,
+    companyId,
+    role,
+    imgFormUploadData,
+  } = userGloabalContext();
   const { productList, setProductList, imagesFiles, setImagesFiles } =
     userGloabalContext();
 
@@ -235,6 +241,7 @@ function PurchaseOrder() {
       assignedPeople: peopleOfInterest.map((item) => item.id),
       poNumber: formik.values.poNumber,
       products: [...slotOfProducts],
+      productImages: imgFormUploadData,
       status,
     };
     // console.log(requestBody);
@@ -243,24 +250,39 @@ function PurchaseOrder() {
     // console.log(requestBody.pr);
 
     const formData = new FormData();
+    const imgData = new FormData();
 
-    // requestBody.products.map((product) => {
-    //   product.images.map((e, index) => {
-    //     const imgData = new FormData();
-    //     imgData.append(`${e.name}`, e.file);
-    //     product.images[index] = imgData;
+    // requestBody.productImages.map((product, productIndex) => {
+    //   product.map((e, index) => {
+    //     imgData.append(
+    //       `productImage[${productIndex}][${index}].${e.name}`,
+    //       e.file
+    //     );
     //   });
+    //   // product[imgIndex] = imgData;
     // });
-
+    // requestBody.productImages = []
     Object.keys(requestBody).forEach((key) => {
       if (Array.isArray(requestBody[key])) {
-        requestBody[key].forEach((item, index) => {
-          // If the item is an object or array, you might need to stringify it before appending
-          formData.append(`${key}[${index}]`, JSON.stringify(item));
-          if (requestBody[key] === "products") {
-          }
-        });
+        // console.log(key);
+        if (key === "productImages") {
+          requestBody[key].map((product, productIndex) => {
+            product.map((e, index) => {
+              formData.append(
+                `productImage[${productIndex}][${index}].${e.name}`,
+                e.file
+              );
+            });
+            // product[imgIndex] = imgData;
+          });
+        } else {
+          requestBody[key].forEach((item, index) => {
+            // If the item is an object or array, you might need to stringify it before appending
+            formData.append(`${key}[${index}]`, JSON.stringify(item));
+          });
+        }
       } else {
+        // console.log(key);
         formData.append(key, requestBody[key]);
       }
     });
@@ -270,16 +292,16 @@ function PurchaseOrder() {
       console.log(pair);
     }
 
-    const response = await axios.post(
-      import.meta.env.VITE_BASE_URL + `/api/purchaseOrder`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-    console.log(response, "PO");
+    // const response = await axios.post(
+    //   import.meta.env.VITE_BASE_URL + `/api/purchaseOrder`,
+    //   formData,
+    //   {
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //   }
+    // );
+    // console.log(response, "PO");
 
     // if (e.target.type === "submit") {
     //   wyraiApi
@@ -293,42 +315,6 @@ function PurchaseOrder() {
     //     .catch((err) => console.log(err));
     // }
   }
-
-  // useEffect(() => {
-  //   // wyraiApi.post()
-  //   // // conversionImage(purchaseDoc);
-  //   const config = {
-  //     headers: {
-  //       "Content-Type": "multipart/form-data", // Set your content type or other required headers
-  //       "Access-Control-Allow-Origin": "*", // You can set the specific domain instead of '*'
-  //     },
-  //   };
-  //   // const formData = new FormData();
-  //   // console.log(ApiImage?.name);
-  //   // formData.append("image_file", ApiImage);
-  //   // console.log(formData);
-  //   // axios
-  //   //   .post("http://35.154.0.66:5000/detect", formData, config)
-  //   //   .then((res) => console.log(res));
-  //   fetch(ApiImage)
-  //     .then((response) => response.blob())
-  //     .then((blob) => {
-  //       const formData = new FormData();
-  //       formData.append("image_file", blob, "filename.jpg"); // Provide a filename here
-  //       console.log(blob);
-  //       axios
-  //         .post("http://13.201.96.92:5000/detect", formData, config)
-  //         .then((res) => {
-  //           console.log(res);
-  //         })
-  //         .catch((error) => {
-  //           console.error("Error:", error);
-  //         });
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching or converting the image:", error);
-  //     });
-  // }, [purchaseDoc]);
 
   // useEffect(() => {
   //   const allFieldsFilled = Object.values(productList).every(
@@ -363,16 +349,13 @@ function PurchaseOrder() {
   const handleProductChange = (poIndex, field, value) => {
     const newPurchaseOrders = [...slotOfProducts];
     if (field === "images") {
-      // console.log(value);
-
       const img = newPurchaseOrders[poIndex][field];
-      console.log(newPurchaseOrders[poIndex][field], value, poIndex);
+      // console.log(newPurchaseOrders[poIndex][field], value, poIndex);
       newPurchaseOrders[poIndex][field] = [...value];
       setSlotOfProducts(newPurchaseOrders);
     } else {
       newPurchaseOrders[poIndex][field] = value;
     }
-    // console.log(newPurchaseOrders);
     // console.log(newPurchaseOrders);
     setSlotOfProducts(newPurchaseOrders);
   };

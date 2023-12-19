@@ -18,6 +18,8 @@ export const UserContextProvider = ({ children }) => {
   const navigate = useNavigate();
   const [branchData, setBranchData] = useState(null);
   const [activeMenu, setActiveMenu] = useState(true);
+  const [imgFormUploadData, setImgFormUploadData] = useState([]);
+  // console.log(imgFormUploadData);
   const [comments, setComments] = useState([]);
   const [productList, setProductList] = useState({
     styleId: "",
@@ -199,6 +201,8 @@ export const UserContextProvider = ({ children }) => {
           branchData,
           role,
           activeMenu,
+          imgFormUploadData,
+          setImgFormUploadData,
           setActiveMenu,
           setStartTime,
           setImagesFiles,

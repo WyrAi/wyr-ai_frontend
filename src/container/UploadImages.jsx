@@ -22,12 +22,21 @@ const UploadImages = ({
   poIndex,
   // closeModal,
 }) => {
-  const { imagesFiles } = userGloabalContext();
+  const { imagesFiles, imgFormUploadData, setImgFormUploadData } =
+    userGloabalContext();
   // console.log(test);
+  const intialImages = [
+    { name: "Back", file: "" },
+    { name: "Front", file: "" },
+    { name: "Care Label", file: "" },
+    { name: "Size Label", file: "" },
+    { name: "Brand Label", file: "" },
+    { name: "Price Label", file: "" },
+  ];
 
   const [images, setImages] = useState("");
   const [files, setFiles] = useState(imagesData);
-  // const [tempfile, setTempfile] = useState(imagesData);
+  const [tempFile, setTempFile] = useState(imagesData);
   const [img, setImg] = useState(null);
   const [imgName, setImgName] = useState("");
 
@@ -90,8 +99,26 @@ const UploadImages = ({
 
   const handleDrop = (acceptedFiles, index) => {
     const newImages = [...files];
+    // const imgFormData = [...tempFile];
+    // const formData = new FormData();
+
+    // formData.append(`${imgFormData[index].name}`, acceptedFiles[0]);
+
     newImages[index].file = acceptedFiles[0]; // Assuming you're adding only one file per drop
+    // imgFormData[index].file = acceptedFiles[0]; // formData;
     setFiles(newImages);
+    setTempFile(newImages);
+  };
+
+  const handleFormData = () => {
+    if (imgFormUploadData.length - 1 === poIndex) {
+      console.log(poIndex);
+      const updateImgData = [...imgFormUploadData];
+      updateImgData[poIndex] = tempFile;
+      setImgFormUploadData(updateImgData);
+    } else {
+      setImgFormUploadData([...imgFormUploadData, tempFile]);
+    }
   };
   console.log(files);
 
@@ -112,11 +139,13 @@ const UploadImages = ({
 
         // Adjust the list of allowed file extensions as needed
         const allowedExtensions = ["jpg", "jpeg", "png", "gif"];
-
+        // const imgData = new FormData();
+        // imgData.append(`${text}`, droppedFile);
         if (allowedExtensions.includes(fileExtension)) {
           setAcceptedFiles(acceptedFiles);
           if (index === null) {
             setFiles([...files, { name: text, file: acceptedFiles[0] }]);
+            setTempFile([...tempFile, { name: text, file: acceptedFiles[0] }]);
             setImgName("");
           } else {
             handleDrop(acceptedFiles, index);
@@ -128,6 +157,7 @@ const UploadImages = ({
         // console.log("Accepted files:", acceptedFiles);
       }
     };
+    console.log(tempFile, files);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
       onDrop,
@@ -259,8 +289,9 @@ const UploadImages = ({
             type="button"
             className="border text-white bg-blue rounded py-2 px-5 ml-5"
             onClick={() => {
-              handleSubmit();
               closeModal(`uploadImg_${poIndex}`);
+              handleFormData();
+              setTempFile(intialImages);
             }}
           >
             Save
