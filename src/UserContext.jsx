@@ -17,6 +17,7 @@ const userContext = createContext();
 export const UserContextProvider = ({ children }) => {
   const navigate = useNavigate();
   const [branchData, setBranchData] = useState(null);
+  const [notification, setNotifications] = useState([]);
   const [comments, setComments] = useState([]);
   const [productList, setProductList] = useState({
     styleId: "",
@@ -47,11 +48,19 @@ export const UserContextProvider = ({ children }) => {
 
   // PO popup and images file
   const [popUpload, setPopUpload] = useState(false);
-  const [imagesFiles, setImagesFiles] = useState([]);
+  const [imagesFiles, setImagesFiles] = useState({
+    name: "",
+    file: "",
+  }); // set imnages file for products in purchase Order
 
+  const reqimg = {
+    backImage: undefined,
+    frontImage: undefined,
+    careLabel: undefined,
+    sizeLabel: undefined,
+  };
   //time setter
   const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -160,12 +169,12 @@ export const UserContextProvider = ({ children }) => {
       getUserInformation();
     }
   }, [userInformation, token]);
+  console.log(userInformation);
 
   const { companyId, role, userRights } = React.useMemo(() => {
     const companyId = userInformation?.companyId?._id;
-    const role = userInformation?.role?.name;
+    const role = userInformation?.companyId?.companyRole;
     const rights = userInformation?.role?.SelectAccess;
-    console.log(rights, userInformation);
     return { companyId, role, userRights: rights };
   }, [userInformation]);
 
@@ -192,11 +201,11 @@ export const UserContextProvider = ({ children }) => {
           popUpload,
           imagesFiles,
           startTime,
-          endTime,
           branchData,
           role,
+          notification,
+          setNotifications,
           setStartTime,
-          setEndTime,
           setImagesFiles,
           setPopUpload,
           clearFieldData,
