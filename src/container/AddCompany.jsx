@@ -71,7 +71,17 @@ const AddCompany = () => {
                 receiverName: values.email,
                 text:`connection request form the ${values.email} `,
               }
+              console.log("data of form", data)
               socket.emit("sendText", {data}); 
+
+              // const response =  fetch("http://localhost:5000/api/postmessage", {
+
+              //   method: "POST",
+              //   headers: {
+              //     "Content-Type": "application/json",
+              //   },
+              //   body: JSON.stringify(data),
+              // });
               console.log("After socket document")
 
             }).catch((err) => {

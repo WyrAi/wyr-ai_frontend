@@ -6,3 +6,14 @@
   overflow: hidden;
   height: 100vh;
 }
+
+/* global.css */
+.dropdown-notch {
+  position: absolute;
+  top: -1px; /* adjust this value to align the notch */
+  right: 17px; /* align to the right edge of the dropdown */
+  border-left: 20px solid transparent; /* adjust size as needed */
+  border-right: 20px solid transparent; /* adjust size as needed */
+  border-bottom: 19px solid rgb(243, 228, 228); /* color of your dropdown border */
+}
+
