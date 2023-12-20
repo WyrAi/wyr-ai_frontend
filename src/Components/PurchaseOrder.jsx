@@ -292,16 +292,16 @@ function PurchaseOrder() {
       console.log(pair);
     }
 
-    // const response = await axios.post(
-    //   import.meta.env.VITE_BASE_URL + `/api/purchaseOrder`,
-    //   formData,
-    //   {
-    //     headers: {
-    //       "Content-Type": "multipart/form-data",
-    //     },
-    //   }
-    // );
-    // console.log(response, "PO");
+    const response = await axios.post(
+      import.meta.env.VITE_BASE_URL + `/api/purchaseOrder`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    console.log(response, "PO");
 
     // if (e.target.type === "submit") {
     //   wyraiApi
@@ -349,6 +349,7 @@ function PurchaseOrder() {
   const handleProductChange = (poIndex, field, value) => {
     const newPurchaseOrders = [...slotOfProducts];
     if (field === "images") {
+      console.log("images");
       const img = newPurchaseOrders[poIndex][field];
       // console.log(newPurchaseOrders[poIndex][field], value, poIndex);
       newPurchaseOrders[poIndex][field] = [...value];
@@ -914,12 +915,12 @@ function PurchaseOrder() {
               Preview
             </button>
           )} */}
-          <div className="bg-gray-300">
+          <div className="">
             <Prompt
               btnText={
                 <button
                   type="button"
-                  className="bg-blue flex gap-2 items-center z-10 absolute right-[4.5vh] top-[90px] py-2 px-4 rounded text-white"
+                  className="bg-blue flex gap-2 items-center z-10 absolute right-[4.5vh] top-[20px] py-2 px-4 rounded text-white"
                   // onClick={() => setShowPurchaseOrder(true)}
                 >
                   <AiOutlineSearch className="text-white text-2xl" />

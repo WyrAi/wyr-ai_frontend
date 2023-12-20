@@ -3,15 +3,21 @@ import help from "../assets/noun-help-1459308.svg";
 import notify from "../assets/noun-notification-1040085 (1) 1.svg";
 import setting from "../assets/noun-setting-1835295 1.svg";
 import search from "../assets/Search.svg";
-import logo from "../assets/logo.svg";
+import { AiOutlineMenu } from "react-icons/ai";
+import userGloabalContext from "../UserContext";
 const Header = () => {
+  const { activeMenu, setActiveMenu } = userGloabalContext();
+
   return (
     <header className="bg-white h-full mb-5 ">
-      <div className="grid grid-cols-[1fr_1fr_1fr] items-center pt-2 md:justify-start md:space-x-10">
-        <Link to="/user" className="w-full pl-[90px] pt-[22px] ">
-          <img src={logo} alt="" className="w-[112px]" />
-        </Link>
-        <div className="w-full">
+      <div className="grid grid-cols-[1fr_1fr] items-center pt-2 md:justify-start md:space-x-10">
+        <div className="w-full flex gap-5 items-center">
+          {/* {!activeMenu && (
+            <AiOutlineMenu
+              className="text-black text-xl cursor-pointer ml-5 "
+              onClick={() => setActiveMenu((prev) => !prev)}
+            />
+          )} */}
           <div className="w-4/5 m-auto">
             <label htmlFor="search" className="sr-only">
               Search

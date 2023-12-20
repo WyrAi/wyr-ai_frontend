@@ -95,16 +95,13 @@ const Purchase = () => {
     const filtered = allPOrder.filter((item) => item.status === status);
     setFilterData(filtered);
   };
-  // console.log(allPOrder);
-  // console.log(sor);
+
   useEffect(() => {
-    console.log("first");
     FetchAllPOrders();
   }, [selectedFilter]);
 
   useEffect(() => {
     if (sortFilter.text !== "All") {
-      console.log("here");
       filterDataByStatus(sortFilter.text);
     } else {
       FetchAllPOrders();
@@ -142,6 +139,7 @@ const Purchase = () => {
         <div className="flex flex-wrap w-full h-24 gap-6">
           {filterData?.map((value, index) => {
             const { poNumber, purchaseDoc, buyer, status } = value;
+            console.log(value);
             return (
               <PoCard
                 k={index}

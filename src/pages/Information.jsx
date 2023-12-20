@@ -10,6 +10,7 @@ import { AiFillDelete } from "react-icons/ai";
 import { RxCrossCircled } from "react-icons/rx";
 import { useFormik } from "formik";
 import InputField from "../container/InputField";
+import Prompt from "../DasiyUIComponents/Prompt";
 
 const Information = () => {
   const [data, setData] = React.useState([]);
@@ -20,6 +21,7 @@ const Information = () => {
     parentIndex: "",
     text: "",
   });
+  const [sendEmail, setSendEmail] = React.useState("");
 
   const InformationGet = async () => {
     try {
@@ -311,13 +313,58 @@ const Information = () => {
   return (
     <>
       <div className="w-full h-screen overflow-y-auto  ">
-        <div className=" text-right download-Button  py-3 px-4 right-0">
+        <div className=" flex justify-end gap-5 download-Button  py-3 px-4 right-0">
           <button
             className="bg-[#1e96fc] rounded-md px-4 py-2  font-medium text-lg text-white"
             onClick={() => downloadPDF()}
           >
             Download
           </button>
+          <Prompt
+            btnText={
+              <button
+                className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white "
+                // onClick={() => downloadPDF()}
+              >
+                Email
+              </button>
+            }
+            modalID={"sendEmail"}
+          >
+            <div className="w-[80%] mx-auto flex flex-col gap-5">
+              <h1 className="text-center text-xl font-semibold ">
+                Send Report{" "}
+              </h1>
+              <div className="flex gap-1 items-end">
+                <div
+                  className={`border-2 border-[#99999980]  relative p-[15px] flex flex-col rounded-lg mt-5 w-full bg-white `}
+                >
+                  <label
+                    htmlFor={"email"}
+                    className="absolute top-[-11px] bg-white text-color px-3"
+                  >
+                    {"Email"}
+                  </label>
+                  <input
+                    type={"email"}
+                    name={"email"}
+                    id={"email"}
+                    placeholder={"Enter the Email Id"}
+                    className="border-0 outline-none placeholder-[#CCCCCC]"
+                    value={sendEmail}
+                    onChange={(e) => setSendEmail(e.target.value)}
+                    autoComplete="off"
+                  />
+                </div>
+                <button
+                  className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white ml-5 w-[300px] h-[50px] mb-1"
+                  // onClick={() => downloadPDF()}
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+          </Prompt>
         </div>
         <div className=" flex flex-col items-center actual-receipt p-6 w-full">
           <img
@@ -474,6 +521,12 @@ const Information = () => {
             onClick={() => downloadPDF()}
           >
             Download
+          </button>{" "}
+          <button
+            className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white"
+            // onClick={() => downloadPDF()}
+          >
+            Email
           </button>
         </div>
       </div>

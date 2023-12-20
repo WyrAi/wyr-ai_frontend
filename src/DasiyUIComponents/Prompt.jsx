@@ -21,7 +21,7 @@ const Prompt = ({ children, btnText, modalID, btnClasses, isDisabled }) => {
         {btnText}
       </button>
       <dialog id={modalID} className="modal">
-        <div className="modal-box md:w-fit md:min-w-[60vw] w-[90%] p-[35px]">
+        <div className="modal-box md:min-w-[60vw] p-[35px]">
           <form method="dialog">
             <button
               type="button"

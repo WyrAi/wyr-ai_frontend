@@ -2,16 +2,35 @@ import { Outlet } from "react-router-dom";
 import Header from "./container/Header";
 import Nav from "./container/Nav";
 import userGloabalContext from "./UserContext";
-import { AiOutlineMenu } from "react-icons/ai";
+import { useEffect } from "react";
 
 const Layout = () => {
-  const { activeMenu, setActiveMenu } = userGloabalContext();
+  const { activeMenu, setActiveMenu, screenSize, setScreenSize } =
+    userGloabalContext();
+
+  useEffect(() => {
+    const handleSize = () => {
+      setScreenSize(window.innerWidth);
+    };
+    window.addEventListener("resize", handleSize);
+    handleSize();
+
+    return () => window.removeEventListener("resize", handleSize);
+  }, []);
+
+  useEffect(() => {
+    if (screenSize <= 900) {
+      setActiveMenu(false);
+    } else {
+      setActiveMenu(true);
+    }
+  }, [screenSize]);
+
   return (
-    <div className="h-screen grid grid-rows-[5rem_auto] bg-gray-100  ">
-      <Header />
+    <div className="h-screen bg-gray-100   ">
       <div className="flex">
         {activeMenu ? (
-          <div className="w-[20rem] fixed ">
+          <div className="w-[full] md:w-[20vw] fixed ">
             <Nav></Nav>
           </div>
         ) : (
@@ -21,14 +40,11 @@ const Layout = () => {
         )}
         <div
           className={` relative min-h-screen w-full ${
-            activeMenu ? "md:ml-[20rem]" : "flex-2"
+            activeMenu ? " md:ml-[20vw]" : "flex-2"
           }`}
         >
-          <AiOutlineMenu
-            className="text-black text-xl cursor-pointer absolute top-5 left-5 "
-            onClick={() => setActiveMenu((prev) => !prev)}
-          />
-          <div className="ml-12 mt-5">
+          <div className=" grid grid-rows-[5vw_auto]">
+            <Header />
             <Outlet />
           </div>
         </div>

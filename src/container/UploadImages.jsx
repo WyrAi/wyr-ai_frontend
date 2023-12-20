@@ -24,7 +24,6 @@ const UploadImages = ({
 }) => {
   const { imagesFiles, imgFormUploadData, setImgFormUploadData } =
     userGloabalContext();
-  // console.log(test);
   const intialImages = [
     { name: "Back", file: "" },
     { name: "Front", file: "" },
@@ -35,8 +34,7 @@ const UploadImages = ({
   ];
 
   const [images, setImages] = useState("");
-  const [files, setFiles] = useState(imagesData);
-  const [tempFile, setTempFile] = useState(imagesData);
+  const [files, setFiles] = useState([...imagesData]);
   const [img, setImg] = useState(null);
   const [imgName, setImgName] = useState("");
 
@@ -73,11 +71,12 @@ const UploadImages = ({
     maxSize: 5242880,
   });
 
-  // const handleSubmit = () => {
-  //   if (files?.length > 0) {
-  //     handleProductChange(poIndex, "images", files);
-  //   }
-  // };
+  const handleSubmit = () => {
+    console.log("changes hits");
+    if (files?.length > 0) {
+      handleProductChange(poIndex, "images", files);
+    }
+  };
 
   const removeImage = (index) => {
     const updateFiles = [...files];
@@ -90,16 +89,16 @@ const UploadImages = ({
     setImgName(e.target.value);
   };
 
-  React.useEffect(() => {
-    console.log("changes hits");
-    if (files?.length > 0) {
-      handleProductChange(poIndex, "images", files);
-    }
-  }, [files]);
+  // React.useEffect(() => {
+  //   console.log("changes hits");
+  //   if (files?.length > 0) {
+  //     handleProductChange(poIndex, "images", files);
+  //   }
+  // }, [files]);
 
   const handleDrop = (acceptedFiles, index) => {
     const newImages = [...files];
-    // const imgFormData = [...tempFile];
+
     // const formData = new FormData();
 
     // formData.append(`${imgFormData[index].name}`, acceptedFiles[0]);
@@ -107,20 +106,19 @@ const UploadImages = ({
     newImages[index].file = acceptedFiles[0]; // Assuming you're adding only one file per drop
     // imgFormData[index].file = acceptedFiles[0]; // formData;
     setFiles(newImages);
-    setTempFile(newImages);
   };
 
   const handleFormData = () => {
     if (imgFormUploadData.length - 1 === poIndex) {
-      console.log(poIndex);
+      // console.log(poIndex);
       const updateImgData = [...imgFormUploadData];
-      updateImgData[poIndex] = tempFile;
+      updateImgData[poIndex] = files;
       setImgFormUploadData(updateImgData);
     } else {
-      setImgFormUploadData([...imgFormUploadData, tempFile]);
+      setImgFormUploadData([...imgFormUploadData, files]);
     }
   };
-  console.log(files);
+  // console.log(files);
 
   const DropZone = ({
     text,
@@ -145,7 +143,6 @@ const UploadImages = ({
           setAcceptedFiles(acceptedFiles);
           if (index === null) {
             setFiles([...files, { name: text, file: acceptedFiles[0] }]);
-            setTempFile([...tempFile, { name: text, file: acceptedFiles[0] }]);
             setImgName("");
           } else {
             handleDrop(acceptedFiles, index);
@@ -157,7 +154,6 @@ const UploadImages = ({
         // console.log("Accepted files:", acceptedFiles);
       }
     };
-    console.log(tempFile, files);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
       onDrop,
@@ -281,6 +277,7 @@ const UploadImages = ({
             className="border text-blue border-blue rounded py-2 px-5"
             onClick={() => {
               closeModal(`uploadImg_${poIndex}`);
+              // setFiles(intialImages);
             }}
           >
             Cancel
@@ -291,7 +288,6 @@ const UploadImages = ({
             onClick={() => {
               closeModal(`uploadImg_${poIndex}`);
               handleFormData();
-              setTempFile(intialImages);
             }}
           >
             Save
