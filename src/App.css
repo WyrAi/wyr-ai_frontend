@@ -10,10 +10,10 @@
 /* global.css */
 .dropdown-notch {
   position: absolute;
-  top: -1px; /* adjust this value to align the notch */
-  right: 17px; /* align to the right edge of the dropdown */
+  top: 2px; /* adjust this value to align the notch */
+  right: 1px; /* align to the right edge of the dropdown */
   border-left: 20px solid transparent; /* adjust size as needed */
   border-right: 20px solid transparent; /* adjust size as needed */
   border-bottom: 19px solid rgb(243, 228, 228); /* color of your dropdown border */
+  /* box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1); */
 }
-

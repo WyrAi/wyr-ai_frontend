@@ -5,24 +5,41 @@ import setting from "../assets/noun-setting-1835295 1.svg";
 import search from "../assets/Search.svg";
 import logo from "../assets/logo.svg";
 import userGloabalContext from "../UserContext";
-import { useState } from "react";
+import { useState,useEffect } from "react";
+import axios from "axios";
 import '../App.css'
 // DropDown.js
 const DropDown = ({ children }) => {
+  const {userInformation} = userGloabalContext();
+  const handleAllRead = () => {
+    try {
+      console.log("the log of update");
+       axios.post("http://localhost:5000/api/updatenotifactionstatus", {
+        receiverid: userInformation?.email , 
+      }).then((res) => console.log(res)).catch((err) => console.log(err))
+
+      
+
+      // console.log(response.data.message); // Log the response message
+
+      // You can perform additional actions based on the response if needed
+    } catch (error) {
+      console.error("Error updating seen status:", error);
+      // Handle error, show error message, etc.
+    }
+  }
+
+
   return (
     <div className="relative">
       <div className="dropdown-notch"></div>
-      <div className="absolute top-2 right-0 mt-2 w-96 bg-white rounded-xl shadow-2xl border z-50">
+      <div className="absolute top-2 right-[-10px] mt-3 w-96 bg-white rounded-xl shadow-2xl border z-50">
         <div className="flex justify-between items-center px-4 py-2 ">
           <h2 className="text-lg  text-gray-700 ">Notification</h2>
-          <button className="text-md text-blue-600  text-blue underline underline-offset-1">Mark All As Read</button>
+          <button className="text-md text-blue-600  text-blue underline underline-offset-1" onClick={handleAllRead} >Mark All As Read</button>
         </div>
         <ul className="overflow-y-auto max-h-56 px-4">
           {children}
-          <p className="relative">flksadkk</p>
-          <p className="relative">flksadkkkkkk</p>
-          <p className="relative">flksadkkkkkk</p>
-          <p className="relative">flksadkkkkkk</p>
           {/* Add more <p> tags as needed */}
         </ul>
       </div>
@@ -37,9 +54,10 @@ const DropDown = ({ children }) => {
 
 
 const Header = () => {
-  const { notification, setNotifications } = userGloabalContext();
-  const [popup, setPopup] = useState(true);
-  console.log(notification);
+  const { notification, fetchNotification } = userGloabalContext();
+  console.log("notification length",(notification.filter((notification) => notification.seen === true)).length);
+  
+  const [popup, setPopup] = useState(false);
 
   return (
     <header className="bg-white h-full mb-5 ">
@@ -69,41 +87,26 @@ const Header = () => {
         <div className=" flex items-center justify-start ">
           <Link href="#" className="text-gray-600 hover:text-gray-900">
             {/* <ShoppingBagIcon className="h-6 w-6" aria-hidden="true" /> */}
-            <img src={notify} alt="help" className="block" onClick={() => {}} />
+            <div className="relative block" onClick={() => setPopup(!popup)}>
+            <img src={notify} alt="help" className="block" onClick={() => fetchNotification()} />
+            {notification.filter((notification) => notification.seen === false).length > 0 && (
+              <span className="absolute top-4 right-[-15px] inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
+                {notification.filter((notification) => notification.seen === false).length}
+              </span>
+            )}
+          </div>
 
             <div className="relative flex-1 cursor-pointer">
               {popup && (
                 <DropDown>
                   {notification.length > 0 &&
                     notification?.map((item, index) => {
-                      // const intials = item?.name?.charAt(0).toUpperCase();
                       return (
                         <li
                           key={index}
-                          className="py-2 flex items-center gap-4 mr-2 border-b w-[150px]"
-                          onClick={
-                            () => {}
-                            // handleDropDownSelect(
-                            //   "nameOfBuyer",
-                            //   "addOfBuyer",
-                            //   item
-                            // )
-                          }
+                          className="py-2  gap-4 mr-2 border-b w-full"
                         >
-                          {/* <span className="w-6 h-6 bg-blue flex justify-center items-center rounded-full">
-                            {intials}
-                          </span> */}
-                          <span className="flex-1 text-xs">{item}</span>
-                          {/* <span className="flex gap-2 items-center">
-                            <img
-                              src={gps}
-                              alt="gps"
-                              className="w-[16px] h-[16px]"
-                            />
-                            <span className="text-[10px]">
-                              {item.city}, {item.country}
-                            </span>
-                          </span> */}
+                          <span className={` text-xs ${!item.seen && "font-semibold"}`}>{item.message}</span>
                         </li>
                       );
                     })}
