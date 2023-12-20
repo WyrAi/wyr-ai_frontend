@@ -14,10 +14,11 @@ import Prompt from "../DasiyUIComponents/Prompt";
 import SuccessRelation from "./SuccessRelation";
 import axios from "axios";
 import wyraiApi from "../api/wyraiApi";
-// import socket from "../Components/socket";
+
+import socket from "../Components/socket";
 
 const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
- 
+
   const { role, companyId } = userGloabalContext();
   const [roles, setRoles] = React.useState([
     { id: 0, name: "Buyer", icon: Buyer, selected: false },
@@ -25,10 +26,11 @@ const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
     { id: 2, name: "Factory", icon: factory, selected: false },
     { id: 3, name: "QC Agency", icon: QC, selected: false },
   ]);
+
+
   const [error, setError] = React.useState({ role: "" });
 
   const UserRolesRelation = roles.filter((item) => item.name != role);
-  console.log(role, UserRolesRelation);
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
@@ -49,122 +51,75 @@ const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
         if (selectedData.length === 0) {
           setError({ role: "Please select role before sending email " });
           console.log(document.getElementById(modalID));
-          document.getElementById("modalID").close();
+          document.getElementById('modalID').close();
         } else {
           setError({ role: "" });
-          const requestBody = {
-            email: values.email,
-            role: selectedData[0].name,
-          };
-
-          // console.log({
-          //   reciverEmail: values.email,
+          // const requestBody = {
+          //   email: values.email,
           //   role: selectedData[0].name,
-          //   senderCompanyId: companyId,
-          // });
+          // };
 
+          // console.log(requestBody);
           wyraiApi
             .post(`/api/companyRelationShip`, {
               reciverEmail: values.email,
               role: selectedData[0].name,
               senderCompanyId: companyId,
-            })
-            .then((res) => {
-              console.log(res);
+            }).then((res) => {
 
-              document.getElementById("addCompany").close();
-              setSuccessRelation(true);
-              fetchRelation();
-            })
-            .catch((err) => {
-              console.log("before document");
-              document.getElementById(modalID).close();
-              console.log("After document");
-              // socket.emit("sendText", {
-              //   senderName: values.email,
-              //   receiverName: values.email,
-              //   text: `connection request form the ${values.email} `,
-              // });
-              console.log("After socket document");
-            })
-            .catch((err) => {
+              const data={
+                senderName:values.email,
+                text:`connection request from the ${values.email}`
+              }
+
+              socket.emit("RelationshipsText", {data}); 
+              console.log("After socket document")
+
+            }).catch((err) => {
               console.log(err);
             });
         }
       },
       validationSchema,
     });
-  // const { values, handleBlur, handleChange, handleSubmit, errors, touched } =
-  //   useFormik({
-  //     initialValues,
-  //     onSubmit: async (values) => {
-  //       console.log(values);
-  //       const selectedData = UserRolesRelation.filter(
-  //         (item) => item.selected === true
-  //       );
-  //       if (selectedData.length === 0) {
-  //         setError({ role: "Please select role before sending email " });
-  //       } else {
-  //         setError({ role: "" });
-  //         const requestBody = {
-  //           email: values.email,
-  //           role: selectedData[0].name,
-  //         };
 
-  //         // console.log({
-  //         //   reciverEmail: values.email,
-  //         //   role: selectedData[0].name,
-  //         //   senderCompanyId: companyId,
-  //         // });
-
-  //         wyraiApi
-  //           .post(`/api/companyRelationShip`, {
-  //             reciverEmail: values.email,
-  //             role: selectedData[0].name,
-  //             senderCompanyId: companyId,
-  //           })
-  //           .then((res) => {
-  //             console.log(res);
-  //             document.getElementById("addCompany").close();
-  //             setSuccessRelation(true);
-  //             fetchRelation();
-  //           })
-  //           .catch((err) => {
-  //             console.log(err);
-  //           });
-  //       }
-  //     },
-  //     validationSchema,
-  //   });
-
-  const handleClick = (itemId) => {
-    // Find the index of the item with the given id
-    const itemIndex = UserRolesRelation.findIndex((item) => item.id === itemId);
+    const handleClick = (itemId) => {
+        const itemIndex = UserRolesRelation.findIndex(
+        (item) => item.id === itemId
+      );
 
     const clickedRole = UserRolesRelation[itemIndex].name;
-    // If the item is found, update its value
+    
     if (itemIndex !== -1) {
-      // Create a new array with the updated item
       UserRolesRelation.forEach((item) => (item.selected = false));
+      const clickedRole = UserRolesRelation[itemIndex].name;
+      // If the item is found, update its value
+      if (itemIndex !== -1) {
+        // Create a new array with the updated item
+        UserRolesRelation.forEach((item) => (item.selected = false));
 
-      const updatedItems = [...UserRolesRelation];
-      console.log(!updatedItems[itemIndex].selected);
-      updatedItems[itemIndex] = {
-        ...updatedItems[itemIndex],
-        selected: !updatedItems[itemIndex].selected, // Replace with the desired new value
-      };
+        const updatedItems = [...UserRolesRelation];
+        console.log(!updatedItems[itemIndex].selected);
+        updatedItems[itemIndex] = {
+          ...updatedItems[itemIndex],
+          selected: !updatedItems[itemIndex].selected, // Replace with the desired new value
+        };
 
-      // Update the state with the new array
+        // Update the state with the new array
+        setRoles(updatedItems);
+      }
+    };
       setRoles(updatedItems);
     }
-  };
+  
 
-  return (
-    <div className="w-full flex flex-col gap-10 justify-center items-center">
-      <h1 className="text-2xl font-bold text-center">Add Company</h1>
-      <span className="text-base font-semibold text-darkGray">
-        Select Your Role
-      </span>
+    return (
+      <div className="w-full flex flex-col gap-10 justify-center items-center">
+        <h1 className="text-2xl font-bold text-center">Add Company</h1>
+        <span className="text-base font-semibold text-darkGray">
+          Select Your Role
+        </span>
+
 
       <div className="flex w-full justify-center ">
         {UserRolesRelation?.length > 0 &&
@@ -245,8 +200,10 @@ const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
           </div>
         </div>
       </div>
+
     </div>
   );
 };
+
 
 export default AddCompany;
