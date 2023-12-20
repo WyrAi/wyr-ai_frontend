@@ -87,6 +87,7 @@ const RelationShip = () => {
           .then((res) => {
             console.log(res);
             fetchRelation();
+            setSelectRelation({ id: "" });
           })
           .catch((err) => console.log(err));
       }
@@ -101,6 +102,7 @@ const RelationShip = () => {
           .put(`/api/approvedRelationship/${selectRelation.id}`)
           .then((res) => {
             console.log(res);
+            setSelectRelation({ id: "" });
             fetchRelation();
           })
           .catch((err) => console.log(err));
@@ -217,7 +219,6 @@ const RelationShip = () => {
                   relation={value.relationId}
                   selectRelationmethod={handleselectRelation}
                   RelationMethod={fetchRelation}
-                  ationMethod={fetchRelation}
                 />
               </div>
             );

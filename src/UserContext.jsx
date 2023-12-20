@@ -17,6 +17,10 @@ const userContext = createContext();
 export const UserContextProvider = ({ children }) => {
   const navigate = useNavigate();
   const [branchData, setBranchData] = useState(null);
+  const [activeMenu, setActiveMenu] = useState(true);
+  const [screenSize, setScreenSize] = useState(undefined);
+  const [imgFormUploadData, setImgFormUploadData] = useState([]);
+
   const [notification, setNotifications] = useState([]);
   const [comments, setComments] = useState([]);
   const [productList, setProductList] = useState({
@@ -48,10 +52,7 @@ export const UserContextProvider = ({ children }) => {
 
   // PO popup and images file
   const [popUpload, setPopUpload] = useState(false);
-  const [imagesFiles, setImagesFiles] = useState({
-    name: "",
-    file: "",
-  }); // set imnages file for products in purchase Order
+  const [imagesFiles, setImagesFiles] = useState([]); // set imnages file for products in purchase Order
 
   const reqimg = {
     backImage: undefined,
@@ -203,6 +204,13 @@ export const UserContextProvider = ({ children }) => {
           startTime,
           branchData,
           role,
+          activeMenu,
+          imgFormUploadData,
+          screenSize,
+          setScreenSize,
+          setImgFormUploadData,
+          setActiveMenu,
+
           notification,
           setNotifications,
           setStartTime,

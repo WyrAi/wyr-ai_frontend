@@ -14,7 +14,10 @@ const DropZone = ({
   textSize,
   className,
   fileName,
-  method
+  method,
+
+  setFormData,
+
 }) => {
   const [files, setFiles] = useState([]);
   const [preview, setPreview] = useState("");
@@ -30,10 +33,12 @@ const DropZone = ({
         const file = acceptedFiles[0];
         // console.log(file);
         // console.log(file.type);
+
         const reader = new FileReader();
         reader.onload = (e) => {
           // Use reader.result
           onDrop(e.target.result);
+          // console.log(e.target.result);
           setPreview(e.target.result);
         };
         reader.readAsDataURL(file);
@@ -42,6 +47,24 @@ const DropZone = ({
     [onDrop]
   );
 
+  const onDropForm = useCallback(
+    (acceptedFiles) => {
+      if (setFormData) {
+        const file = acceptedFiles[0];
+        // console.log(file);
+        // console.log(file.type);
+        setFormData(file);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          // Use reader.result
+          // console.log(e.target.result);
+          setPreview(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    },
+    [setFormData]
+  );
   useEffect(() => {
     // console.log(files[0]);
     if (method) method(files[0]);
@@ -52,9 +75,12 @@ const DropZone = ({
     onDrop: (acceptedFiles) => {
       console.log(acceptedFiles);
       setFiles(acceptedFiles);
+      onDropForm(acceptedFiles);
       onDropHandler(acceptedFiles);
     },
-    accept: accept || "image/*",
+    accept: accept || {
+      "image/*": [".jpeg", ".jpg", ".png"],
+    },
     multiple: multiple || false,
     maxSize: maxSize || 5242880,
   });
