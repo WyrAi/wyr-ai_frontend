@@ -95,7 +95,7 @@ function PurchaseOrder() {
   // const [buyerPopup, setBuyerPopup] = useState(false);
   // const [vendorPopup, setVendorPopup] = useState(false);
   const [count, setCount] = useState(1);
-
+  // const { productList, imagesFiles, setImagesFiles } = userGloabalContext();
   const validationSchema = Yup.object().shape({
     poNumber: Yup.string().required("PO Number is required"),
     nameOfBuyer: Yup.string().required("Name of Buyer is required"),
@@ -201,6 +201,56 @@ function PurchaseOrder() {
     }
     // console.log(slotOfProducts.length);
     let requestBody = {};
+    if (slotOfProducts.length > 0) {
+      requestBody = {
+        purchaseDoc,
+        buyer: ids.buyerId,
+        vendor: ids.vendorId,
+        shiptoName: formik.values.shiptoName,
+        shiptoAdd: formik.values.shiptoAdd,
+        shipVia: formik.values.shipVia,
+        shipDate: formik.values.shipDate,
+        assignedPeople: peopleOfInterest.map((item) => item.id),
+        poNumber: formik.values.poNumber,
+        products: [...slotOfProducts],
+        status,
+      };
+    } else {
+      requestBody = {
+        purchaseDoc,
+        buyer: ids.buyerId,
+        vendor: ids.vendorId,
+        shiptoName: formik.values.shiptoName,
+        shiptoAdd: formik.values.shiptoAdd,
+        shipVia: formik.values.shipVia,
+        shipDate: formik.values.shipDate,
+        assignedPeople: peopleOfInterest.map((item) => item.id),
+        poNumber: formik.values.poNumber,
+        products: [{ ...productList, images: imagesFiles }],
+        status,
+      };
+    }
+
+    if (e.target.type === "submit") {
+      wyraiApi
+        .post("/api/purchaseOrder", requestBody)
+        .then((res) =>{
+          navigate(-1)
+
+          const data={
+            senderName:"",
+            text:`connection request from the ${values.email}`
+          }
+
+          socket.emit("RelationshipsText", {data});
+        } )
+        .catch((err) => console.log(err));
+    } else {
+      wyraiApi
+        .post(`/api/PuracheseOrderDraft/${userInformation?._id}`, requestBody)
+        .then((res) => navigate(-1))
+        .catch((err) => console.log(err));
+    }
     // if (slotOfProducts.length > 0) {
     //   requestBody = {
     //     purchaseDoc,
@@ -464,6 +514,7 @@ function PurchaseOrder() {
   //   console.log(ApiImage, "gfffcf");
   //   if (ApiImage) POAIData();
   // }, [ApiImage]);
+
 
   const fetchpeople = async () => {
     if (ids.buyerId.length > 0 && ids.vendorId.length > 0) {

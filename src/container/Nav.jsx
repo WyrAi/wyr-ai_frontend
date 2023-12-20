@@ -5,7 +5,7 @@ import logo from "../assets/logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 import userGloabalContext from "../UserContext";
 import React from "react";
-import { deleteToken } from "../Utils/authUtils";
+import socket from "../Components/socket";
 
 const Nav = () => {
   const { userInformation, userRights } = userGloabalContext();
@@ -22,12 +22,13 @@ const Nav = () => {
     }
     return [];
   }, [userInformation?.role?.SelectAccess]);
-  console.log(userRights);
 
-  const logoutHandlemethod = () => {
-    deleteToken();
-    navigate("/login");
-  };
+  const logoutHandlemethod = () =>{
+    console.log("logout emit")
+    // deleteToken()
+    socket.emit("remove",(socket.id))
+    navigate("/login")
+  }
   return (
     <>
       <div className="h-screen grid grid-rows-[80%_10%] justify-around border-r-[1px] border-gray-200 items-center bg-white overflow-hidden ">
@@ -56,6 +57,7 @@ const Nav = () => {
             className="flex gap-3 items-center  "
             onClick={() => logoutHandlemethod()}
           >
+
             <img src={logout} alt="logout" />
             <span>Logout</span>
           </button>

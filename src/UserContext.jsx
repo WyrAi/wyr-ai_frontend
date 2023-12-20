@@ -20,6 +20,8 @@ export const UserContextProvider = ({ children }) => {
   const [activeMenu, setActiveMenu] = useState(true);
   const [screenSize, setScreenSize] = useState(undefined);
   const [imgFormUploadData, setImgFormUploadData] = useState([]);
+
+  const [notification, setNotifications] = useState([]);
   const [comments, setComments] = useState([]);
   const [productList, setProductList] = useState({
     styleId: "",
@@ -139,6 +141,7 @@ export const UserContextProvider = ({ children }) => {
     wyraiApi
       .get(`/api/UserInformation`)
       .then((res) => {
+        console.log(res);
         const userInformation = res.data.UserInfo;
         setUserInformation(userInformation);
         const companyId = userInformation?.companyId?._id;
@@ -161,7 +164,9 @@ export const UserContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    console.log(token, userInformation);
     if (token && !userInformation) {
+      console.log("here");
       getUserInformation();
     }
   }, [userInformation, token]);
@@ -171,7 +176,6 @@ export const UserContextProvider = ({ children }) => {
     const companyId = userInformation?.companyId?._id;
     const role = userInformation?.companyId?.companyRole;
     const rights = userInformation?.role?.SelectAccess;
-    console.log(rights, role);
     return { companyId, role, userRights: rights };
   }, [userInformation]);
 
@@ -206,6 +210,9 @@ export const UserContextProvider = ({ children }) => {
           setScreenSize,
           setImgFormUploadData,
           setActiveMenu,
+
+          notification,
+          setNotifications,
           setStartTime,
           setImagesFiles,
           setPopUpload,
