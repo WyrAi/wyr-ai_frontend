@@ -15,7 +15,7 @@ const DropZone = ({
   className,
   fileName,
   method,
-
+  setLoader,
   setFormData,
 
 }) => {
@@ -74,6 +74,7 @@ const DropZone = ({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: (acceptedFiles) => {
       console.log(acceptedFiles);
+      setLoader(true);
       setFiles(acceptedFiles);
       onDropForm(acceptedFiles);
       onDropHandler(acceptedFiles);
@@ -102,7 +103,7 @@ const DropZone = ({
       {files.length > 0 ? (
         <img
           src={preview}
-          className="object-cover overflow-hidden w-full flex-1"
+          className="object-cover object-top overflow-hidden w-full flex-1"
         ></img>
       ) : (
         <p

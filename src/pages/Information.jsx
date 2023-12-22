@@ -261,8 +261,13 @@ const Information = () => {
             <Prompt
               btnText={
                 <button
-                  className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white "
+
+                  className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white ml-5 w-[300px] h-[50px] mb-1"
+                  onClick={() => console.log("first")}
+
+//                   className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white "
                   // onClick={() => PdfCreateAndVideoCheck()}
+
                 >
                   Email
                 </button>

@@ -19,7 +19,7 @@ const Layout = () => {
   }, []);
 
   useEffect(() => {
-    if (screenSize <= 900) {
+    if (screenSize <= 768) {
       setActiveMenu(false);
     } else {
       setActiveMenu(true);
@@ -30,22 +30,27 @@ const Layout = () => {
     <div className="h-screen bg-gray-100   ">
       <div className="flex">
         {activeMenu ? (
-          <div className="w-[full] md:w-[20vw] fixed ">
+          <div className="w-full h-full md:w-[20vw] fixed ">
             <Nav></Nav>
           </div>
         ) : (
-          <div className="w-0 ">
+          <div className="w-0 h-full ">
             <Nav></Nav>
           </div>
         )}
         <div
-          className={` relative min-h-screen w-full ${
+          className={` relative h-full w-full ${
             activeMenu ? " md:ml-[20vw]" : "flex-2"
           }`}
         >
-          <div className=" grid grid-rows-[5vw_auto]">
-            <Header />
-            <Outlet />
+          <div className=" flex flex-col h-full">
+            <div className="flex-none">
+              <Header />
+            </div>
+
+            <div className=" flex-1 border-l-[1px] border-gray-300">
+              <Outlet />
+            </div>
           </div>
         </div>
       </div>
