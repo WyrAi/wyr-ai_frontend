@@ -23,8 +23,13 @@ const InspectionCard = () => {
 };
 
 const Dashboard = () => {
-
-  const { getUserInformation, companyId, userInformation,notification ,setNotifications} = userGloabalContext();
+  const {
+    getUserInformation,
+    companyId,
+    userInformation,
+    notification,
+    setNotifications,
+  } = userGloabalContext();
   const toast = useToast();
 
   const status = {

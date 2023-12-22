@@ -16,7 +16,9 @@ import axios from "axios";
 import wyraiApi from "../api/wyraiApi";
 
 import socket from "../Components/socket";
-const AddCompany = () => {
+
+const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
+
   const { role, companyId } = userGloabalContext();
   const [roles, setRoles] = React.useState([
     { id: 0, name: "Buyer", icon: Buyer, selected: false },
@@ -25,7 +27,7 @@ const AddCompany = () => {
     { id: 3, name: "QC Agency", icon: QC, selected: false },
   ]);
 
-  const receivers=["sk9313725@gmail.com","neittazoujeutou-4286@yopmail.com",];
+
   const [error, setError] = React.useState({ role: "" });
 
   const UserRolesRelation = roles.filter((item) => item.name != role);
@@ -64,23 +66,13 @@ const AddCompany = () => {
               role: selectedData[0].name,
               senderCompanyId: companyId,
             }).then((res) => {
-              console.log(res);
-              console.log("before document")
-              // document.getElementById('modalID').close();
-              console.log("After document")
-
-              // const data ={
-              //   senderName: values.email,
-              //   receiverName: receivers,
-              //   text:`connection request form the ${values.email} `,
-              // }
 
               const data={
                 senderName:values.email,
                 text:`connection request from the ${values.email}`
               }
 
-              socket.emit("sendText", {data}); 
+              socket.emit("RelationshipsText", {data}); 
               console.log("After socket document")
 
             }).catch((err) => {
@@ -89,76 +81,17 @@ const AddCompany = () => {
         }
       },
       validationSchema,
-
     });
 
-    const initialValues = {
-      email: "",
-    };
-
-    const { values, handleBlur, handleChange, handleSubmit, errors, touched } =
-      useFormik({
-        initialValues,
-        onSubmit: async (values) => {
-          console.log(values);
-          const selectedData = UserRolesRelation.filter(
-            (item) => item.selected === true
-          );
-          if (selectedData.length === 0) {
-            setError({ role: "Please select role before sending email " });
-            console.log(document.getElementById(modalID));
-            document.getElementById("modalID").close();
-          } else {
-            setError({ role: "" });
-            const requestBody = {
-              email: values.email,
-              role: selectedData[0].name,
-            };
-
-            // console.log({
-            //   reciverEmail: values.email,
-            //   role: selectedData[0].name,
-            //   senderCompanyId: companyId,
-            // });
-
-            wyraiApi
-              .post(`/api/companyRelationShip`, {
-                reciverEmail: values.email,
-                role: selectedData[0].name,
-                senderCompanyId: companyId,
-              })
-              .then((res) => {
-                console.log(res);
-
-                document.getElementById("addCompany").close();
-                setSuccessRelation(true);
-                fetchRelation();
-              })
-              .catch((err) => {
-                console.log("before document");
-                document.getElementById(modalID).close();
-                console.log("After document");
-                // socket.emit("sendText", {
-                //   senderName: values.email,
-                //   receiverName: values.email,
-                //   text: `connection request form the ${values.email} `,
-                // });
-                console.log("After socket document");
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          }
-        },
-        validationSchema,
-      });
-
     const handleClick = (itemId) => {
-      // Find the index of the item with the given id
-      const itemIndex = UserRolesRelation.findIndex(
+        const itemIndex = UserRolesRelation.findIndex(
         (item) => item.id === itemId
       );
 
+    const clickedRole = UserRolesRelation[itemIndex].name;
+    
+    if (itemIndex !== -1) {
+      UserRolesRelation.forEach((item) => (item.selected = false));
       const clickedRole = UserRolesRelation[itemIndex].name;
       // If the item is found, update its value
       if (itemIndex !== -1) {
@@ -176,6 +109,9 @@ const AddCompany = () => {
         setRoles(updatedItems);
       }
     };
+      setRoles(updatedItems);
+    }
+  
 
     return (
       <div className="w-full flex flex-col gap-10 justify-center items-center">
@@ -184,90 +120,90 @@ const AddCompany = () => {
           Select Your Role
         </span>
 
-        <div className="flex w-full justify-center ">
-          {UserRolesRelation?.length > 0 &&
-            UserRolesRelation.map((item) => (
-              <div
-                key={uuid()}
-                className="flex-1 flex flex-col justify-center items-center"
-              >
-                <div
-                  className={`relative rounded-full w-[80px] h-[80px] flex justify-center items-center shadow-[0_1px_14px_0px_rgba(0,0,0,0.15)] cursor-pointer  ${
-                    item.selected && "border-2 border-blue"
-                  } `}
-                  onClick={() => handleClick(item.id)}
-                >
-                  <img
-                    src={item.icon}
-                    className=" p-4 rounder-full "
-                    alt="logo"
-                  />
-                  <img
-                    src={vector}
-                    alt=""
-                    className={
-                      item.selected
-                        ? "absolute w-5 h-5 top-0 right-0 block bg-white rounded-full "
-                        : "absolute w-5 h-5 top-0 right-0 hidden  "
-                    }
-                  />
-                </div>
-                <span className="block text-center w-full mt-5">
-                  {item.name}
-                </span>
-              </div>
-            ))}
-        </div>
 
-        <div className=" w-full">
-          <div
-            className={`border-2 ${
-              errors.email ? "border-[#FF686B]" : "border-[#99999980]"
-            }  relative p-[15px] flex flex-col rounded-lg mt-5 w-full bg-white `}
-          >
-            <label
-              htmlFor={"email"}
-              className="absolute top-[-11px] bg-white text-color px-3"
-            >
-              {"Email"}
-            </label>
-            <input
-              type={"email"}
-              name={"email"}
-              id={"email"}
-              placeholder={"Enter the Email Id"}
-              className="border-0 outline-none placeholder-[#CCCCCC]"
-              value={values.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              autoComplete="off"
-            />
-          </div>
-          {errors.email && touched.email ? (
-            <p className="text-red-800 text-left">{errors.email}</p>
-          ) : (
-            ""
-          )}
-          {error.role.length > 0 && (
-            <p className="text-red-800 text-left">{error.role}</p>
-          )}
-          <span className="text-xs font-medium">
-            As you Enter Email ID the link will Generate Automatically
-          </span>
-          <div className="flex justify-center">
+      <div className="flex w-full justify-center ">
+        {UserRolesRelation?.length > 0 &&
+          UserRolesRelation.map((item) => (
             <div
-              className="mt-6  border py-3 text-xl font-medium bg-[#1B9BEF] rounded-md w-5/12 text-white text-center cursor-pointer "
-              onClick={() => {
-                handleSubmit();
-              }}
+              key={uuid()}
+              className="flex-1 flex flex-col justify-center items-center"
             >
-              Invite
+              <div
+                className={`relative rounded-full w-[80px] h-[80px] flex justify-center items-center shadow-[0_1px_14px_0px_rgba(0,0,0,0.15)] cursor-pointer  ${
+                  item.selected && "border-2 border-blue"
+                } `}
+                onClick={() => handleClick(item.id)}
+              >
+                <img
+                  src={item.icon}
+                  className=" p-4 rounder-full "
+                  alt="logo"
+                />
+                <img
+                  src={vector}
+                  alt=""
+                  className={
+                    item.selected
+                      ? "absolute w-5 h-5 top-0 right-0 block bg-white rounded-full "
+                      : "absolute w-5 h-5 top-0 right-0 hidden  "
+                  }
+                />
+              </div>
+              <span className="block text-center w-full mt-5">{item.name}</span>
             </div>
+          ))}
+      </div>
+
+      <div className=" w-full">
+        <div
+          className={`border-2 ${
+            errors.email ? "border-[#FF686B]" : "border-[#99999980]"
+          }  relative p-[15px] flex flex-col rounded-lg mt-5 w-full bg-white `}
+        >
+          <label
+            htmlFor={"email"}
+            className="absolute top-[-11px] bg-white text-color px-3"
+          >
+            {"Email"}
+          </label>
+          <input
+            type={"email"}
+            name={"email"}
+            id={"email"}
+            placeholder={"Enter the Email Id"}
+            className="border-0 outline-none placeholder-[#CCCCCC]"
+            value={values.email}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            autoComplete="off"
+          />
+        </div>
+        {errors.email && touched.email ? (
+          <p className="text-red-800 text-left">{errors.email}</p>
+        ) : (
+          ""
+        )}
+        {error.role.length > 0 && (
+          <p className="text-red-800 text-left">{error.role}</p>
+        )}
+        <span className="text-xs font-medium">
+          As you Enter Email ID the link will Generate Automatically
+        </span>
+        <div className="flex justify-center">
+          <div
+            className="mt-6  border py-3 text-xl font-medium bg-[#1B9BEF] rounded-md w-5/12 text-white text-center cursor-pointer "
+            onClick={() => {
+              handleSubmit();
+            }}
+          >
+            Invite
           </div>
         </div>
       </div>
-    );
-  };
+
+    </div>
+  );
 };
+
 
 export default AddCompany;
