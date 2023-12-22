@@ -43,7 +43,7 @@ export const UserContextProvider = ({ children }) => {
   const [roleData, setRoleData] = useState([]);
   const [userInformation, setUserInformation] = useState(null);
   const [token, setToken] = useState(getAuthToken());
-  const [render, setRender] = useState(false);
+  // const [render, setRender] = useState(false);
 
   const [userData, setUserData] = useState(null);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -230,8 +230,8 @@ export const UserContextProvider = ({ children }) => {
           getUserInformation,
           userInformation,
           userRights,
-          render,
-          setRender,
+          // render,
+          // setRender,
           setUserData,
           userData,
         }}
