@@ -5,7 +5,6 @@
 
 import io from "socket.io-client";
 
-// Function to get the stored socket ID or generate a new one
 const getStoredSocketId = () => {
   const storedSocketId = localStorage.getItem('socketId');
   if (storedSocketId) {
@@ -23,7 +22,7 @@ const getStoredSocketId = () => {
   }
 };
 
-// Use an async function to handle the promise
+
 const initSocket =  () => {
   const socketId = getStoredSocketId();
   return io("http://localhost:5000", {
