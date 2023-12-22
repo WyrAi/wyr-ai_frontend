@@ -52,8 +52,6 @@ const UserMgt = () => {
     //   }
     // );
 
-    
-
     fetchData();
   };
   useEffect(() => {
@@ -216,7 +214,7 @@ const UserMgt = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-wrap w-full h-24 gap-4">
+          <div className="flex flex-wrap content-start w-full h-full gap-4 overflow-auto">
             {filteredUsers?.map((item, index) => (
               <UserCard
                 check={checkedItems}

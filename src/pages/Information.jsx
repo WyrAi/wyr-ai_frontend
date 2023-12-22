@@ -358,7 +358,7 @@ const Information = () => {
                 </div>
                 <button
                   className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white ml-5 w-[300px] h-[50px] mb-1"
-                  // onClick={() => downloadPDF()}
+                  onClick={() => console.log("first")}
                 >
                   Send
                 </button>
