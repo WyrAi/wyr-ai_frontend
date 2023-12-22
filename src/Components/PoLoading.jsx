@@ -7,11 +7,11 @@ const PoLoading = () => {
       <div class="loader">
         {/* <p>loading</p> */}
         <div class="words">
-          <span class="word ">Load</span>
-          <span class="word ">Identify</span>
-          <span class="word ">Extract</span>
-          <span class="word ">Process</span>
-          <span class="word ">Create</span>
+           <span class="word ">Loading</span>
+          <span class="word ">Identifying</span>
+          <span class="word ">Extracting</span>
+          <span class="word ">Processing</span>
+          <span class="word ">Creating</span>
         </div>
         <div class="words">
           <span class="word text-[#9D9E9E]">Image</span>
