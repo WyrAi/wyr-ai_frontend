@@ -6,7 +6,7 @@ import userGloabalContext from "../UserContext";
 import { useEffect } from "react";
 import { useState } from "react";
 import useToast from "../Contexts/ToasterContext";
- import socket from "../Components/socket";
+import initSocket from "../Components/socket";
 import axios from "axios";
 
 const InspectionCard = () => {
@@ -25,6 +25,10 @@ const InspectionCard = () => {
 
 const Dashboard = () => {
 
+  const socket = initSocket();
+
+  console.log("gggggggggggggg",socket);
+
   const { getUserInformation, companyId, userInformation,notification ,fetchNotification} = userGloabalContext();
   const toast = useToast();
 
@@ -41,22 +45,26 @@ const Dashboard = () => {
       getUserInformation();
     }
   }, []);
+
+  socket.on("getText", async (data) => {
+    window.alert(data.text)
+   fetchNotification();
+  });
   
   useEffect(() => {
     console.log("userINformation",userInformation?.email);
     if (userInformation?.email) {
       console.log("Notification component mounted", socket.id);
-      socket.on("getText", async (data) => {
-      });
+      
       try {
         fetchNotification();
       } catch (error) {
         console.error("Error fetching notifications:", error);
       }
     }
-  }, [userInformation,socket]);
-
-  console.log("76",notification);
+  }, [userInformation]);
+  console.log("61=====>",socket.id)
+  console.log("gfkuljknlj====>",socket.id);
 
   return (
     <div className="ml-5 w-[85%] h-full box-border mt-7">

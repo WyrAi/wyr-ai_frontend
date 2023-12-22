@@ -18,11 +18,6 @@ const DropDown = ({ children }) => {
         receiverid: userInformation?.email , 
       }).then((res) => console.log(res)).catch((err) => console.log(err))
 
-      
-
-      // console.log(response.data.message); // Log the response message
-
-      // You can perform additional actions based on the response if needed
     } catch (error) {
       console.error("Error updating seen status:", error);
       // Handle error, show error message, etc.
