@@ -5,7 +5,7 @@ import logo from "../assets/logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 import userGloabalContext from "../UserContext";
 import React from "react";
-import { deleteToken } from "../Utils/authUtils";
+import socket from "../Components/socket";
 
 const Nav = () => {
   const { userInformation, userRights } = userGloabalContext();
@@ -22,12 +22,13 @@ const Nav = () => {
     }
     return [];
   }, [userInformation?.role?.SelectAccess]);
-  console.log(userRights);
 
-  const logoutHandlemethod = () => {
-    deleteToken();
-    navigate("/login");
-  };
+  const logoutHandlemethod = () =>{
+    console.log("logout emit")
+    // deleteToken()
+    socket.emit("remove",(socket.id))
+    navigate("/login")
+  }
   return (
     <>
       <div className="h-screen flex flex-col justify-start  items-center bg-white overflow-hidden ">
@@ -35,6 +36,7 @@ const Nav = () => {
           <Link to="/user" className="w-full flex justify-center">
             <img src={logo} alt="" className="w-[200px]" />
           </Link>
+
           <div className=" flex flex-col items-center gap-5 w-full box-border">
             {sideBarData?.map((item, index) => {
               if (accessArray.includes(item.name)) {
@@ -60,6 +62,33 @@ const Nav = () => {
               <span>Logout</span>
             </button>
           </div>
+
+//           {sideBarData?.map((item, index) => {
+//             if (accessArray.includes(item.name)) {
+//               return (
+//                 <Link
+//                   to={item.link}
+//                   key={index}
+//                   className="flex items-center gap-3 py-3 h-14 w-[100%] hover:bg-blue hover:text-white rounded-xl pl-7 pr-5 "
+//                 >
+//                   {item.icon}
+//                   <span>{item.heading}</span>
+//                 </Link>
+//               );
+//             }
+//           })}
+//         </div>
+
+//         <div className="w-1/2 m-auto">
+//           <button
+//             className="flex gap-3 items-center  "
+//             onClick={() => logoutHandlemethod()}
+//           >
+
+//             <img src={logout} alt="logout" />
+//             <span>Logout</span>
+//           </button>
+
         </div>
       </div>
     </>

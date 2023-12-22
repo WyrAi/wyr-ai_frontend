@@ -52,7 +52,23 @@ const UserMgt = () => {
     //   }
     // );
 
+
     fetchData();
+
+    wyraiApi
+      .delete("/api/registerEmployeeDelete", {
+        data: {
+          checkedItems,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        fetchData();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
   };
   useEffect(() => {
     fetchData();
