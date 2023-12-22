@@ -15,10 +15,11 @@ import SuccessRelation from "./SuccessRelation";
 import axios from "axios";
 import wyraiApi from "../api/wyraiApi";
 
-import socket from "../Components/socket";
+import initSocket from "../Components/socket";
 
 const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
 
+  const socket = initSocket();
   const { role, companyId } = userGloabalContext();
   const [roles, setRoles] = React.useState([
     { id: 0, name: "Buyer", icon: Buyer, selected: false },

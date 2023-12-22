@@ -6,23 +6,38 @@ import search from "../assets/Search.svg";
 import logo from "../assets/logo.svg";
 import userGloabalContext from "../UserContext";
 import { useState,useEffect } from "react";
+<<<<<<< HEAD
+=======
+import axios from "axios";
+>>>>>>> prince
 import '../App.css'
 // DropDown.js
 const DropDown = ({ children }) => {
+  const {userInformation} = userGloabalContext();
+  const handleAllRead = () => {
+    try {
+      console.log("the log of update");
+       axios.post("http://localhost:5000/api/updatenotifactionstatus", {
+        receiverid: userInformation?.email , 
+      }).then((res) => console.log(res)).catch((err) => console.log(err))
+
+    } catch (error) {
+      console.error("Error updating seen status:", error);
+      // Handle error, show error message, etc.
+    }
+  }
+
+
   return (
     <div className="relative">
       <div className="dropdown-notch"></div>
       <div className="absolute top-2 right-[-10px] mt-3 w-96 bg-white rounded-xl shadow-2xl border z-50">
         <div className="flex justify-between items-center px-4 py-2 ">
           <h2 className="text-lg  text-gray-700 ">Notification</h2>
-          <button className="text-md text-blue-600  text-blue underline underline-offset-1">Mark All As Read</button>
+          <button className="text-md text-blue-600  text-blue underline underline-offset-1" onClick={handleAllRead} >Mark All As Read</button>
         </div>
         <ul className="overflow-y-auto max-h-56 px-4">
           {children}
-          <p className="relative">flksadkk</p>
-          <p className="relative">flksadkkkkkk</p>
-          <p className="relative">flksadkkkkkk</p>
-          <p className="relative">flksadkkkkkk</p>
           {/* Add more <p> tags as needed */}
         </ul>
       </div>
@@ -37,8 +52,15 @@ const DropDown = ({ children }) => {
 
 
 const Header = () => {
+<<<<<<< HEAD
   const { notification, setNotifications } = userGloabalContext();
   const [popup, setPopup] = useState(true);
+=======
+  const { notification, fetchNotification } = userGloabalContext();
+  console.log("notification length",(notification.filter((notification) => notification.seen === true)).length);
+  
+  const [popup, setPopup] = useState(false);
+>>>>>>> prince
 
   return (
     <header className="bg-white h-full mb-5 ">
@@ -69,10 +91,17 @@ const Header = () => {
           <Link href="#" className="text-gray-600 hover:text-gray-900">
             {/* <ShoppingBagIcon className="h-6 w-6" aria-hidden="true" /> */}
             <div className="relative block" onClick={() => setPopup(!popup)}>
+<<<<<<< HEAD
             <img src={notify} alt="help" className="block" />
             {notification.length > 0 && (
               <span className="absolute top-4 right-[-15px] inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
                 {notification.length}
+=======
+            <img src={notify} alt="help" className="block" onClick={() => fetchNotification()} />
+            {notification.filter((notification) => notification.seen === false).length > 0 && (
+              <span className="absolute top-4 right-[-15px] inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
+                {notification.filter((notification) => notification.seen === false).length}
+>>>>>>> prince
               </span>
             )}
           </div>
@@ -85,9 +114,15 @@ const Header = () => {
                       return (
                         <li
                           key={index}
+<<<<<<< HEAD
                           className="py-2 flex items-center gap-4 mr-2 border-b w-[150px]"
                         >
                           <span className="flex-1 text-xs">{item}</span>
+=======
+                          className="py-2  gap-4 mr-2 border-b w-full"
+                        >
+                          <span className={` text-xs ${!item.seen && "font-semibold"}`}>{item.message}</span>
+>>>>>>> prince
                         </li>
                       );
                     })}

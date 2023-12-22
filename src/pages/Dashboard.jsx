@@ -6,7 +6,8 @@ import userGloabalContext from "../UserContext";
 import { useEffect } from "react";
 import { useState } from "react";
 import useToast from "../Contexts/ToasterContext";
-import socket from "../Components/socket";
+import initSocket from "../Components/socket";
+import axios from "axios";
 
 const InspectionCard = () => {
   return (
@@ -23,15 +24,16 @@ const InspectionCard = () => {
 };
 
 const Dashboard = () => {
-  const {
-    getUserInformation,
-    companyId,
-    userInformation,
-    notification,
-    setNotifications,
-  } = userGloabalContext();
+
+  const socket = initSocket();
+
+  console.log("gggggggggggggg",socket);
+
+  const { getUserInformation, companyId, userInformation,notification ,fetchNotification} = userGloabalContext();
   const toast = useToast();
 
+  
+  
   const status = {
     active: { name: "Active", Current: 0, color: "#EFD780" },
     approve: { name: "Approve", Current: 0, color: "#B8B8FF" },
@@ -44,25 +46,25 @@ const Dashboard = () => {
     }
   }, []);
 
+  socket.on("getText", async (data) => {
+    window.alert(data.text)
+   fetchNotification();
+  });
+  
   useEffect(() => {
-    console.log("Notification component mounted", socket.id);
-    socket.on("getText", async (data) => {
-      const response = await fetch(
-        `http://localhost:5000/api/getnotificationMessage/sk9313725@gmail.com`
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+    console.log("userINformation",userInformation?.email);
+    if (userInformation?.email) {
+      console.log("Notification component mounted", socket.id);
+      
+      try {
+        fetchNotification();
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
       }
-      const result = await response.json();
-      const notyData = result?.map((item) => item.text);
-      console.log(notyData);
-      setNotifications((prev) => [...prev, ...notyData]);
-
-      console.log("Notification component:", result);
-      window.alert(data.text);
-    });
-  }, [socket]);
+    }
+  }, [userInformation]);
+  console.log("61=====>",socket.id)
+  console.log("gfkuljknlj====>",socket.id);
 
   return (
     <div className="ml-5 w-[85%] h-full box-border mt-7">
