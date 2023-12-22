@@ -12,7 +12,6 @@ import { LoginSchema } from "../validationSchemas/loginSchema";
 import socket from "../Components/socket";
 import io from "socket.io-client";
 
-
 const Login = () => {
   // const [socket, setSocket] = useState("");
   // const navigate = useNavigate();
@@ -36,28 +35,26 @@ const Login = () => {
   //   };
   // }, []);
 
+  //   const saveNotificationUser = async () => {
+  //     try {
+  //       const response = await fetch("http://localhost:5000/api/socketuser", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ user:formData.email, socket:socket.id }),
+  //       });
 
-//   const saveNotificationUser = async () => {
-//     try {
-//       const response = await fetch("http://localhost:5000/api/socketuser", {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({ user:formData.email, socket:socket.id }),
-//       });
-
-//       if (response.ok) {
-//         const data = await response.json();
-//         console.log("NotificationUser saved successfully:", data);
-//       } else {
-//         console.error("Failed to save NotificationUser");
-//       }
-//     } catch (error) {
-//       console.error("Error saving NotificationUser:", error);
-//     }
-//   };
-
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         console.log("NotificationUser saved successfully:", data);
+  //       } else {
+  //         console.error("Failed to save NotificationUser");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error saving NotificationUser:", error);
+  //     }
+  //   };
 
   // const handleChange = (e) => {
   //   const { name, value } = e.target;
@@ -66,7 +63,6 @@ const Login = () => {
   //     [name]: value,
   //   }));
   // };
-
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -84,7 +80,7 @@ const Login = () => {
       .catch((err) => {
         console.log(err);
       });
-  }
+  };
 
   // const loginUser = async (e) => {
   //   e.preventDefault();
@@ -138,6 +134,9 @@ const Login = () => {
       const res = await wyraiApi.post(`/api/UserPasswordReset`, {
         email: values.Email,
       });
+      if (res.status === 200) {
+        alert(res.data.message);
+      }
       console.log(res);
     } catch (error) {
       console.log(error);
