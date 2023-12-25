@@ -216,23 +216,22 @@ function PurchaseOrder() {
         status = "Pending Approval";
       }
 
+      //   async function handleSubmit(e) {
+      //     let status = "";
+      //     if (
+      //       userInformation?.role?.SelectAccess?.purchaseOrder?.some(
+      //         (item) => item === "Approve"
+      //       )
+      //     ) {
+      //       status = "Published";
+      //     } else {
+      //       status = "Pending Approval";
+      //     }
+      //     // console.log(slotOfProducts.length);
+      //     let requestBody = {};
+      //     if (slotOfProducts.length > 0) {
+      //       requestBody = {
       const requestBody = {
-//   async function handleSubmit(e) {
-//     let status = "";
-//     if (
-//       userInformation?.role?.SelectAccess?.purchaseOrder?.some(
-//         (item) => item === "Approve"
-//       )
-//     ) {
-//       status = "Published";
-//     } else {
-//       status = "Pending Approval";
-//     }
-//     // console.log(slotOfProducts.length);
-//     let requestBody = {};
-//     if (slotOfProducts.length > 0) {
-//       requestBody = {
-
         purchaseDoc,
         buyer: ids.buyerId,
         vendor: ids.vendorId,
@@ -266,115 +265,115 @@ function PurchaseOrder() {
               // If the item is an object or array, you might need to stringify it before appending
               formData.append(`${key}[${index}]`, JSON.stringify(item));
 
-//         status,
-//       };
-//     } else {
-//       requestBody = {
-//         purchaseDoc,
-//         buyer: ids.buyerId,
-//         vendor: ids.vendorId,
-//         shiptoName: formik.values.shiptoName,
-//         shiptoAdd: formik.values.shiptoAdd,
-//         shipVia: formik.values.shipVia,
-//         shipDate: formik.values.shipDate,
-//         assignedPeople: peopleOfInterest.map((item) => item.id),
-//         poNumber: formik.values.poNumber,
-//         products: [{ ...productList, images: imagesFiles }],
-//         status,
-//       };
-//     }
+              //         status,
+              //       };
+              //     } else {
+              //       requestBody = {
+              //         purchaseDoc,
+              //         buyer: ids.buyerId,
+              //         vendor: ids.vendorId,
+              //         shiptoName: formik.values.shiptoName,
+              //         shiptoAdd: formik.values.shiptoAdd,
+              //         shipVia: formik.values.shipVia,
+              //         shipDate: formik.values.shipDate,
+              //         assignedPeople: peopleOfInterest.map((item) => item.id),
+              //         poNumber: formik.values.poNumber,
+              //         products: [{ ...productList, images: imagesFiles }],
+              //         status,
+              //       };
+              //     }
 
-//     if (e.target.type === "submit") {
-//       wyraiApi
-//         .post("/api/purchaseOrder", requestBody)
-//         .then((res) =>{
-//           navigate(-1)
+              //     if (e.target.type === "submit") {
+              //       wyraiApi
+              //         .post("/api/purchaseOrder", requestBody)
+              //         .then((res) =>{
+              //           navigate(-1)
 
-//           const data={
-//             senderName:"",
-//             text:`connection request from the ${values.email}`
-//           }
+              //           const data={
+              //             senderName:"",
+              //             text:`connection request from the ${values.email}`
+              //           }
 
-//           socket.emit("RelationshipsText", {data});
-//         } )
-//         .catch((err) => console.log(err));
-//     } else {
-//       wyraiApi
-//         .post(`/api/PuracheseOrderDraft/${userInformation?._id}`, requestBody)
-//         .then((res) => navigate(-1))
-//         .catch((err) => console.log(err));
-//     }
-//     // if (slotOfProducts.length > 0) {
-//     //   requestBody = {
-//     //     purchaseDoc,
-//     //     buyer: ids.buyerId,
-//     //     vendor: ids.vendorId,
-//     //     shiptoName: formik.values.shiptoName,
-//     //     shiptoAdd: formik.values.shiptoAdd,
-//     //     shipVia: formik.values.shipVia,
-//     //     shipDate: formik.values.shipDate,
-//     //     assignedPeople: peopleOfInterest.map((item) => item.id),
-//     //     poNumber: formik.values.poNumber,
-//     //     products: [...slotOfProducts],
-//     //     status,
-//     //   };
-//     // } else {
-//     //   requestBody = {
-//     //     purchaseDoc,
-//     //     buyer: ids.buyerId,
-//     //     vendor: ids.vendorId,
-//     //     shiptoName: formik.values.shiptoName,
-//     //     shiptoAdd: formik.values.shiptoAdd,
-//     //     shipVia: formik.values.shipVia,
-//     //     shipDate: formik.values.shipDate,
-//     //     assignedPeople: peopleOfInterest.map((item) => item.id),
-//     //     poNumber: formik.values.poNumber,
-//     //     products: [{ ...productList, images: imagesFiles }],
-//     //     status,
-//     //   };
-//     // }
-//     requestBody = {
-//       purchaseDoc,
-//       buyer: ids.buyerId,
-//       vendor: ids.vendorId,
-//       shiptoName: formik.values.shiptoName,
-//       shiptoAdd: formik.values.shiptoAdd,
-//       shipVia: formik.values.shipVia,
-//       shipDate: formik.values.shipDate,
-//       assignedPeople: peopleOfInterest.map((item) => item.id),
-//       poNumber: formik.values.poNumber,
-//       products: [...slotOfProducts],
-//       productImages: imgFormUploadData,
-//       status,
-//     };
-//     // console.log(requestBody);
+              //           socket.emit("RelationshipsText", {data});
+              //         } )
+              //         .catch((err) => console.log(err));
+              //     } else {
+              //       wyraiApi
+              //         .post(`/api/PuracheseOrderDraft/${userInformation?._id}`, requestBody)
+              //         .then((res) => navigate(-1))
+              //         .catch((err) => console.log(err));
+              //     }
+              //     // if (slotOfProducts.length > 0) {
+              //     //   requestBody = {
+              //     //     purchaseDoc,
+              //     //     buyer: ids.buyerId,
+              //     //     vendor: ids.vendorId,
+              //     //     shiptoName: formik.values.shiptoName,
+              //     //     shiptoAdd: formik.values.shiptoAdd,
+              //     //     shipVia: formik.values.shipVia,
+              //     //     shipDate: formik.values.shipDate,
+              //     //     assignedPeople: peopleOfInterest.map((item) => item.id),
+              //     //     poNumber: formik.values.poNumber,
+              //     //     products: [...slotOfProducts],
+              //     //     status,
+              //     //   };
+              //     // } else {
+              //     //   requestBody = {
+              //     //     purchaseDoc,
+              //     //     buyer: ids.buyerId,
+              //     //     vendor: ids.vendorId,
+              //     //     shiptoName: formik.values.shiptoName,
+              //     //     shiptoAdd: formik.values.shiptoAdd,
+              //     //     shipVia: formik.values.shipVia,
+              //     //     shipDate: formik.values.shipDate,
+              //     //     assignedPeople: peopleOfInterest.map((item) => item.id),
+              //     //     poNumber: formik.values.poNumber,
+              //     //     products: [{ ...productList, images: imagesFiles }],
+              //     //     status,
+              //     //   };
+              //     // }
+              //     requestBody = {
+              //       purchaseDoc,
+              //       buyer: ids.buyerId,
+              //       vendor: ids.vendorId,
+              //       shiptoName: formik.values.shiptoName,
+              //       shiptoAdd: formik.values.shiptoAdd,
+              //       shipVia: formik.values.shipVia,
+              //       shipDate: formik.values.shipDate,
+              //       assignedPeople: peopleOfInterest.map((item) => item.id),
+              //       poNumber: formik.values.poNumber,
+              //       products: [...slotOfProducts],
+              //       productImages: imgFormUploadData,
+              //       status,
+              //     };
+              //     // console.log(requestBody);
 
-//     // uncomment below api to set submit and draft , told backend guy images files has been changed
-//     // console.log(requestBody.pr);
+              //     // uncomment below api to set submit and draft , told backend guy images files has been changed
+              //     // console.log(requestBody.pr);
 
-//     const formData = new FormData();
-//     const imgData = new FormData();
+              //     const formData = new FormData();
+              //     const imgData = new FormData();
 
-//     // requestBody.productImages.map((product, productIndex) => {
-//     //   product.map((e, index) => {
-//     //     imgData.append(
-//     //       `productImage[${productIndex}][${index}].${e.name}`,
-//     //       e.file
-//     //     );
-//     //   });
-//     //   // product[imgIndex] = imgData;
-//     // });
-//     // requestBody.productImages = []
-//     Object.keys(requestBody).forEach((key) => {
-//       if (Array.isArray(requestBody[key])) {
-//         // console.log(key);
-//         if (key === "productImages") {
-//           requestBody[key].map((product, productIndex) => {
-//             product.map((e, index) => {
-//               formData.append(
-//                 `productImage[${productIndex}][${index}].${e.name}`,
-//                 e.file
-//               );
+              //     // requestBody.productImages.map((product, productIndex) => {
+              //     //   product.map((e, index) => {
+              //     //     imgData.append(
+              //     //       `productImage[${productIndex}][${index}].${e.name}`,
+              //     //       e.file
+              //     //     );
+              //     //   });
+              //     //   // product[imgIndex] = imgData;
+              //     // });
+              //     // requestBody.productImages = []
+              //     Object.keys(requestBody).forEach((key) => {
+              //       if (Array.isArray(requestBody[key])) {
+              //         // console.log(key);
+              //         if (key === "productImages") {
+              //           requestBody[key].map((product, productIndex) => {
+              //             product.map((e, index) => {
+              //               formData.append(
+              //                 `productImage[${productIndex}][${index}].${e.name}`,
+              //                 e.file
+              //               );
 
             });
           }
@@ -1102,7 +1101,7 @@ function PurchaseOrder() {
                 <button
                   type="button"
                   className="bg-blue flex gap-2 items-center z-10 absolute right-[5vh] top-[110px] py-2 px-4 rounded text-white"
-                  // onClick={() => setShowPurchaseOrder(true)}
+                // onClick={() => setShowPurchaseOrder(true)}
                 >
                   <AiOutlineSearch className="text-white text-2xl" />
                   Preview
