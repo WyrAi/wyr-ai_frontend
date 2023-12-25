@@ -382,21 +382,21 @@ function PurchaseOrder() {
         }
       });
 
-      // for (let pair of formData.entries()) {
-      //   console.log(pair);
-      // }
+      for (let pair of formData.entries()) {
+        console.log(pair);
+      }
 
-      // const response = await axios.post(
-      //   import.meta.env.VITE_BASE_URL + `/api/purchaseOrder`,
-      //   formData,
-      //   {
-      //     headers: {
-      //       "Content-Type": "multipart/form-data",
-      //     },
-      //   }
-      // );
+      const response = await axios.post(
+        import.meta.env.VITE_BASE_URL + `/api/purchaseOrder`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
-      // console.log(response, "PO");
+      console.log(response, "PO");
 
       if (e.target.type === "submit") {
         wyraiApi
