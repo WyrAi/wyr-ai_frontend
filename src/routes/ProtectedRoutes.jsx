@@ -17,6 +17,7 @@ import Information from "../pages/Information";
 import InspectionForm from "../Components/InspectionForm";
 import QcInspection from "../pages/QcInspection";
 import InspectionView from "../Components/InspectionView";
+import ReportVideos from "../pages/ReportVideos";
 
 const IsRouteAllowed = (props) => {
   const { hasPermissions, children } = props;
@@ -51,6 +52,7 @@ const ProtectedRoutes = () => {
         <Route path="/inspection/add" element={<InspectionForm />} />
         <Route path="/qcInspection" element={<QcInspection />} />
         <Route path="/inspection/view/:id" element={<InspectionView />} />
+        <Route path="/ReportVideos" element={<ReportVideos />} />
         {/* {userRights?.userManagement?.length ? ( */}
         <Route
           path="/user"
@@ -66,6 +68,7 @@ const ProtectedRoutes = () => {
         ) : null}
 
         <Route path="/relationShip" element={<RelationShip />} />
+
         <Route path="*" element={<Page404 />} />
       </Route>
     </Routes>
