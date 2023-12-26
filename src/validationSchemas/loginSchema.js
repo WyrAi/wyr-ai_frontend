@@ -10,7 +10,7 @@ export const LoginSchema = Yup.object({
     .email("Invalid email address")
     .required("Please enter Email"),
   // .matches(EmailRegex, "Invalid Email")
-  Password: Yup.string().max(8).required("Please enter Password"),
+  Password: Yup.string().required("Please enter Password"),
 
   // .matches(Password, "Password limit eight characters")
 });

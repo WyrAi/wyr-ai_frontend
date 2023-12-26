@@ -17,6 +17,10 @@ const userContext = createContext();
 export const UserContextProvider = ({ children }) => {
   const navigate = useNavigate();
   const [branchData, setBranchData] = useState(null);
+  const [activeMenu, setActiveMenu] = useState(true);
+  const [screenSize, setScreenSize] = useState(undefined);
+  const [imgFormUploadData, setImgFormUploadData] = useState([]);
+
   const [notification, setNotifications] = useState([]);
   const [comments, setComments] = useState([]);
   const [productList, setProductList] = useState({
@@ -39,7 +43,7 @@ export const UserContextProvider = ({ children }) => {
   const [roleData, setRoleData] = useState([]);
   const [userInformation, setUserInformation] = useState(null);
   const [token, setToken] = useState(getAuthToken());
-  const [render, setRender] = useState(false);
+  // const [render, setRender] = useState(false);
 
   const [userData, setUserData] = useState(null);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -48,10 +52,7 @@ export const UserContextProvider = ({ children }) => {
 
   // PO popup and images file
   const [popUpload, setPopUpload] = useState(false);
-  const [imagesFiles, setImagesFiles] = useState({
-    name: "",
-    file: "",
-  }); // set imnages file for products in purchase Order
+  const [imagesFiles, setImagesFiles] = useState([]); // set imnages file for products in purchase Order
 
   const reqimg = {
     backImage: undefined,
@@ -216,6 +217,13 @@ export const UserContextProvider = ({ children }) => {
           startTime,
           branchData,
           role,
+          activeMenu,
+          imgFormUploadData,
+          screenSize,
+          setScreenSize,
+          setImgFormUploadData,
+          setActiveMenu,
+
           notification,
           fetchNotification,
           setNotifications,
@@ -236,8 +244,8 @@ export const UserContextProvider = ({ children }) => {
           getUserInformation,
           userInformation,
           userRights,
-          render,
-          setRender,
+          // render,
+          // setRender,
           setUserData,
           userData,
         }}

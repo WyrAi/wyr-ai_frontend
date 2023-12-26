@@ -87,6 +87,7 @@ const RelationShip = () => {
           .then((res) => {
             console.log(res);
             fetchRelation();
+            setSelectRelation({ id: "" });
           })
           .catch((err) => console.log(err));
       }
@@ -101,6 +102,7 @@ const RelationShip = () => {
           .put(`/api/approvedRelationship/${selectRelation.id}`)
           .then((res) => {
             console.log(res);
+            setSelectRelation({ id: "" });
             fetchRelation();
           })
           .catch((err) => console.log(err));
@@ -208,7 +210,7 @@ const RelationShip = () => {
         </div>
       </div>
       <div className=" mx-2 w-full flex-1 flex flex-col">
-        <div className="flex flex-w gap-2  mt-5 flex-wrap">
+        <div className="flex flex-w h-full gap-2  mt-5 flex-wrap">
           {allRelation?.map((value, index) => {
             return (
               <div className="bg-gray-50 h-[120px] w-[295px]" key={index}>
@@ -217,7 +219,6 @@ const RelationShip = () => {
                   relation={value.relationId}
                   selectRelationmethod={handleselectRelation}
                   RelationMethod={fetchRelation}
-                  ationMethod={fetchRelation}
                 />
               </div>
             );

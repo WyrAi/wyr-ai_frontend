@@ -10,6 +10,7 @@ import { AiFillDelete } from "react-icons/ai";
 import { RxCrossCircled } from "react-icons/rx";
 import { useFormik } from "formik";
 import InputField from "../container/InputField";
+import Prompt from "../DasiyUIComponents/Prompt";
 
 const Information = () => {
   const [data, setData] = React.useState([]);
@@ -20,7 +21,9 @@ const Information = () => {
     parentIndex: "",
     text: "",
   });
-
+  const [sendEmail, setSendEmail] = React.useState("");
+  const [PDFStore, setPDFStore] = React.useState("");
+  const [buttonStatus, setButtonStatus] = React.useState(false);
   const InformationGet = async () => {
     try {
       const { data } = await axios.get(`${baseURL}/api/AllInformationGet`);
@@ -133,84 +136,16 @@ const Information = () => {
       console.log(error);
     }
   }
-  //it is working code
-  // const downloadPDF = () => {
-  //   const capture = document.querySelector(".actual-receipt");
-  //   // Check if the capture element is found
 
-  //   if (capture) {
-  //     // Use html2canvas options to wait for images to load
-  //     const ignoreElements = [
-  //       ".input-comments",
-  //       ".delete-button",
-  //       ".download-Button",
-  //     ];
+  const downloadPDF = async () => {
+    return new Promise((resolve, reject) => {
+      const capture = document.querySelector(".actual-receipt");
 
-  //     // // Remove ignored elements from the clone
-  //     // ignoreElements.forEach((selector) => {
-  //     //   const elementsToRemove = clone.querySelectorAll(selector);
-  //     //   elementsToRemove.forEach((element) =>
-  //     //     element.parentNode.removeChild(element)
-  //     //   );
-  //     // });
-  //     // window.onload = function () {
-  //     html2canvas(capture, {
-  //       useCORS: true,
-  //       quality: 1,
-  //       type: "image/png",
-  //       // width: window.innerWidth, // Set the width to the viewport width
-  //       // height: window.innerHeight,
-  //       // scale: 1, // Set the scale to 1 (no scaling)
-  //       logging: true,
-  //       allowTaint: true,
-  //       proxy: "path/to/proxy", // Provide a path to a proxy if needed
-  //       ignoreElements: (element) => {
-  //         // Check if the element should be ignored
-  //         return ignoreElements.some((selector) => element.matches(selector));
-  //       },
-  //     }).then((canvas) => {
-  //       // Create PDF using jsPDF
-  //       const imgData = canvas.toDataURL("image/png");
-  //       // const doc = new jsPDF("p", "mm", "a4");
-  //       // console.log(imgData);
-  //       // const componentWidth = doc.internal.pageSize.getWidth();
-  //       // const componentHeight = doc.internal.pageSize.getHeight();
-  //       // const imgWidth = 210; // A4 page width in mm
-  //       // const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      if (!capture) {
+        reject(new Error("Element with class 'actual-receipt' not found."));
+        return;
+      }
 
-  //       // // Add the image to the PDF
-  //       // doc.addImage(imgData, 'PNG', 0, 0);
-  //       // // doc.addImage(imgData, "PNG", 0, 0, componentWidth, componentHeight);
-  //       // doc.save("receipt.pdf");
-  //       var imgWidth = 210;
-  //       var pageHeight = 295;
-  //       var imgHeight = (canvas.height * imgWidth) / canvas.width;
-  //       var heightLeft = imgHeight;
-
-  //       var doc = new jsPDF("p", "mm");
-  //       var position = 0;
-
-  //       doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-  //       heightLeft -= pageHeight;
-
-  //       while (heightLeft >= 0) {
-  //         position = heightLeft - imgHeight;
-  //         doc.addPage();
-  //         doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-  //         heightLeft -= pageHeight;
-  //       }
-  //       doc.save("file.pdf");
-  //     });
-  //     // };
-  //   } else {
-  //     console.error("Element with class 'actual-receipt' not found.");
-  //   }
-  // };
-
-  const downloadPDF = () => {
-    const capture = document.querySelector(".actual-receipt");
-
-    if (capture) {
       const ignoreElements = [
         ".input-comments",
         ".delete-button",
@@ -227,13 +162,13 @@ const Information = () => {
         ignoreElements: (element) => {
           return ignoreElements.some((selector) => element.matches(selector));
         },
-      }).then((canvas) => {
+      }).then(async (canvas) => {
         const imgData = canvas.toDataURL("image/png");
         const imgWidth = 210;
         const pageHeight = 295;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        const topMargin = 20; // Adjust top margin
-        const lowerMargin = 20; // Adjust lower margin
+        const topMargin = 20;
+        const lowerMargin = 20;
 
         const doc = new jsPDF("p", "mm");
 
@@ -249,61 +184,65 @@ const Information = () => {
           heightLeft -= pageHeight;
         }
 
-        doc.save("file.pdf");
+        const pdfData = doc.output("arraybuffer");
+        const blob = new Blob([pdfData], { type: "application/pdf" });
+        resolve(blob);
       });
-    } else {
-      console.error("Element with class 'actual-receipt' not found.");
+    });
+  };
+
+  const PdfCreateAndVideoCheck = async () => {
+    try {
+      const pdf = await downloadPDF();
+      if (!pdf) {
+        alert("PDF generation failed.");
+        return;
+      }
+
+      setPDFStore(pdf);
+
+      const { data } = await axios.get(`${baseURL}/api/VideoCheck`);
+      if (!data.status) {
+        alert(
+          "We are still processing the video. Please check the spellings after some time."
+        );
+      }
+
+      if (data.status && PDFStore) {
+        setButtonStatus(true);
+      } else {
+        alert("The PDF is generating.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while generating the PDF.");
     }
   };
 
-  // const downloadPDF = () => {
-  //   const capture = document.querySelector(".actual-receipt");
-
-  //   if (capture) {
-  //     const ignoreElements = [
-  //       ".input-comments",
-  //       ".delete-button",
-  //       ".download-Button",
-  //     ];
-
-  //     html2canvas(capture, {
-  //       useCORS: true,
-  //       quality: 1,
-  //       type: "image/png",
-  //       logging: true,
-  //       allowTaint: true,
-  //       proxy: "path/to/proxy",
-  //       ignoreElements: (element) => {
-  //         return ignoreElements.some((selector) => element.matches(selector));
-  //       },
-  //     }).then((canvas) => {
-  //       const imgData = canvas.toDataURL("image/png");
-  //       const imgWidth = 210;
-  //       const pageHeight = 295;
-  //       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  //       const topMargin = 20; // Adjust top margin
-  //       const upperMargin = 25; // Adjust upper margin
-
-  //       const doc = new jsPDF("p", "mm");
-
-  //       let position = upperMargin;
-
-  //       doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-  //       let heightLeft = imgHeight - pageHeight + upperMargin;
-
-  //       while (heightLeft >= 0) {
-  //         position = heightLeft - imgHeight + upperMargin;
-  //         doc.addPage();
-  //         doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-  //         heightLeft -= pageHeight;
-  //       }
-
-  //       doc.save("file.pdf");
-  //     });
-  //   } else {
-  //     console.error("Element with class 'actual-receipt' not found.");
-  //   }
-  // };
+  const EmailHandleMethod = async () => {
+    try {
+      console.log(PDFStore, "HIIIIII");
+      let formData = new FormData();
+      formData.append("email", sendEmail);
+      formData.append("file", PDFStore, "file.pdf");
+      const { data } = await axios.post(
+        `${baseURL}/api/ReportEmailSend`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (data.status) {
+        setButtonStatus(false);
+        setPDFStore(null);
+      }
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     InformationGet();
@@ -311,13 +250,72 @@ const Information = () => {
   return (
     <>
       <div className="w-full h-screen overflow-y-auto  ">
-        <div className=" text-right download-Button  py-3 px-4 right-0">
+        <div className=" flex justify-end gap-5 download-Button  py-3 px-4 right-0">
           <button
             className="bg-[#1e96fc] rounded-md px-4 py-2  font-medium text-lg text-white"
             onClick={() => downloadPDF()}
           >
             Download
           </button>
+          {buttonStatus ? (
+            <Prompt
+              btnText={
+                <button
+
+                  className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white ml-5 w-[300px] h-[50px] mb-1"
+                  onClick={() => console.log("first")}
+
+//                   className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white "
+                  // onClick={() => PdfCreateAndVideoCheck()}
+
+                >
+                  Email
+                </button>
+              }
+              modalID={"sendEmail"}
+            >
+              <div className="w-[80%] mx-auto flex flex-col gap-5">
+                <h1 className="text-center text-xl font-semibold ">
+                  Send Report{" "}
+                </h1>
+                <div className="flex gap-1 items-end">
+                  <div
+                    className={`border-2 border-[#99999980]  relative p-[15px] flex flex-col rounded-lg mt-5 w-full bg-white `}
+                  >
+                    <label
+                      htmlFor={"email"}
+                      className="absolute top-[-11px] bg-white text-color px-3"
+                    >
+                      {"Email"}
+                    </label>
+                    <input
+                      type={"email"}
+                      name={"email"}
+                      id={"email"}
+                      placeholder={"Enter the Email Id"}
+                      className="border-0 outline-none placeholder-[#CCCCCC]"
+                      value={sendEmail}
+                      onChange={(e) => setSendEmail(e.target.value)}
+                      autoComplete="off"
+                    />
+                  </div>
+                  <button
+                    className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white ml-5 w-[300px] h-[50px] mb-1"
+                    onClick={() => EmailHandleMethod()}
+                  >
+                    Send
+                  </button>
+                </div>
+              </div>
+            </Prompt>
+          ) : (
+            <button
+              className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white "
+              onClick={() => PdfCreateAndVideoCheck()}
+            >
+              PDF & Video Gernate
+            </button>
+          )}
         </div>
         <div className=" flex flex-col items-center actual-receipt p-6 w-full">
           <img
@@ -474,6 +472,12 @@ const Information = () => {
             onClick={() => downloadPDF()}
           >
             Download
+          </button>{" "}
+          <button
+            className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white"
+            onClick={() => EmailHandleMethod()}
+          >
+            Email
           </button>
         </div>
       </div>

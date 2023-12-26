@@ -64,8 +64,10 @@ const Purchase = () => {
   const [selectedFilter, setSelectedFilter] = useState(filters[0]);
   const [sortFilter, setSortFilter] = useState(sortFilter_Opt[0]);
   const [allPOrder, setAllPOrder] = useState([]);
+  const [filterData, setFilterData] = useState([]);
   const navigate = useNavigate();
   const { userInformation } = userGloabalContext();
+  // console.log(window.innerHeight);
 
   function handleAddPage() {
     try {
@@ -76,24 +78,40 @@ const Purchase = () => {
   }
 
   const FetchAllPOrders = async () => {
-    console.log(userInformation);
+    // console.log(userInformation);
     const id = userInformation._id;
 
     wyraiApi
       .get(`api/purchaseOrder/${id}`)
-      .then((res) => setAllPOrder(res?.data?.Response?.poList))
+      .then((res) => {
+        setAllPOrder(res?.data?.Response?.poList);
+        setFilterData(res?.data?.Response?.poList);
+      })
       .catch((err) => console.log(err));
 
     // // if (data.Order) setAllPOrder(data.Order);
   };
-  console.log(allPOrder);
+
+  const filterDataByStatus = (status) => {
+    const filtered = allPOrder.filter((item) => item.status === status);
+    setFilterData(filtered);
+  };
 
   useEffect(() => {
     FetchAllPOrders();
   }, [selectedFilter]);
 
+  useEffect(() => {
+    if (sortFilter.text !== "All") {
+      filterDataByStatus(sortFilter.text);
+    } else {
+      FetchAllPOrders();
+    }
+  }, [sortFilter]);
+  console.log(filterData);
+
   return (
-    <main className="flex flex-col h-full">
+    <main className="flex flex-col h-full overflow-hidden">
       <div className="flex flex-col m-5">
         <div className="flex gap-1 items-center">
           <div className="w-full">
@@ -118,10 +136,11 @@ const Purchase = () => {
           />
         </div>
       </div>
-      <div className=" ml-5 w-full flex-1 flex flex-col">
-        <div className="flex flex-wrap w-full h-24 gap-6">
-          {allPOrder?.map((value, index) => {
+      <div className=" ml-5 w-[98%] h-[740px]  ">
+        <div className="flex flex-wrap w-full gap-6 overflow-y-auto">
+          {filterData?.map((value, index) => {
             const { poNumber, purchaseDoc, buyer, status } = value;
+            console.log(value);
             return (
               <PoCard
                 k={index}

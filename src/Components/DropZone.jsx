@@ -14,7 +14,10 @@ const DropZone = ({
   textSize,
   className,
   fileName,
-  method
+  method,
+  setLoader,
+  setFormData,
+
 }) => {
   const [files, setFiles] = useState([]);
   const [preview, setPreview] = useState("");
@@ -30,10 +33,12 @@ const DropZone = ({
         const file = acceptedFiles[0];
         // console.log(file);
         // console.log(file.type);
+
         const reader = new FileReader();
         reader.onload = (e) => {
           // Use reader.result
           onDrop(e.target.result);
+          // console.log(e.target.result);
           setPreview(e.target.result);
         };
         reader.readAsDataURL(file);
@@ -42,6 +47,24 @@ const DropZone = ({
     [onDrop]
   );
 
+  const onDropForm = useCallback(
+    (acceptedFiles) => {
+      if (setFormData) {
+        const file = acceptedFiles[0];
+        // console.log(file);
+        // console.log(file.type);
+        setFormData(file);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          // Use reader.result
+          // console.log(e.target.result);
+          setPreview(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    },
+    [setFormData]
+  );
   useEffect(() => {
     // console.log(files[0]);
     if (method) method(files[0]);
@@ -51,10 +74,14 @@ const DropZone = ({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: (acceptedFiles) => {
       console.log(acceptedFiles);
+      setLoader(true);
       setFiles(acceptedFiles);
+      onDropForm(acceptedFiles);
       onDropHandler(acceptedFiles);
     },
-    accept: accept || "image/*",
+    accept: accept || {
+      "image/*": [".jpeg", ".jpg", ".png"],
+    },
     multiple: multiple || false,
     maxSize: maxSize || 5242880,
   });
@@ -76,7 +103,7 @@ const DropZone = ({
       {files.length > 0 ? (
         <img
           src={preview}
-          className="object-cover overflow-hidden w-full flex-1"
+          className="object-cover object-top overflow-hidden w-full flex-1"
         ></img>
       ) : (
         <p

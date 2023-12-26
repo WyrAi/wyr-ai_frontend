@@ -3,9 +3,12 @@ import help from "../assets/noun-help-1459308.svg";
 import notify from "../assets/noun-notification-1040085 (1) 1.svg";
 import setting from "../assets/noun-setting-1835295 1.svg";
 import search from "../assets/Search.svg";
-import logo from "../assets/logo.svg";
+import { AiOutlineMenu } from "react-icons/ai";
 import userGloabalContext from "../UserContext";
+
+import logo from "../assets/logo.svg";
 import { useState,useEffect } from "react";
+
 import axios from "axios";
 import '../App.css'
 // DropDown.js
@@ -49,18 +52,25 @@ const DropDown = ({ children }) => {
 
 
 const Header = () => {
-  const { notification, fetchNotification } = userGloabalContext();
+
+
+  const { notification, setNotifications,activeMenu, setActiveMenu,screenSize,fetchNotification } = userGloabalContext();
+
+ 
   console.log("notification length",(notification.filter((notification) => notification.seen === true)).length);
   
   const [popup, setPopup] = useState(false);
 
   return (
     <header className="bg-white h-full mb-5 ">
-      <div className="grid grid-cols-[1fr_1fr_1fr] items-center pt-2 md:justify-start md:space-x-10">
-        <Link to="/user" className="w-full pl-[90px] pt-[22px] ">
-          <img src={logo} alt="" className="w-[112px]" />
-        </Link>
-        <div className="w-full">
+      <div className="grid grid-cols-[1fr_1fr] items-start pt-6 pb-4 md:justify-start md:space-x-10  px-6">
+        <div className="w-full flex gap-5 items-start">
+          {screenSize <= 768 && (
+            <AiOutlineMenu
+              className="text-black text-xl cursor-pointer ml-5 "
+              onClick={() => setActiveMenu((prev) => !prev)}
+            />
+          )}
           <div className="w-4/5 m-auto">
             <label htmlFor="search" className="sr-only">
               Search
@@ -72,21 +82,23 @@ const Header = () => {
               <input
                 id="search"
                 name="search"
-                className="block w-full pl-10 pr-4 py-4  rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="block w-full pl-10 pr-4 py-4 border rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 placeholder="Tap to Search"
                 type="search"
               />
             </div>
           </div>
         </div>
-        <div className=" flex items-center justify-start ">
+        <div className=" flex items-center justify-end  ">
           <Link href="#" className="text-gray-600 hover:text-gray-900">
             {/* <ShoppingBagIcon className="h-6 w-6" aria-hidden="true" /> */}
             <div className="relative block" onClick={() => setPopup(!popup)}>
+
             <img src={notify} alt="help" className="block" onClick={() => fetchNotification()} />
             {notification.filter((notification) => notification.seen === false).length > 0 && (
               <span className="absolute top-4 right-[-15px] inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
                 {notification.filter((notification) => notification.seen === false).length}
+
               </span>
             )}
           </div>
@@ -99,9 +111,11 @@ const Header = () => {
                       return (
                         <li
                           key={index}
+
                           className="py-2  gap-4 mr-2 border-b w-full"
                         >
                           <span className={` text-xs ${!item.seen && "font-semibold"}`}>{item.message}</span>
+
                         </li>
                       );
                     })}
@@ -122,8 +136,8 @@ const Header = () => {
           </Link>
           <Link href="#" className=" ml-6 text-gray-600 hover:text-gray-900">
             {/* Your Profile/Sign In Icon */}
-            <div className=" h-8 w-8 flex justify-center items-center bg-red-400  rounded-full">
-              <span className="p-2 ">A</span>
+            <div className=" h-8 w-8 flex justify-center items-center bg-red-500  rounded-full">
+              <span className="p-2 text-white ">A</span>
             </div>
           </Link>
         </div>

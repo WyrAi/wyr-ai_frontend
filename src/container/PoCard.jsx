@@ -4,13 +4,13 @@ import sample from "../assets/Rectangle 25.png";
 
 const PoCard = ({ id, purchaseDoc, buyer, status, statusLabel }) => {
   const statusUi = statusLabel.find((item) => item.text === status);
-  const color = statusUi.color || "";
-  console.log(color, statusLabel);
+  const color = statusUi?.color || "";
+  // console.log(color, statusLabel);
 
   return (
     <>
       <div
-        className={`flex gap-2 w-[290px] h-full items-center  pl-2 py-3 pr-4 bg-white mr-3`}
+        className={`flex gap-2 w-[290px] h-[100px] items-center  pl-2 py-3 pr-4 bg-white mr-3`}
         style={{ borderLeft: "2px solid" + color }}
       >
         <img src={purchaseDoc} alt="" className="w-16 h-16 flex-1" />

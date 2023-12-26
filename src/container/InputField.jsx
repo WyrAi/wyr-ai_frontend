@@ -13,6 +13,7 @@ const InputField = ({
   padding,
   type,
   disable,
+  onBlur,
 }) => {
   return (
     <>
@@ -33,6 +34,7 @@ const InputField = ({
           placeholder={placeholder}
           value={value}
           onChange={onChange}
+          onBlur={onBlur}
           onClick={handleClick}
           disabled={disable || false}
           autoComplete="off"
