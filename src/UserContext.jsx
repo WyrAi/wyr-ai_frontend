@@ -107,6 +107,19 @@ export const UserContextProvider = ({ children }) => {
       });
   };
 
+  const fetchNotification = () => {
+    try {
+      axios.get(`http://localhost:5000/api/getnotification/${userInformation?.email}`).then((res) => {
+        console.log(res);
+        const notyData = res?.data?.data;  //.map((item) => item.message); 
+        setNotifications((prev) => [...notyData]);
+      }).catch((err) => console.log(err));
+    } catch (error) {
+      console.log(error);
+    }
+  
+  }
+
   // const edit = (e) => {
   //   const id = e[0];
   //   userData.forEach((item) => {
@@ -212,6 +225,7 @@ export const UserContextProvider = ({ children }) => {
           setActiveMenu,
 
           notification,
+          fetchNotification,
           setNotifications,
           setStartTime,
           setImagesFiles,

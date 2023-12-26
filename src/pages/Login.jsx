@@ -9,12 +9,15 @@ import { userGloabalContext } from "../UserContext";
 import { useFormik } from "formik";
 import { LoginSchema } from "../validationSchemas/loginSchema";
 
-import socket from "../Components/socket";
+import initSocket from "../Components/socket";
 import io from "socket.io-client";
 
 const Login = () => {
   // const [socket, setSocket] = useState("");
   // const navigate = useNavigate();
+
+
+  const socket = initSocket()
 
   const { setAuth } = useContext(AuthContext);
   const { setToken } = userGloabalContext();
@@ -64,23 +67,25 @@ const Login = () => {
   //   }));
   // };
 
-  const loginUser = async (e) => {
-    e.preventDefault();
-    wyraiApi
-      .post(`/api/login`, formData)
-      .then((res) => {
-        console.log(res.data.token);
-        setToken(res.data.token);
-        setAuth(res.data.token);
-        console.log("userInfo", formData.email);
-        saveNotificationUser();
-        // socket?.emit("newUser", formData.email);
-        navigate("/dashboard");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+
+  // const loginUser = async (e) => {
+  //   e.preventDefault();
+  //   wyraiApi
+  //     .post(`/api/login`, formData)
+  //     .then((res) => {
+  //       console.log(res.data.token);
+  //       setToken(res.data.token);
+  //       setAuth(res.data.token);
+  //       console.log("userInfo", formData.email);
+  //       saveNotificationUser();
+  //       //  socket?.emit("newUser", formData.email);
+  //       navigate("/dashboard");
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }
+
 
   // const loginUser = async (e) => {
   //   e.preventDefault();
@@ -114,16 +119,19 @@ const Login = () => {
             setToken(res.data.token);
             setAuth(res.data.token);
             // console.log("userInfo", values.Email);
+
+            socket?.emit("newUser", values.Email);
+            socket.on('sockeid',data=>{
+              console.log("gfkuljknlj====>",socket.id);
+            // localStorage.setItem('socketId', data);
+            });
             navigate("/dashboard");
-            // socket?.emit("newUser", values.email);
           })
           .catch((err) => {
             console.log(err);
           });
       },
     });
-
-  // console.log(errors, touched);
 
   const ForgetPassword = async () => {
     try {
@@ -197,7 +205,7 @@ const Login = () => {
               <button
                 type="submit"
                 className="group relative w-1/2 m-auto flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#1b9bef] hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
+               >
                 Sign In
               </button>
               <p className="text-center text-sm text-gray-500 my-4">
