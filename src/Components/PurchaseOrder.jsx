@@ -82,7 +82,8 @@ function PurchaseOrder() {
     { id: userInformation?._id, name: userInformation?.name },
   ]);
 
-  // console.log(...peopleOfInterest);
+  console.log("peopleOfInterest",...peopleOfInterest);
+  const allIds = peopleOfInterest.map(item => item.id);
   const [ids, setIds] = useState({
     buyerId: "",
     vendorId: "",
@@ -458,7 +459,7 @@ function PurchaseOrder() {
   const handleProductChange = (poIndex, field, value) => {
     const newPurchaseOrders = [...slotOfProducts];
     if (field === "images") {
-      console.log("images");
+      // console.log(poIndex, field);
       const img = newPurchaseOrders[poIndex][field];
       // console.log(newPurchaseOrders[poIndex][field], value, poIndex);
       newPurchaseOrders[poIndex][field] = [...value];
@@ -466,7 +467,7 @@ function PurchaseOrder() {
     } else {
       newPurchaseOrders[poIndex][field] = value;
     }
-    // console.log(newPurchaseOrders);
+
     setSlotOfProducts(newPurchaseOrders);
   };
 
@@ -484,8 +485,7 @@ function PurchaseOrder() {
       console.log(error);
     }
   };
-  // console.log(slotOfProducts);
-
+ 
   const addAssignPeople = (id, name, value) => {
     try {
       const isExisting = peopleOfInterest.some((item) => item.id === id);
@@ -498,7 +498,6 @@ function PurchaseOrder() {
       console.log(error);
     }
   };
-  // console.log(peopleOfInterest);
 
   const RemoveAssignPeople = (id) => {
     try {
@@ -507,7 +506,6 @@ function PurchaseOrder() {
       console.log(error);
     }
   };
-  // console.log(peopleOfInterest);
 
   const handleBack = () => {
     try {
@@ -696,13 +694,6 @@ function PurchaseOrder() {
                 method={ImageHandler}
               />
             </div>
-            {/* {purchaseDoc && (
-              <img
-                src={purchaseDoc}
-                alt="Preview"
-                className="w-full h-full  "
-              />
-            )} */}
           </div>
           <div className="h-10 w-full bg-[#F3F4F6]"></div>
           <div id="bottom" className=" ml-5 mt-5 w-1/2">
@@ -713,7 +704,7 @@ function PurchaseOrder() {
               type="text"
               value={aiData.poNumber || formik.values.poNumber}
               onChange={handleChange}
-              // handleClick={handleClick}
+
               onBlur={formik.handleBlur}
               error={formik.touched.poNumber && formik.errors.poNumber}
               placeholder={"Enter PO Number"}
@@ -926,7 +917,7 @@ function PurchaseOrder() {
                   className={
                     "form-input border border-gray-400 mt-1 pl-4 py-4 pr-10  rounded-md w-full outline-none"
                   }
-                  onClickOutside={toggleCalendar} // Close the calendar when clicking outside
+                  onClickOutside={toggleCalendar} 
                   open={isCalendarOpen}
                 />
                 <label
@@ -957,9 +948,7 @@ function PurchaseOrder() {
                   onChange={handleChange}
                   handleClick={handleClick}
                   onBlur={formik.handleBlur}
-                  // error={
-                  //   formik.touched.assignPeople && formik.errors.assignPeople
-                  // }
+
                   placeholder={""}
                   labelColor={"bg-white"}
                   disable={true}

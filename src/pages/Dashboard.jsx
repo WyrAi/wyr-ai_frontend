@@ -27,8 +27,6 @@ const Dashboard = () => {
 
   const socket = initSocket();
 
-  console.log("gggggggggggggg",socket);
-
   const { getUserInformation, companyId, userInformation,notification ,fetchNotification} = userGloabalContext();
   const toast = useToast();
 
@@ -47,7 +45,6 @@ const Dashboard = () => {
   }, []);
 
   socket.on("getText", async (data) => {
-    window.alert(data.text)
    fetchNotification();
   });
   
@@ -63,9 +60,6 @@ const Dashboard = () => {
       }
     }
   }, [userInformation]);
-  console.log("61=====>",socket.id)
-  console.log("gfkuljknlj====>",socket.id);
-
   return (
     <div className="ml-5 w-[85%] h-full box-border mt-7">
       <header className="flex justify-between mb-9">
