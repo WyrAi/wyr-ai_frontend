@@ -5,12 +5,13 @@ import comment from "../assets/noun-add-comment-5035165 1.svg";
 import down from "../assets/mingcute_up-fill (1).svg";
 import up from "../assets/mingcute_up-fill.svg";
 import add from "../assets/noun-add-5479406 1.svg";
+import { AiOutlineCloudUpload } from "react-icons/ai";
 import { formatDate } from "../Utils/formatDate";
+import Prompt, { closeModal } from "../DasiyUIComponents/Prompt";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-// import DropZone from '../Components/DropZone';
 import CommentBox from "./CommentBox";
 import { userGloabalContext } from "../UserContext";
 import UploadImages from "./UploadImages";
@@ -18,7 +19,7 @@ import UploadImages from "./UploadImages";
 const Products = ({ data, handleProductChange, poIndex }) => {
   const { images, ...restData } = data;
   const productList = restData;
-  console.log(images, productList);
+  console.log(images, productList, data, poIndex);
   const [collapse, setCollapse] = useState(false);
   const [togglePopup, setTogglePopup] = useState(false);
   const { popUpload, setPopUpload, imagesFiles, setImagesFiles } =
@@ -34,88 +35,128 @@ const Products = ({ data, handleProductChange, poIndex }) => {
       .integer()
       .required("Quantity is required"),
     color: Yup.string().required("Color is required"),
-    weight: Yup.number().positive().required("Weight is required"),
-    weightTolerance: Yup.number()
-      .positive()
-      .required("Weight Tolerance is required"),
-    length: Yup.number().positive().required("Length is required"),
-    lengthTolerance: Yup.number()
-      .positive()
-      .required("Length Tolerance is required"),
-    width: Yup.number().positive().required("Width is required"),
-    widthTolerance: Yup.number()
-      .positive()
-      .required("Width Tolerance is required"),
-    height: Yup.number().positive().required("Height is required"),
-    heightTolerance: Yup.number()
-      .positive()
-      .required("Height Tolerance is required"),
-    aql: Yup.number().positive().required("AQL is required"),
+    weight: Yup.string().test(
+      "Is-valid-number",
+      "Not a valid number",
+      (value) => {
+        return !isNaN(parseFloat(value));
+      }
+    ),
+    weightTolerance: Yup.string().test(
+      "Is-valid-number",
+      "Not a valid number",
+      (value) => {
+        return !isNaN(parseFloat(value));
+      }
+    ),
+    length: Yup.string().test(
+      "Is-valid-number",
+      "Not a valid number",
+      (value) => {
+        return !isNaN(parseFloat(value));
+      }
+    ),
+    lengthTolerance: Yup.string().test(
+      "Is-valid-number",
+      "Not a valid number",
+      (value) => {
+        return !isNaN(parseFloat(value));
+      }
+    ),
+    width: Yup.string().test(
+      "Is-valid-number",
+      "Not a valid number",
+      (value) => {
+        return !isNaN(parseFloat(value));
+      }
+    ),
+    widthTolerance: Yup.string().test(
+      "Is-valid-number",
+      "Not a valid number",
+      (value) => {
+        return !isNaN(parseFloat(value));
+      }
+    ),
+    height: Yup.string().test(
+      "Is-valid-number",
+      "Not a valid number",
+      (value) => {
+        return !isNaN(parseFloat(value));
+      }
+    ),
+    heightTolerance: Yup.string().test(
+      "Is-valid-number",
+      "Not a valid number",
+      (value) => {
+        return !isNaN(parseFloat(value));
+      }
+    ),
+    aql: Yup.string().test("Is-valid-number", "Not a valid number", (value) => {
+      return !isNaN(parseFloat(value));
+    }),
   });
 
-  const initialValues = {
-    styleId: "",
-    styleName: "",
-    quantity: "",
-    color: "",
-    weight: "",
-    weightTolerance: "",
-    length: "",
-    lengthTolerance: "",
-    width: "",
-    widthTolerance: "",
-    height: "",
-    heightTolerance: "",
-    aql: "",
-    comments: [], //this can have many comments so, when sent as Array of comments
-  };
   const formik = useFormik({
     initialValues: productList,
-    onSubmit: (values) => handleSubmit(values),
+    onSubmit: () => {},
     validationSchema,
   });
 
-  async function handleSubmit(values) {
-    try {
-      console.log(values);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  // async function handleSubmit(values) {
+  //   try {
+  //     // console.log(values);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 
   async function handleInputChange(e) {
     const name = e.target.name;
     const value = e.target.value;
-    // validationCheck(name, value);
     handleProductChange(poIndex, name, value);
 
     formik.setFieldValue(name, value);
   }
-  // console.log(formik.errors);
-  // console.log(formik.touched);
+  // console.log(Object.keys(images?.[0]?.file).length > 0);
 
   return (
     <>
-      <div className=" mb-5">
+      <div className="bg-[#eeeeee] mb-5">
         <div className="relative">
           {collapse ? (
-            <div className={` flex flex-col gap-8 bg-gray-50 p-10`}>
+            <div className={` flex flex-col gap-8 p-10 `}>
               <div className="flex flex-col gap-5">
                 <div className="relative flex flex-col md:flex-row  gap-5 ">
                   <div className="  w-[220px] rounded-md overflow-hidden flex">
                     <div className=" w-full outline-dashed outline-gray-300 flex flex-col items-center justify-center  m-1 mb-4  bg-white">
                       <div className="flex flex-col items-center mb-4 ">
                         <div className="m-2 ">
-                          <img
-                            src={add}
-                            alt="cloud"
-                            className="h-12 w-12 text-blue absolute top-[0] right-[0] md:top-[-3vh] md:left-[194px] cursor-pointer"
-                            onClick={() => {
-                              setPopUpload(!popUpload);
-                            }}
-                          />
-                          {images?.frontImage?.length > 0 ? (
-                            <img src={images?.frontImage} alt="" />
+                          <Prompt
+                            btnText={
+                              <img
+                                src={add}
+                                alt="cloud"
+                                className="h-12 w-12 text-blue absolute top-[0] right-[0] md:top-[-3vh] md:left-[194px] cursor-pointer"
+                              />
+                            }
+                            modalID={`uploadImg_${poIndex}`}
+                            promptWidth={60}
+                          >
+                            <UploadImages
+                              imagesData={images}
+                              setImagesFiles={setImagesFiles}
+                              handleProductChange={handleProductChange}
+                              poIndex={poIndex}
+                              closeModal={closeModal}
+                            />
+                          </Prompt>
+
+                          {Object.keys(images?.[0]?.file).length > 0 ? (
+                            <img
+                              src={URL.createObjectURL(images?.[0]?.file)}
+                              alt=""
+                              className="object-cover overflow-hidden w-full flex-1 h-[150px]"
+                            />
                           ) : (
                             <div>
                               <img
@@ -146,15 +187,10 @@ const Products = ({ data, handleProductChange, poIndex }) => {
                         value={formik.values.styleId}
                         onChange={handleInputChange}
                         onBlur={formik.handleBlur}
-                        error={formik.errors.styleId}
+                        error={formik.touched.styleId && formik.errors.styleId}
                         placeholder={"ST ED BC 3220 W"}
                         labelColor={"bg-slimeGray"}
                       />
-                      {/* {formik.touched.styleId && formik.errors.styleId && (
-                        <p className="text-red-800 text-left">
-                          {errors[i.bname]}
-                        </p>
-                      )} */}
                     </div>
                     <div className="">
                       <InputField
@@ -164,15 +200,12 @@ const Products = ({ data, handleProductChange, poIndex }) => {
                         value={formik.values.styleName}
                         onChange={handleInputChange}
                         onBlur={formik.handleBlur}
-                        error={formik.errors.styleName}
+                        error={
+                          formik.touched.styleName && formik.errors.styleName
+                        }
                         placeholder={"BH1222 Marri Welcome"}
                         labelColor={"bg-slimeGray"}
                       />
-                      {/* {formik.errors?.styleName?.length > 0 && (
-                        <p className="text-red-800 text-left">
-                          {formik.errors.styleName}
-                        </p>
-                      )} */}
                     </div>
                     <div className="">
                       <InputField
@@ -182,7 +215,9 @@ const Products = ({ data, handleProductChange, poIndex }) => {
                         value={formik.values.quantity}
                         onChange={handleInputChange}
                         onBlur={formik.handleBlur}
-                        error={formik.errors.quantity}
+                        error={
+                          formik.touched.quantity && formik.errors.quantity
+                        }
                         placeholder={"600"}
                         labelColor={"bg-slimeGray"}
                       />
@@ -195,7 +230,7 @@ const Products = ({ data, handleProductChange, poIndex }) => {
                         value={formik.values.color}
                         onChange={handleInputChange}
                         onBlur={formik.handleBlur}
-                        error={formik.errors.color}
+                        error={formik.touched.color && formik.errors.color}
                         placeholder={"Nat 75/25"}
                         labelColor={"bg-slimeGray"}
                       />
@@ -382,25 +417,36 @@ const Products = ({ data, handleProductChange, poIndex }) => {
               </div>
             </div>
           ) : (
-            <div className={` bg-gray-50 p-10`}>
+            <div className={` bg-[#eeeeee] p-10`}>
               <div className="  flex flex-col gap-5">
                 <div className="flex flex-col md:flex-row gap-5 items-center ">
-                  <div className="relative p-7 w-[220px] h-[88px] rounded-md  flex outline-dashed outline-gray-300  flex-col items-center justify-center m-1  bg-white">
-                    <img
-                      src={add}
-                      alt="cloud"
-                      className="h-10 w-10 text-blue absolute top-[0%] right-[1%] md:top-[-24px] md:left-[198px] cursor-pointer"
-                      onClick={() => setPopUpload(!popUpload)}
-                    />
-                    {images?.frontImage?.length > 0 ? (
-                      <img src={images?.frontImage} alt="" />
-                    ) : (
-                      <div>
-                        <img
-                          src={upload}
-                          alt="cloud"
-                          className="m-auto h-10 w-10"
+                  <div className="relative w-[220px] h-[88px] rounded-md outline-dashed p-2 outline-gray-300 m-1 bg-white">
+                    <div className="h-12 w-12 absolute top-[0] right-[0] md:top-[-3vh] md:left-[194px] cursor-pointer">
+                      <Prompt
+                        btnText={
+                          <img src={add} alt="cloud" className="text-blue" />
+                        }
+                        modalID={`uploadImg_${poIndex}`}
+                        promptWidth={80}
+                      >
+                        <UploadImages
+                          imagesData={images}
+                          setImagesFiles={setImagesFiles}
+                          handleProductChange={handleProductChange}
+                          poIndex={poIndex}
                         />
+                      </Prompt>
+                    </div>
+
+                    {Object.keys(images?.[0]?.file).length > 0 ? (
+                      <img
+                        src={URL.createObjectURL(images?.[0]?.file)}
+                        alt=""
+                        className="object-cover overflow-hidden w-full flex-1 h-full"
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center">
+                        <AiOutlineCloudUpload size={24} />
 
                         <p className="text-center text-xs font-[600]">
                           {"Upload Approved Sample"}
@@ -411,7 +457,6 @@ const Products = ({ data, handleProductChange, poIndex }) => {
                       </div>
                     )}
                   </div>
-
                   <div className="grid grid-cols-1 md:grid-cols-2 flex-1 gap-5 w-full">
                     <div className="flex-1">
                       <InputField
@@ -464,16 +509,6 @@ const Products = ({ data, handleProductChange, poIndex }) => {
             </div>
           )}
         </div>
-        {popUpload && (
-          <UploadImages
-            popup={popUpload}
-            setPopup={setPopUpload}
-            imagesData={images}
-            setImagesFiles={setImagesFiles}
-            handleProductChange={handleProductChange}
-            poIndex={poIndex}
-          />
-        )}
       </div>
     </>
   );

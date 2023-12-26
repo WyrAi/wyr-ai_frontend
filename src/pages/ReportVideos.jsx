@@ -9,6 +9,7 @@ import {
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import Prompt from "../DasiyUIComponents/Prompt";
 
 const filters = [
   {
@@ -131,13 +132,29 @@ const ReportVideos = () => {
         </div>
       </div>
       <div className="flex flex-wrap gap-4 m-5">
-        {LiveInsepections.map((value) => (
+        {LiveInsepections.map((value, index) => (
           <div className=" w-[295px] h-[282px] flex flex-col justify-between ">
             <div className=" w-full h-[230px] relative">
               <img src={value.image} alt="" className="h-full" />
-              <button className=" bg-[#1B9BEF] text-white rounded-md absolute px-[20px] py-[10px] font-bold text-sm text-center top-[50%] left-[50%] transform translate-x-[-55%] translate-y-[-30%] ">
-                Join Live
-              </button>
+              <Prompt
+                btnText={
+                  <button className=" bg-[#1B9BEF] text-white rounded-md absolute px-[20px] py-[10px] font-bold text-sm text-center top-[50%] left-[50%] transform translate-x-[-55%] translate-y-[-30%] ">
+                    Join Live
+                  </button>
+                }
+                modalID={`joinLive_${index}`}
+              >
+                <div className="flex justify-center">
+                  <iframe
+                    src="http://13.201.72.80:8080/embed/video"
+                    title="Owncast"
+                    height="350px"
+                    width="550px"
+                    referrerpolicy="origin"
+                    allowfullscreen
+                  ></iframe>
+                </div>
+              </Prompt>
               <div className="absolute top-[85%] right-[0%] transform translate-x-[-55%] translate-y-[-30%] flex gap-2">
                 {SubImage.map((value) => (
                   <img

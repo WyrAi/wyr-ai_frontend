@@ -51,6 +51,10 @@ const UserMgt = () => {
     //     body: JSON.stringify({ userIds: checkedItems }),
     //   }
     // );
+
+
+    fetchData();
+
     wyraiApi
       .delete("/api/registerEmployeeDelete", {
         data: {
@@ -64,6 +68,7 @@ const UserMgt = () => {
       .catch((err) => {
         console.log(err);
       });
+
   };
   useEffect(() => {
     fetchData();
@@ -225,7 +230,7 @@ const UserMgt = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-wrap w-full h-24 gap-4">
+          <div className="flex flex-wrap content-start w-full h-full gap-4 overflow-auto">
             {filteredUsers?.map((item, index) => (
               <UserCard
                 check={checkedItems}
