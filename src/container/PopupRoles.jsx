@@ -9,10 +9,17 @@ import * as Yup from 'yup';
 import AccessManagement from './AccessManagement';
 import wyraiApi from '../api/wyraiApi';
 import { useNavigate } from 'react-router-dom';
+import { Socket } from 'engine.io-client';
+import initSocket from '../Components/socket';
 
 const PopupRoles = (props) => {
+
+
+
+  const socket = initSocket();
   const { setPopupRole } = props;
           const { fetchRole, userInformation ,companyId} = userGloabalContext();
+          console.log("22=======>",userInformation?.email)
   const navigate = useNavigate();
 
   // const companyId = userInformation.companyId._id;
@@ -55,6 +62,14 @@ const PopupRoles = (props) => {
       })
       .then((res) => {
         setPopupRole(false);
+      
+        const data = {
+          senderName:userInformation?.email,
+          text:"New Role has been generated"
+        }
+         console.log("userRole Data",data);
+         socket.emit("RoleText",data)
+        
         fetchRole();
       })
       .catch((err) => {

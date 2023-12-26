@@ -125,7 +125,7 @@ const Login = () => {
             socket?.emit("newUser", values.Email);
             socket.on('sockeid',data=>{
               console.log("gfkuljknlj====>",socket.id);
-            // localStorage.setItem('socketId', data);
+            localStorage.setItem('socketId', data);
             });
             navigate("/dashboard");
           })

@@ -1,12 +1,13 @@
 import { sideBarData } from "../assets/data/sidebarData";
 import logout from "../assets/noun-log-out-5762374 1.svg";
-
 import { Link, useNavigate } from "react-router-dom";
 import userGloabalContext from "../UserContext";
 import React from "react";
-import socket from "../Components/socket";
+import initSocket from "../Components/socket";
+import { deleteToken } from "../Utils/authUtils.js";
 
 const Nav = () => {
+  const socket = initSocket();
   const { userInformation, userRights } = userGloabalContext();
   const navigate = useNavigate()
   const accessArray = React.useMemo(() => {
@@ -24,8 +25,10 @@ const Nav = () => {
 
   const logoutHandlemethod = () =>{
     console.log("logout emit")
-    // deleteToken()
-    socket.emit("remove",(socket.id))
+    deleteToken()
+    const storedSocketId = localStorage.getItem('socketId');
+    localStorage.removeItem('socketId');
+    socket.emit("remove",(storedSocketId))
     navigate("/login")
   }
   return (

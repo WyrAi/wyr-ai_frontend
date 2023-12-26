@@ -15,7 +15,7 @@ const getStoredSocketId = () => {
       tempSocket.on("connect", () => {
         const newSocketId = tempSocket.id;
         tempSocket.disconnect();
-        localStorage.setItem('socketId', newSocketId);
+        
         resolve(newSocketId);
       });
     });

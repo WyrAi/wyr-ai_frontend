@@ -52,7 +52,8 @@ function PurchaseOrder() {
     { id: userInformation?._id, name: userInformation?.name },
   ]);
 
-  // console.log(...peopleOfInterest);
+  console.log("peopleOfInterest",...peopleOfInterest);
+  const allIds = peopleOfInterest.map(item => item.id);
   const [ids, setIds] = useState({
     buyerId: "",
     vendorId: "",
@@ -220,8 +221,9 @@ function PurchaseOrder() {
           navigate(-1)
 
           const data={
-            senderName:"",
-            text:`connection request from the ${values.email}`
+            senderName:userInformation?.email,
+            employeeIds:allIds,
+            text:"A Purchase order has been generated"
           }
 
           socket.emit("RelationshipsText", {data});
@@ -233,35 +235,7 @@ function PurchaseOrder() {
         .then((res) => navigate(-1))
         .catch((err) => console.log(err));
     }
-    // if (slotOfProducts.length > 0) {
-    //   requestBody = {
-    //     purchaseDoc,
-    //     buyer: ids.buyerId,
-    //     vendor: ids.vendorId,
-    //     shiptoName: formik.values.shiptoName,
-    //     shiptoAdd: formik.values.shiptoAdd,
-    //     shipVia: formik.values.shipVia,
-    //     shipDate: formik.values.shipDate,
-    //     assignedPeople: peopleOfInterest.map((item) => item.id),
-    //     poNumber: formik.values.poNumber,
-    //     products: [...slotOfProducts],
-    //     status,
-    //   };
-    // } else {
-    //   requestBody = {
-    //     purchaseDoc,
-    //     buyer: ids.buyerId,
-    //     vendor: ids.vendorId,
-    //     shiptoName: formik.values.shiptoName,
-    //     shiptoAdd: formik.values.shiptoAdd,
-    //     shipVia: formik.values.shipVia,
-    //     shipDate: formik.values.shipDate,
-    //     assignedPeople: peopleOfInterest.map((item) => item.id),
-    //     poNumber: formik.values.poNumber,
-    //     products: [{ ...productList, images: imagesFiles }],
-    //     status,
-    //   };
-    // }
+
     requestBody = {
       purchaseDoc,
       buyer: ids.buyerId,
@@ -275,115 +249,17 @@ function PurchaseOrder() {
       products: [...slotOfProducts],
       status,
     };
-    // console.log(requestBody);
-
-    // uncomment below api to set submit and draft , told backend guy images files has been changed
-    console.log(requestBody);
-    // if (e.target.type === "submit") {
-    //   wyraiApi
-    //     .post("/api/purchaseOrder", requestBody)
-    //     .then((res) => navigate(-1))
-    //     .catch((err) => console.log(err));
-    // } else {
-    //   wyraiApi
-    //     .post(`/api/PuracheseOrderDraft/${userInformation?._id}`, requestBody)
-    //     .then((res) => navigate(-1))
-    //     .catch((err) => console.log(err));
-    // }
-
-    // const resp = await fetch(
-    //   import.meta.env.VITE_BASE_URL + "/api/purchaseOrder",
-    //   {
-    //     method: "post",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(requestBody),
-    //   }
-    // );
-
-    // if (resp.ok) {
-    //   navigate(-1);
-    // }
+    
   }
-  // const conversionImage = (baseUrl) => {
-  //   const base64URL = baseUrl; // Your Base64 URL
-
-  //   // Remove the prefix (e.g., 'data:image/jpeg;base64,') from the Base64 URL to get only the Base64-encoded data
-  //   console.log(base64URL);
-  //   const base64Data = base64URL?.split(";base64,").pop();
-  //   if (base64Data) {
-  //     const blob = (() => {
-  //       const byteCharacters = atob(base64Data);
-  //       const byteArrays = [];
-
-  //       for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-  //         const slice = byteCharacters.slice(offset, offset + 512);
-
-  //         const byteNumbers = new Array(slice.length);
-  //         for (let i = 0; i < slice.length; i++) {
-  //           byteNumbers[i] = slice.charCodeAt(i);
-  //         }
-
-  //         const byteArray = new Uint8Array(byteNumbers);
-  //         byteArrays.push(byteArray);
-  //       }
-
-  //       return new Blob(byteArrays, { type: "image/jpeg" });
-  //     })();
-
-  //     console.log(blob);
-  //     const file = new File([blob], "PurchaseOrder.jpg", {
-  //       type: "image/jpeg",
-  //     });
-  //     const config = {
-  //       headers: {
-  //         "Content-Type": "multipart/form-data", // Set your content type or other required headers
-  //         "Access-Control-Allow-Origin": "*", // You can set the specific domain instead of '*'
-  //       },
-  //     };
-  //     const formData = new FormData();
-  //     formData.append("image_file", file);
-  //     axios
-  //       .post("http://35.154.0.66:5000/detect", formData, config)
-  //       .then((res) => console.log(res));
-  //     console.log(file);
-  //   }
-
-  //   // const base64Data = base64URL?.replace(/^data:image\/\w+;base64,/, "");
-
-  //   // Convert the Base64-encoded data to binary data
-  //   // const binaryData = atob(base64Data);
-
-  //   // // Create a Blob from the binary data
-  //   // const blob = new Blob(
-  //   //   [new Uint8Array(Array.from(binaryData, (char) => char.charCodeAt(0)))],
-  //   //   { type: "image/jpeg" }
-  //   // );
-
-  //   // // Construct a file from the Blob
-  //   // const file = new File([blob], "filename.jpg", { type: "image/jpeg" });
-
-  //   // console.log(file); // The constructed File object
-  //   // return file;
-  // };
 
   useEffect(() => {
-    // wyraiApi.post()
-    // // conversionImage(purchaseDoc);
     const config = {
       headers: {
-        "Content-Type": "multipart/form-data", // Set your content type or other required headers
-        "Access-Control-Allow-Origin": "*", // You can set the specific domain instead of '*'
+        "Content-Type": "multipart/form-data", 
+        "Access-Control-Allow-Origin": "*", 
       },
     };
-    // const formData = new FormData();
-    // console.log(ApiImage?.name);
-    // formData.append("image_file", ApiImage);
-    // console.log(formData);
-    // axios
-    //   .post("http://35.154.0.66:5000/detect", formData, config)
-    //   .then((res) => console.log(res));
+
     fetch(ApiImage)
       .then((response) => response.blob())
       .then((blob) => {
@@ -418,22 +294,12 @@ function PurchaseOrder() {
           ["images"]: [],
         },
       ]);
-      // setProductList(intials);
     }
   }, [productList]);
-
-  // console.log(imagesFiles, imageIndex);
-  // useEffect(() => {
-  //   console.log("here");
-  //   if (typeof imageIndex === "number") {
-  //     handleProductChange(imageIndex, "images", imagesFiles);
-  //   }
-  // }, [imageIndex, imagesFiles]);
 
   const handleProductChange = (poIndex, field, value) => {
     const newPurchaseOrders = [...slotOfProducts];
     if (field === "images") {
-      // console.log(poIndex, field);
       const img = newPurchaseOrders[poIndex][field];
       console.log(newPurchaseOrders[poIndex][field], value);
       newPurchaseOrders[poIndex][field] = [value];
@@ -441,7 +307,6 @@ function PurchaseOrder() {
       newPurchaseOrders[poIndex][field] = value;
     }
 
-    // console.log(newPurchaseOrders);
     setSlotOfProducts(newPurchaseOrders);
   };
 
@@ -462,8 +327,7 @@ function PurchaseOrder() {
       console.log(error);
     }
   };
-  // console.log(slotOfProducts);
-
+ 
   const addAssignPeople = (id, name, value) => {
     try {
       const isExisting = peopleOfInterest.some((item) => item.id === id);
@@ -476,7 +340,6 @@ function PurchaseOrder() {
       console.log(error);
     }
   };
-  // console.log(peopleOfInterest);
 
   const RemoveAssignPeople = (id) => {
     try {
@@ -485,7 +348,6 @@ function PurchaseOrder() {
       console.log(error);
     }
   };
-  // console.log(peopleOfInterest);
 
   const handleBack = () => {
     try {
@@ -602,13 +464,6 @@ function PurchaseOrder() {
                 method={ImageHandler}
               />
             </div>
-            {/* {purchaseDoc && (
-              <img
-                src={purchaseDoc}
-                alt="Preview"
-                className="w-full h-full  "
-              />
-            )} */}
           </div>
           <div className="w-1/2">
             <h1 className="text-xl font-bold mb-5">PO Number</h1>
@@ -618,7 +473,7 @@ function PurchaseOrder() {
               type="text"
               value={formik.values.poNumber}
               onChange={handleChange}
-              // handleClick={handleClick}
+
               onBlur={formik.handleBlur}
               error={formik.touched.poNumber && formik.errors.poNumber}
               placeholder={"Enter PO Number"}
@@ -831,7 +686,7 @@ function PurchaseOrder() {
                   className={
                     "form-input border border-gray-400 mt-1 pl-4 py-4 pr-10  rounded-md w-full outline-none"
                   }
-                  onClickOutside={toggleCalendar} // Close the calendar when clicking outside
+                  onClickOutside={toggleCalendar} 
                   open={isCalendarOpen}
                 />
                 <label
@@ -862,9 +717,7 @@ function PurchaseOrder() {
                   onChange={handleChange}
                   handleClick={handleClick}
                   onBlur={formik.handleBlur}
-                  // error={
-                  //   formik.touched.assignPeople && formik.errors.assignPeople
-                  // }
+
                   placeholder={""}
                   labelColor={"bg-white"}
                   disable={true}
