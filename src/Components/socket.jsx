@@ -11,7 +11,7 @@ const getStoredSocketId = () => {
     return Promise.resolve(storedSocketId);
   } else {
     return new Promise((resolve) => {
-      const tempSocket = io("http://localhost:5000");
+      const tempSocket = io(import.meta.env.VITE_BASE_URL);
       tempSocket.on("connect", () => {
         const newSocketId = tempSocket.id;
         tempSocket.disconnect();
@@ -25,7 +25,7 @@ const getStoredSocketId = () => {
 
 const initSocket =  () => {
   const socketId = getStoredSocketId();
-  return io("http://localhost:5000", {
+  return io(import.meta.env.VITE_BASE_URL, {
     query: {
       socketId: socketId,
     },
