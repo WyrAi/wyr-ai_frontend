@@ -434,7 +434,7 @@ function PurchaseOrder() {
         formData.append("image_file", ApiImage);
 
         axios
-          .post("http://13.127.36.67:5000/detect", formData, {
+          .post("http://13.201.97.55:5000/detect", formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
@@ -768,7 +768,7 @@ function PurchaseOrder() {
                   label="Complete Address"
                   name="shiptoAdd"
                   type="text"
-                  value={aiData.shiptoAdd || formik.values.shiptoAdd}
+                  value={formik.values.shiptoAdd || aiData.shiptoAdd}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   error={formik.touched.shiptoAdd && formik.errors.shiptoAdd}
