@@ -20,7 +20,7 @@ import initSocket from "../Components/socket";
 const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
 
   const socket = initSocket();
-  const { role, companyId } = userGloabalContext();
+  const { role, companyId, userInformation } = userGloabalContext();
   const [roles, setRoles] = React.useState([
     { id: 0, name: "Buyer", icon: Buyer, selected: false },
     { id: 1, name: "Buying Agency", icon: Agency, selected: false },
@@ -70,11 +70,9 @@ const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
 
               const data={
                 senderName:values.email,
-                text:`connection request from the ${values.email}`
+                text:`connection request from the ${userInformation?.email}`
               }
-
               socket.emit("RelationshipsText", {data}); 
-              console.log("After socket document")
 
             }).catch((err) => {
               console.log(err);
