@@ -64,7 +64,6 @@ const DropZone = ({
     },
     [setFormData]
   );
-
   useEffect(() => {
     // console.log(files[0]);
     if (method) method(files[0]);

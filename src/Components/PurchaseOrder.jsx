@@ -297,7 +297,6 @@ function PurchaseOrder() {
       console.log(error);
     }
   }
-  console.log(aiData);
 
   // useEffect(() => {
   //   const allFieldsFilled = Object.values(productList).every(
@@ -483,14 +482,15 @@ function PurchaseOrder() {
         setIsPoLoading(false);
       }
     };
-    // console.log(ApiImage, "gfffcf");
+
     if (ApiImage) POAIData();
   }, [ApiImage]);
-  // console.log(aiData.poNumber);
 
   useEffect(() => {
     const products = aiData?.table?.products;
     if (aiData) {
+      // before setting the field value check if the dropdown list includes the data comming from poUpload,
+
       formik.setFieldValue("poNumber", aiData?.poNumber || "");
       formik.setFieldValue("nameOfBuyer", aiData?.nameOfBuyer || "");
       formik.setFieldValue("addOfBuyer", aiData?.addOfBuyer || "");

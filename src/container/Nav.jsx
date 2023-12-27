@@ -5,6 +5,7 @@ import logo from "../assets/logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 import userGloabalContext from "../UserContext";
 import React from "react";
+import socket from "../Components/socket";
 
 const Nav = () => {
   const { userInformation, userRights } = userGloabalContext();
@@ -23,7 +24,9 @@ const Nav = () => {
   }, [userInformation?.role?.SelectAccess]);
 
   const logoutHandlemethod = () => {
-    deleteToken();
+    console.log("logout emit");
+    // deleteToken()
+    socket.emit("remove", socket.id);
     navigate("/login");
   };
   return (
@@ -33,6 +36,7 @@ const Nav = () => {
           <Link to="/user" className="w-full flex justify-center">
             <img src={logo} alt="" className="w-[200px]" />
           </Link>
+
           <div className=" flex flex-col items-center gap-5 w-full box-border">
             {sideBarData?.map((item, index) => {
               if (accessArray.includes(item.name)) {

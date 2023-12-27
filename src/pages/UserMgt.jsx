@@ -51,6 +51,9 @@ const UserMgt = () => {
     //     body: JSON.stringify({ userIds: checkedItems }),
     //   }
     // );
+
+    fetchData();
+
     wyraiApi
       .delete("/api/registerEmployeeDelete", {
         data: {
