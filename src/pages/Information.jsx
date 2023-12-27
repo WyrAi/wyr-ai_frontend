@@ -194,6 +194,7 @@ const Information = () => {
   const PdfCreateAndVideoCheck = async () => {
     try {
       const pdf = await downloadPDF();
+      console.log(pdf);
       if (!pdf) {
         alert("PDF generation failed.");
         return;
@@ -207,8 +208,7 @@ const Information = () => {
           "We are still processing the video. Please check the spellings after some time."
         );
       }
-
-      if (data.status && PDFStore) {
+      if (data.status && pdf) {
         setButtonStatus(true);
       } else {
         alert("The PDF is generating.");
@@ -218,10 +218,9 @@ const Information = () => {
       alert("An error occurred while generating the PDF.");
     }
   };
-
   const EmailHandleMethod = async () => {
     try {
-      console.log(PDFStore, "HIIIIII");
+      // console.log(PDFStore, "HIIIIII");
       let formData = new FormData();
       formData.append("email", sendEmail);
       formData.append("file", PDFStore, "file.pdf");
@@ -238,7 +237,7 @@ const Information = () => {
         setButtonStatus(false);
         setPDFStore(null);
       }
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.log(error);
     }
