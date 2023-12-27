@@ -4,7 +4,6 @@
 // export default socket;
 
 import io from "socket.io-client";
-
 const getStoredSocketId = () => {
   const storedSocketId = localStorage.getItem('socketId');
   if (storedSocketId) {

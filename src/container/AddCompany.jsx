@@ -19,7 +19,7 @@ import initSocket from "../Components/socket";
 
 const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
   const socket = initSocket();
-  const { role, companyId } = userGloabalContext();
+  const { role, companyId, userInformation } = userGloabalContext();
   const [roles, setRoles] = React.useState([
     { id: 0, name: "Buyer", icon: Buyer, selected: false },
     { id: 1, name: "Buying Agency", icon: Agency, selected: false },

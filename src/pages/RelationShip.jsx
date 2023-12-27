@@ -102,6 +102,11 @@ const RelationShip = () => {
           .put(`/api/approvedRelationship/${selectRelation.id}`)
           .then((res) => {
             console.log(res);
+            const data={
+              senderName:values.email,
+              text:`connection request from the ${userInformation?.email}`
+            }
+            socket.emit("RelationshipsText", {data}); 
             setSelectRelation({ id: "" });
             fetchRelation();
           })

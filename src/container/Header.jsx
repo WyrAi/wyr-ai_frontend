@@ -14,8 +14,8 @@ import "../App.css";
 import wyraiApi from "../api/wyraiApi";
 // DropDown.js
 const DropDown = ({ children }) => {
-  const { userInformation } = userGloabalContext();
-  
+  const { userInformation, fetchNotification } = userGloabalContext();
+
   const handleAllRead = () => {
     try {
       console.log("the log of update");
@@ -23,7 +23,11 @@ const DropDown = ({ children }) => {
         .post("/api/updatenotifactionstatus", {
           receiverid: userInformation?.email,
         })
-        .then((res) => console.log(res))
+        .then(
+          (res) => {console.log(res)
+          console.log("the log of update in response")
+          fetchNotification()}
+          )
         .catch((err) => console.log(err));
     } catch (error) {
       console.error("Error updating seen status:", error);

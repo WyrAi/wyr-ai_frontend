@@ -49,10 +49,7 @@ const Dashboard = () => {
   });
   
   useEffect(() => {
-    console.log("userINformation",userInformation?.email);
-    if (userInformation?.email) {
-      console.log("Notification component mounted", socket.id);
-      
+    if (userInformation?.email) {      
       try {
         fetchNotification();
       } catch (error) {
