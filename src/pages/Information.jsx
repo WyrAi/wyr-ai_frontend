@@ -261,13 +261,11 @@ const Information = () => {
             <Prompt
               btnText={
                 <button
-
                   className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white ml-5 w-[300px] h-[50px] mb-1"
                   onClick={() => console.log("first")}
 
-//                   className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white "
+                  //                   className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white "
                   // onClick={() => PdfCreateAndVideoCheck()}
-
                 >
                   Email
                 </button>
@@ -387,11 +385,11 @@ const Information = () => {
                   <img
                     src={e.image}
                     alt="Product"
-                    width={"750px"}
-                    height={"400px"}
-                    className="border flex-1"
+                    width={"500px"}
+                    height={"500px"}
+                    className="border xl:w-[450px] xl:h-[450px] md:w-[350px] md:h-[350px]"
                   />
-                  <div className="p-5 w-full flex-1   flex justify-between gap-5">
+                  <div className="p-5 w-full flex-1 flex justify-between gap-5">
                     <div className="flex flex-col justify-between w-full">
                       <ul className="w-full h-[45%]  md:h-[70%] overflow-auto">
                         {e?.comment?.length > 0 ? (
