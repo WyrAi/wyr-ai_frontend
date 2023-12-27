@@ -115,8 +115,7 @@ const Login = () => {
             // console.log("got token");
             setToken(res.data.token);
             setAuth(res.data.token);
-            // console.log("userInfo", values.Email);
-
+            // console.log("userInfo", values.Email); 
             socket?.emit("newUser", values.Email);
             socket.on("sockeid", (data) => {
               console.log("gfkuljknlj====>", socket.id);

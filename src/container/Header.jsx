@@ -11,14 +11,16 @@ import { useState, useEffect } from "react";
 
 import axios from "axios";
 import "../App.css";
+import wyraiApi from "../api/wyraiApi";
 // DropDown.js
 const DropDown = ({ children }) => {
   const { userInformation } = userGloabalContext();
+  
   const handleAllRead = () => {
     try {
       console.log("the log of update");
-      axios
-        .post("http://localhost:5000/api/updatenotifactionstatus", {
+      wyraiApi
+        .post("/api/updatenotifactionstatus", {
           receiverid: userInformation?.email,
         })
         .then((res) => console.log(res))

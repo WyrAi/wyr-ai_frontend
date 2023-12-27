@@ -113,14 +113,15 @@ const RelationShip = () => {
   };
 
   const fetchRelation = () => {
-    wyraiApi
-      .get(`/api/companyRelationShip/${companyId}`)
-      .then((res) => {
-        const data = res.data?.AllData[0].companyRelations;
-        console.log(data);
-        setAllRelation(data);
-      })
-      .catch((err) => console.log(err));
+    if (companyId)
+      wyraiApi
+        .get(`/api/companyRelationShip/${companyId}`)
+        .then((res) => {
+          const data = res.data?.AllData[0].companyRelations;
+          console.log(data);
+          setAllRelation(data);
+        })
+        .catch((err) => console.log(err));
   };
 
   const handleselectRelation = (value) => {
@@ -129,7 +130,7 @@ const RelationShip = () => {
 
   useEffect(() => {
     fetchRelation();
-  }, []);
+  }, [companyId]);
   console.log(selectRelation.id);
 
   useEffect(() => {
@@ -151,6 +152,10 @@ const RelationShip = () => {
       // Do something when the Esc key is pressed
       // setAddBranchPopUp(false);
     }
+  };
+
+  const popShow = async (value) => {
+    setSuccessRelation(value);
   };
 
   return (
@@ -177,7 +182,7 @@ const RelationShip = () => {
           >
             <div className="w-[60%] mx-auto ">
               <AddCompany
-                setSuccessRelation={setSuccessRelation}
+                setSuccessRelation={popShow}
                 fetchRelation={fetchRelation}
               />
             </div>
