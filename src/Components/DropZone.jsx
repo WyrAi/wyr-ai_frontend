@@ -20,7 +20,6 @@ const DropZone = ({
 }) => {
   const [files, setFiles] = useState([]);
   const [preview, setPreview] = useState("");
-
   /**
    * Callback function for handling dropped files.
    *
@@ -65,6 +64,11 @@ const DropZone = ({
     },
     [setFormData]
   );
+
+  useEffect(() => {
+    // console.log(files[0]);
+    if (method) method(files[0]);
+  }, [files]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: (acceptedFiles) => {

@@ -117,7 +117,7 @@ function PurchaseOrder() {
   // const [buyerPopup, setBuyerPopup] = useState(false);
   // const [vendorPopup, setVendorPopup] = useState(false);
   const [count, setCount] = useState(1);
-
+  // const { productList, imagesFiles, setImagesFiles } = userGloabalContext();
   const validationSchema = Yup.object().shape({
     poNumber: Yup.string().required("PO Number is required"),
     nameOfBuyer: Yup.string().required("Name of Buyer is required"),
@@ -165,7 +165,7 @@ function PurchaseOrder() {
 
   const { values } = formik;
 
-  console.log(values);
+  // console.log(values);
 
   useEffect(() => {
     if (values.nameOfBuyer && values.nameOfVendor) {
@@ -297,6 +297,7 @@ function PurchaseOrder() {
       console.log(error);
     }
   }
+  console.log(aiData);
 
   // useEffect(() => {
   //   const allFieldsFilled = Object.values(productList).every(
@@ -424,6 +425,30 @@ function PurchaseOrder() {
   };
 
   useEffect(() => {
+    const POAIData = async () => {
+      try {
+        console.log("Hello");
+        const formData = new FormData();
+        formData.append("image_file", ApiImage);
+        const response = await axios.post(
+          "http://3.110.187.181:5000/detect",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log(response, "hfddd");
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    console.log(ApiImage, "gfffcf");
+    if (ApiImage) POAIData();
+  }, [ApiImage]);
+
+  useEffect(() => {
     // setIsPoLoading(false);
     const POAIData = async () => {
       console.log(isLoading);
@@ -443,23 +468,11 @@ function PurchaseOrder() {
             console.log(res);
             setAiData(res.data);
             setIsPoLoading(false);
-            // document.getElementById("bottom").scrollIntoView();
-            // setInitialValues({
-            //   poNumber: res.data.poNumber,
-            //   nameOfBuyer: res.data.nameOfBuyer,
-            //   addOfBuyer: res.data.addOfBuyer,
-            //   nameOfVendor: res.data.nameOfVendor,
-            //   addOfVendor: res.data.addOfVendor,
-            //   shiptoName: "",
-            //   shiptoAdd: "",
-            //   shipVia: "",
-            //   shipDate: selectedDate,
-            //   totalCarton: res.data.totalCarton,
-            //   inv_number: "",
-            //   assignPeople: "",
-            // });
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            console.log(err);
+            setIsPoLoading(false);
+          });
         // if (response.status === "200") {
         //   setIsPoLoading(false);
         // }
@@ -470,14 +483,40 @@ function PurchaseOrder() {
         setIsPoLoading(false);
       }
     };
-    console.log(ApiImage, "gfffcf");
+    // console.log(ApiImage, "gfffcf");
     if (ApiImage) POAIData();
   }, [ApiImage]);
-  console.log(aiData.poNumber);
+  // console.log(aiData.poNumber);
 
   useEffect(() => {
     const products = aiData?.table?.products;
-    console.log(products);
+    if (aiData) {
+      formik.setFieldValue("poNumber", aiData?.poNumber || "");
+      formik.setFieldValue("nameOfBuyer", aiData?.nameOfBuyer || "");
+      formik.setFieldValue("addOfBuyer", aiData?.addOfBuyer || "");
+      formik.setFieldValue("nameOfVendor", aiData?.nameOfVendor || "");
+      formik.setFieldValue("shiptoName", aiData?.shiptoName || "");
+      formik.setFieldValue("shiptoAdd", aiData?.shiptoAdd || "");
+      formik.setFieldValue("shipVia", aiData?.shipVia || "");
+
+      if (products) {
+        // setProductList( { ...productList,  },)
+        // console.log("test");
+        console.log(Object.keys(products).length);
+
+        const newProducts = Object.keys(products).map((product) => ({
+          ...intials,
+          images: intialImages,
+          styleId: products[product]?.styleId || "",
+          styleName: products[product]?.styleId || "",
+          quantity: products[product]?.quantity || "",
+          color: products[product]?.color || "",
+        }));
+        setSlotOfProducts(newProducts);
+      }
+    }
+
+    console.log(products, aiData);
 
     let productsArray = [];
     // if (Object.keys(productList).length > 0) {
@@ -493,6 +532,7 @@ function PurchaseOrder() {
     //     }
     // })
   }, [aiData]);
+  // console.log(slotOfProducts);
 
   const fetchpeople = async () => {
     if (ids.buyerId.length > 0 && ids.vendorId.length > 0) {
@@ -519,19 +559,19 @@ function PurchaseOrder() {
   const ImageHandler = async (value) => {
     setApiImage(value);
   };
-  console.log(isPoLoading);
+  // console.log(isPoLoading);
 
-  const scrollToDiv = () => {
-    const container = document.getElementById("container");
-    const scrollTo = document.getElementById("scrollToDiv");
-    container.scrollTo({
-      top:
-        scrollTo.offsetTop -
-        container.clientHeight / 2 +
-        scrollTo.clientHeight / 2,
-      behavior: "smooth",
-    });
-  };
+  // const scrollToDiv = () => {
+  //   const container = document.getElementById("container");
+  //   const scrollTo = document.getElementById("scrollToDiv");
+  //   container.scrollTo({
+  //     top:
+  //       scrollTo.offsetTop -
+  //       container.clientHeight / 2 +
+  //       scrollTo.clientHeight / 2,
+  //     behavior: "smooth",
+  //   });
+  // };
 
   return (
     <>
@@ -583,7 +623,7 @@ function PurchaseOrder() {
               label="PO Number"
               name="poNumber"
               type="text"
-              value={aiData.poNumber || formik.values.poNumber}
+              value={formik.values.poNumber}
               onChange={handleChange}
               // handleClick={handleClick}
               onBlur={formik.handleBlur}
@@ -600,7 +640,7 @@ function PurchaseOrder() {
                   label="Name"
                   name="nameOfBuyer"
                   type="text"
-                  value={aiData.nameOfBuyer || formik.values.nameOfBuyer}
+                  value={formik.values.nameOfBuyer}
                   onChange={handleChange}
                   handleClick={handleClick}
                   onBlur={formik.handleBlur}
@@ -655,7 +695,7 @@ function PurchaseOrder() {
                   label="Address"
                   name="addOfBuyer"
                   type="text"
-                  value={aiData.addOfBuyer || formik.values.addOfBuyer}
+                  value={formik.values.addOfBuyer}
                   onChange={handleChange}
                   handleClick={handleClick}
                   onBlur={formik.handleBlur}
@@ -674,7 +714,7 @@ function PurchaseOrder() {
                   label="Name"
                   name="nameOfVendor"
                   type="text"
-                  value={aiData.nameOfVendor || formik.values.nameOfVendor}
+                  value={formik.values.nameOfVendor}
                   onChange={handleChange}
                   handleClick={handleClick}
                   onBlur={formik.handleBlur}
@@ -733,7 +773,7 @@ function PurchaseOrder() {
                   label="Address"
                   name="addOfVendor"
                   type="text"
-                  value={aiData.addOfVendor || formik.values.addOfVendor}
+                  value={formik.values.addOfVendor}
                   onChange={handleChange}
                   handleClick={handleClick}
                   onBlur={formik.handleBlur}
@@ -754,7 +794,7 @@ function PurchaseOrder() {
                   label="Name"
                   name="shiptoName"
                   type="text"
-                  value={aiData.shiptoName || formik.values.shiptoName}
+                  value={formik.values.shiptoName}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   error={formik.touched.shiptoName && formik.errors.shiptoName}
@@ -768,7 +808,7 @@ function PurchaseOrder() {
                   label="Complete Address"
                   name="shiptoAdd"
                   type="text"
-                  value={formik.values.shiptoAdd || aiData.shiptoAdd}
+                  value={formik.values.shiptoAdd}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   error={formik.touched.shiptoAdd && formik.errors.shiptoAdd}

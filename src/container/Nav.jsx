@@ -5,7 +5,6 @@ import logo from "../assets/logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 import userGloabalContext from "../UserContext";
 import React from "react";
-import { deleteToken } from "../Utils/authUtils";
 
 const Nav = () => {
   const { userInformation, userRights } = userGloabalContext();
@@ -22,7 +21,6 @@ const Nav = () => {
     }
     return [];
   }, [userInformation?.role?.SelectAccess]);
-  console.log(userRights);
 
   const logoutHandlemethod = () => {
     deleteToken();

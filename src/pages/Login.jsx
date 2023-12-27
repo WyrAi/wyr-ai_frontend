@@ -7,7 +7,14 @@ import { AuthContext } from "../Contexts/authContext";
 // import { getAuthToken, setAuthToken } from "../Utils/authUtils";
 import { userGloabalContext } from "../UserContext";
 
+import socket from "../Components/socket";
+import io from "socket.io-client";
+
+
 const Login = () => {
+
+
+  // const [socket, setSocket] = useState("");
   // const navigate = useNavigate();
   const { setAuth } = useContext(AuthContext);
   const { setToken } = userGloabalContext();
@@ -17,6 +24,17 @@ const Login = () => {
     email: "",
     password: "",
   });
+
+  // useEffect(() => {
+  //   // const socketInstance = io("http://localhost:5000");
+  //   setSocket(socket);
+  
+  //   return () => {
+  //     // Cleanup function: disconnect the socket when the component is unmounted
+  //     socketInstance.disconnect();
+  //   };
+  // }, []);
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,11 +52,15 @@ const Login = () => {
         console.log("got token");
         setToken(res.data.token);
         setAuth(res.data.token);
+        console.log("userInfo",formData.email)
         navigate("/dashboard");
+        socket?.emit("newUser", formData.email);
       })
       .catch((err) => {
         console.log(err);
       });
+
+
   };
   return (
     <>
