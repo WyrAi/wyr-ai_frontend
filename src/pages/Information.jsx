@@ -210,7 +210,6 @@ const Information = () => {
       }
       if (data.status && pdf) {
         setButtonStatus(true);
-      } else {
         alert("The PDF is generating.");
       }
     } catch (error) {
