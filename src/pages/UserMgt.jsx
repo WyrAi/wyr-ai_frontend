@@ -52,7 +52,6 @@ const UserMgt = () => {
     //   }
     // );
 
-
     fetchData();
 
     wyraiApi
@@ -68,7 +67,6 @@ const UserMgt = () => {
       .catch((err) => {
         console.log(err);
       });
-
   };
   useEffect(() => {
     fetchData();
