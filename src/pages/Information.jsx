@@ -203,7 +203,8 @@ const Information = () => {
       setPDFStore(pdf);
 
       const { data } = await axios.get(`${baseURL}/api/VideoCheck`);
-      if (data.status != 200) {
+      console.log(data);
+      if (!data.status) {
         alert(
           "We are still processing the video. Please check the spellings after some time."
         );
