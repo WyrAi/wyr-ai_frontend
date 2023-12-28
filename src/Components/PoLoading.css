@@ -61,13 +61,6 @@
   color: #299fff;
   animation: cycle-words 5s infinite;
 }
-.word1 {
-  display: block;
-  height: 100%;
-  padding-left: 6px;
-  color: black;
-  animation: cycle-words 6s infinite;
-}
 
 @keyframes cycle-words {
   10% {

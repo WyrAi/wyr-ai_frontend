@@ -41,7 +41,7 @@ export const UserContextProvider = ({ children }) => {
   });
   // ----------------------------------------------------------------
   const [roleData, setRoleData] = useState([]);
-  const [userInformation, setUserInformation] = useState(null);
+  const [userInformation, setUserInformation] = useState();
   const [token, setToken] = useState(getAuthToken());
   // const [render, setRender] = useState(false);
 
@@ -84,7 +84,7 @@ export const UserContextProvider = ({ children }) => {
       wyraiApi
         .get(`/api/getAllEmployess/${companyId}`)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           setUserData(res.data);
         })
         .catch((err) => {
@@ -105,6 +105,21 @@ export const UserContextProvider = ({ children }) => {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const fetchNotification = () => {
+    try {
+      wyraiApi
+        .get(`/api/getnotification/${userInformation?.email}`)
+        .then((res) => {
+          // console.log(res);
+          const notyData = res?.data?.data; //.map((item) => item.message);
+          setNotifications([...notyData]);
+        })
+        .catch((err) => console.log(err));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // const edit = (e) => {
@@ -141,7 +156,7 @@ export const UserContextProvider = ({ children }) => {
     wyraiApi
       .get(`/api/UserInformation`)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         const userInformation = res.data.UserInfo;
         setUserInformation(userInformation);
         const companyId = userInformation?.companyId?._id;
@@ -162,15 +177,7 @@ export const UserContextProvider = ({ children }) => {
         deleteToken();
       });
   };
-
-  useEffect(() => {
-    console.log(token, userInformation);
-    if (token && !userInformation) {
-      console.log("here");
-      getUserInformation();
-    }
-  }, [userInformation, token]);
-  console.log(userInformation);
+  // console.log(userInformation);
 
   const { companyId, role, userRights } = React.useMemo(() => {
     const companyId = userInformation?.companyId?._id;
@@ -180,11 +187,21 @@ export const UserContextProvider = ({ children }) => {
   }, [userInformation]);
 
   useEffect(() => {
+    // console.log(token, userInformation);
+    if (token && userInformation == undefined) {
+      // console.log("here");
+      getUserInformation();
+    }
+  }, [userInformation, token]);
+  // console.log(userInformation);
+
+  // console.log(companyId, role, userRights);
+
+  useEffect(() => {
     if (companyId) {
       fetchRole();
     }
   }, [companyId]);
-
   return (
     <>
       <userContext.Provider
@@ -212,6 +229,7 @@ export const UserContextProvider = ({ children }) => {
           setActiveMenu,
 
           notification,
+          fetchNotification,
           setNotifications,
           setStartTime,
           setImagesFiles,

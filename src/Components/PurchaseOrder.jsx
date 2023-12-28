@@ -82,7 +82,8 @@ function PurchaseOrder() {
     { id: userInformation?._id, name: userInformation?.name },
   ]);
 
-  // console.log(...peopleOfInterest);
+  console.log("peopleOfInterest", ...peopleOfInterest);
+  const allIds = peopleOfInterest.map((item) => item.id);
   const [ids, setIds] = useState({
     buyerId: "",
     vendorId: "",
@@ -159,7 +160,7 @@ function PurchaseOrder() {
 
   const formik = useFormik({
     initialValues,
-    onSubmit: () => handleSubmit(),
+    onSubmit: (e) => handleSubmit(e),
     // validationSchema,
   });
 
@@ -202,7 +203,7 @@ function PurchaseOrder() {
   // console.log(buyer, companyId);
   // console.log(vendor);
 
-  async function handleSubmit() {
+  async function handleSubmit(e) {
     setIsloading(true);
     try {
       let status = "";
@@ -216,6 +217,21 @@ function PurchaseOrder() {
         status = "Pending Approval";
       }
 
+      //   async function handleSubmit(e) {
+      //     let status = "";
+      //     if (
+      //       userInformation?.role?.SelectAccess?.purchaseOrder?.some(
+      //         (item) => item === "Approve"
+      //       )
+      //     ) {
+      //       status = "Published";
+      //     } else {
+      //       status = "Pending Approval";
+      //     }
+      //     // console.log(slotOfProducts.length);
+      //     let requestBody = {};
+      //     if (slotOfProducts.length > 0) {
+      //       requestBody = {
       const requestBody = {
         purchaseDoc,
         buyer: ids.buyerId,
@@ -255,9 +271,10 @@ function PurchaseOrder() {
         }
       });
 
-      // for (let pair of formData.entries()) {
-      //   console.log(pair);
-      // }
+      for (let pair of formData.entries()) {
+        console.log(pair);
+      }
+      // console.log(e.currentTarget.getAttribute("type"));
 
       // const response = await axios.post(
       //   import.meta.env.VITE_BASE_URL + `/api/purchaseOrder`,
@@ -271,7 +288,7 @@ function PurchaseOrder() {
 
       // console.log(response, "PO");
 
-      if (e.target.type === "submit") {
+      if (e?.currentTarget?.getAttribute("type") === "submit") {
         wyraiApi
           .post("/api/purchaseOrder", formData, {
             headers: {
@@ -331,7 +348,7 @@ function PurchaseOrder() {
   const handleProductChange = (poIndex, field, value) => {
     const newPurchaseOrders = [...slotOfProducts];
     if (field === "images") {
-      console.log("images");
+      // console.log(poIndex, field);
       const img = newPurchaseOrders[poIndex][field];
       // console.log(newPurchaseOrders[poIndex][field], value, poIndex);
       newPurchaseOrders[poIndex][field] = [...value];
@@ -339,7 +356,7 @@ function PurchaseOrder() {
     } else {
       newPurchaseOrders[poIndex][field] = value;
     }
-    // console.log(newPurchaseOrders);
+
     setSlotOfProducts(newPurchaseOrders);
   };
 
@@ -357,7 +374,6 @@ function PurchaseOrder() {
       console.log(error);
     }
   };
-  // console.log(slotOfProducts);
 
   const addAssignPeople = (id, name, value) => {
     try {
@@ -371,7 +387,6 @@ function PurchaseOrder() {
       console.log(error);
     }
   };
-  // console.log(peopleOfInterest);
 
   const RemoveAssignPeople = (id) => {
     try {
@@ -380,7 +395,6 @@ function PurchaseOrder() {
       console.log(error);
     }
   };
-  // console.log(peopleOfInterest);
 
   const handleBack = () => {
     try {
@@ -465,6 +479,7 @@ function PurchaseOrder() {
           })
           .then((res) => {
             console.log(res);
+            wyraiApi.post("/api/logsCreate", res.data);
             setAiData(res.data);
             setIsPoLoading(false);
           })
@@ -472,11 +487,6 @@ function PurchaseOrder() {
             console.log(err);
             setIsPoLoading(false);
           });
-        // if (response.status === "200") {
-        //   setIsPoLoading(false);
-        // }
-
-        // console.log(response, "hfddd");
       } catch (error) {
         console.log(error);
         setIsPoLoading(false);
@@ -486,15 +496,54 @@ function PurchaseOrder() {
     if (ApiImage) POAIData();
   }, [ApiImage]);
 
+  const isExistMatching = (arrayOfObjects, key, stringToCheck) => {
+    console.log(stringToCheck, arrayOfObjects);
+    let existing = null;
+    if (Array.isArray(arrayOfObjects)) {
+      existing = arrayOfObjects.find((obj) => {
+        console.log(obj);
+        return (
+          obj[key]?.replace(/\s+/g, "").toLowerCase() ===
+          stringToCheck?.replace(/\s+/g, "").toLowerCase()
+        );
+      });
+    }
+
+    // console.log(existing);
+    return existing;
+  };
+
   useEffect(() => {
     const products = aiData?.table?.products;
     if (aiData) {
-      // before setting the field value check if the dropdown list includes the data comming from poUpload,
+      // this is used to set conditioning relation if existing user in dropdown then only setValue
+      const vendorExist = isExistMatching(
+        vendor,
+        "name",
+        aiData?.nameOfVendor || aiData?.vendor
+      );
+      const buyerExist = isExistMatching(buyer, "name", aiData?.nameOfBuyer);
+      if (vendorExist !== undefined) {
+        handleDropDownSelect("nameOfVendor", "addOfVendor", vendor);
+      }
+      if (buyerExist !== undefined) {
+        handleDropDownSelect("nameOfBuyer", "addOfBuyer", buyer);
+      }
+      // if (isExistMatching(buyer, "name", aiData?.nameOfBuyer)) {
+      //   formik.setFieldValue("nameOfBuyer", aiData?.nameOfBuyer || "");
+      //   formik.setFieldValue("addOfBuyer", aiData?.addOfBuyer || "");
+      // }
+      // if (isExistMatching(vendor, "name", aiData?.nameOfVendor)) {
+      //   formik.setFieldValue("nameOfVendor", aiData?.nameOfVendor || "");
+      //   formik.setFieldValue("addOfVendor", aiData?.addOfVendor || "");
+      // }
+
+      // formik.setFieldValue("nameOfBuyer", aiData?.nameOfBuyer || "");
+      // formik.setFieldValue("addOfBuyer", aiData?.addOfBuyer || "");
+      // formik.setFieldValue("nameOfVendor", aiData?.nameOfVendor || "");
+      // formik.setFieldValue("addOfVendor", aiData?.addOfVendor || "");
 
       formik.setFieldValue("poNumber", aiData?.poNumber || "");
-      formik.setFieldValue("nameOfBuyer", aiData?.nameOfBuyer || "");
-      formik.setFieldValue("addOfBuyer", aiData?.addOfBuyer || "");
-      formik.setFieldValue("nameOfVendor", aiData?.nameOfVendor || "");
       formik.setFieldValue("shiptoName", aiData?.shiptoName || "");
       formik.setFieldValue("shiptoAdd", aiData?.shiptoAdd || "");
       formik.setFieldValue("shipVia", aiData?.shipVia || "");
@@ -504,33 +553,22 @@ function PurchaseOrder() {
         // console.log("test");
         console.log(Object.keys(products).length);
 
-        const newProducts = Object.keys(products).map((product) => ({
-          ...intials,
-          images: intialImages,
-          styleId: products[product]?.styleId || "",
-          styleName: products[product]?.styleId || "",
-          quantity: products[product]?.quantity || "",
-          color: products[product]?.color || "",
-        }));
+        const newProducts = Object.keys(products).map((product) => {
+          return {
+            ...intials,
+            images: intialImages,
+            styleId: products[product]?.styleId || "",
+            styleName: products[product]?.styleId || "",
+            quantity: products[product]?.quantity || "",
+            color: products[product]?.Color || "",
+          };
+        });
+        console.log(products, newProducts);
         setSlotOfProducts(newProducts);
       }
     }
 
     console.log(products, aiData);
-
-    let productsArray = [];
-    // if (Object.keys(productList).length > 0) {
-    //   productsArray = Object.keys(products).map((key) => ({
-    //     id: key,
-    //     ...products[key],
-    //   }));
-    // }
-
-    // Object.keys(aiData).map((key) => {
-    //     if(key === "table"){
-
-    //     }
-    // })
   }, [aiData]);
   // console.log(slotOfProducts);
 
@@ -608,13 +646,6 @@ function PurchaseOrder() {
                 method={ImageHandler}
               />
             </div>
-            {/* {purchaseDoc && (
-              <img
-                src={purchaseDoc}
-                alt="Preview"
-                className="w-full h-full  "
-              />
-            )} */}
           </div>
           <div className="h-10 w-full bg-[#F3F4F6]"></div>
           <div id="bottom" className=" ml-5 mt-5 w-1/2">
@@ -625,7 +656,6 @@ function PurchaseOrder() {
               type="text"
               value={formik.values.poNumber}
               onChange={handleChange}
-              // handleClick={handleClick}
               onBlur={formik.handleBlur}
               error={formik.touched.poNumber && formik.errors.poNumber}
               placeholder={"Enter PO Number"}
@@ -656,7 +686,10 @@ function PurchaseOrder() {
                   <DropDown>
                     {buyer &&
                       buyer?.map((item, index) => {
-                        const intials = item?.name?.charAt(0).toUpperCase();
+                        const intials = item?.companyId?.name
+                          ?.charAt(0)
+                          .toUpperCase();
+                        console.log(item);
                         return (
                           <li
                             key={index}
@@ -672,7 +705,9 @@ function PurchaseOrder() {
                             <span className="w-6 h-6 bg-blue flex justify-center items-center rounded-full">
                               {intials}
                             </span>
-                            <span className="flex-1 text-xs">{item.name}</span>
+                            <span className="flex-1 text-xs">
+                              {item?.companyId?.name}
+                            </span>
                             <span className="flex gap-2 items-center">
                               <img
                                 src={gps}
@@ -838,7 +873,7 @@ function PurchaseOrder() {
                   className={
                     "form-input border border-gray-400 mt-1 pl-4 py-4 pr-10  rounded-md w-full outline-none"
                   }
-                  onClickOutside={toggleCalendar} // Close the calendar when clicking outside
+                  onClickOutside={toggleCalendar}
                   open={isCalendarOpen}
                 />
                 <label
@@ -869,9 +904,6 @@ function PurchaseOrder() {
                   onChange={handleChange}
                   handleClick={handleClick}
                   onBlur={formik.handleBlur}
-                  // error={
-                  //   formik.touched.assignPeople && formik.errors.assignPeople
-                  // }
                   placeholder={""}
                   labelColor={"bg-white"}
                   disable={true}
@@ -982,17 +1014,14 @@ function PurchaseOrder() {
             <button
               type="button"
               className="py-2 rounded-md px-11 border-2 border-[#1B9BEF] text-[#1B9BEF] font-bold "
-              onClick={() => handleSubmit()}
+              onClick={handleSubmit}
             >
               Save Draft
             </button>
             <button
               type="submit"
               className="py-2 rounded-md px-11 bg-blue font-bold text-white"
-              onClick={() => {
-                // addSlotOfProduct();
-                handleSubmit();
-              }}
+              onClick={handleSubmit}
             >
               {isLoading ? <Loader /> : `Publish`}
             </button>

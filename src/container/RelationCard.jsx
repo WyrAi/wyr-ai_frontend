@@ -53,6 +53,7 @@ const RelationCard = ({
 
   const RelationShipHandleDelete = () => {
     try {
+      console.log("GGGGGGGGGGG",relation._id)
       wyraiApi
         .delete(`/api/deleteRelation/${relation._id}`)
         .then((res) => {
