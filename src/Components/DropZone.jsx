@@ -72,7 +72,10 @@ const DropZone = ({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: (acceptedFiles) => {
       console.log(acceptedFiles);
-      setLoader(true);
+      if (setLoader) {
+        setLoader(true);
+      }
+
       setFiles(acceptedFiles);
       onDropForm(acceptedFiles);
       onDropHandler(acceptedFiles);
