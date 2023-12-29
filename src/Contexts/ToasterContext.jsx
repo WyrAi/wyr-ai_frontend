@@ -26,6 +26,7 @@ const Toast = (props) => {
       clearTimeout(timerID.current);
     };
   }, []);
+
   console.log(`alert alert-${type}`);
   const classname = `alert alert-${type}`;
   return (
@@ -34,6 +35,7 @@ const Toast = (props) => {
     </div>
   );
 };
+
 const ToastsContainer = (props) => {
   const { toasts } = props;
   return (
@@ -64,9 +66,11 @@ const toastReducer = (state, action) => {
       throw new Error(`Unhandled action type: ${action.type}`);
   }
 };
+
 const initialState = {
   toasts: [],
 };
+
 export const ToasterContextProvider = (props) => {
   const { children } = props;
   const [state, dispatch] = useReducer(toastReducer, initialState);
