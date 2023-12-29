@@ -28,7 +28,7 @@ const Layout = () => {
 
   return (
     <div className="h-screen bg-gray-100   ">
-      <div className="flex">
+      <div className="flex h-full">
         {activeMenu ? (
           <div className="w-full h-full md:w-[20vw] fixed ">
             <Nav></Nav>

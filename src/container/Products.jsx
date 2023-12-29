@@ -102,6 +102,14 @@ const Products = ({ data, handleProductChange, poIndex }) => {
     validationSchema,
   });
 
+  console.log(productList?.color);
+  // useEffect(() => {
+  //   formik.setFieldValue("styleId", productList?.styleId);
+  //   formik.setFieldValue("styleName", productList?.styleName);
+  //   formik.setFieldValue("quantity", productList?.quantity);
+  //   formik.setFieldValue("color", productList?.color);
+  // }, [productList]);
+
   // async function handleSubmit(values) {
   //   try {
   //     // console.log(values);
@@ -184,7 +192,7 @@ const Products = ({ data, handleProductChange, poIndex }) => {
                         label="StyleId"
                         name="styleId"
                         type="text"
-                        value={formik.values.styleId}
+                        value={formik.values.styleId || productList.styleId}
                         onChange={handleInputChange}
                         onBlur={formik.handleBlur}
                         error={formik.touched.styleId && formik.errors.styleId}
@@ -197,7 +205,7 @@ const Products = ({ data, handleProductChange, poIndex }) => {
                         label={"Style Name"}
                         name={"styleName"}
                         type="text"
-                        value={formik.values.styleName}
+                        value={formik.values.styleName || productList.styleName}
                         onChange={handleInputChange}
                         onBlur={formik.handleBlur}
                         error={
@@ -212,7 +220,7 @@ const Products = ({ data, handleProductChange, poIndex }) => {
                         label={"Quantity"}
                         name={"quantity"}
                         type="text"
-                        value={formik.values.quantity}
+                        value={formik.values.quantity || productList.quantity}
                         onChange={handleInputChange}
                         onBlur={formik.handleBlur}
                         error={
@@ -227,7 +235,7 @@ const Products = ({ data, handleProductChange, poIndex }) => {
                         label={"Color"}
                         name={"color"}
                         type="text"
-                        value={formik.values.color}
+                        value={formik.values.color || productList.color}
                         onChange={handleInputChange}
                         onBlur={formik.handleBlur}
                         error={formik.touched.color && formik.errors.color}

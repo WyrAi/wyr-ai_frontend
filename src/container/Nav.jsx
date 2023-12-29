@@ -5,7 +5,7 @@ import logo from "../assets/logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 import userGloabalContext from "../UserContext";
 import React from "react";
-import socket from "../Components/socket";
+import { deleteToken } from "../Utils/authUtils.js";
 
 const Nav = () => {
   const {userInformation,userRights} = userGloabalContext();
@@ -23,12 +23,11 @@ const Nav = () => {
     return [];
   }, [userInformation?.role?.SelectAccess]);
 
-  const logoutHandlemethod = () => {
-    console.log("logout emit");
-    // deleteToken()
-    socket.emit("remove", socket.id);
-    navigate("/login");
+  const logoutHandlemethod = async () => {
+    const res = await deleteToken();
+    if (res) navigate("/login");
   };
+
   return (
     <>
       <div className="h-screen flex flex-col justify-start  items-center bg-white overflow-hidden ">

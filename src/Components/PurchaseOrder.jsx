@@ -82,7 +82,8 @@ function PurchaseOrder() {
     { id: userInformation?._id, name: userInformation?.name },
   ]);
 
-  // console.log(...peopleOfInterest);
+  console.log("peopleOfInterest", ...peopleOfInterest);
+  const allIds = peopleOfInterest.map((item) => item.id);
   const [ids, setIds] = useState({
     buyerId: "",
     vendorId: "",
@@ -159,13 +160,13 @@ function PurchaseOrder() {
 
   const formik = useFormik({
     initialValues,
-    onSubmit: () => handleSubmit(),
+    onSubmit: (e) => handleSubmit(e),
     // validationSchema,
   });
 
   const { values } = formik;
 
-  console.log(values);
+  // console.log(values);
 
   useEffect(() => {
     if (values.nameOfBuyer && values.nameOfVendor) {
@@ -202,7 +203,7 @@ function PurchaseOrder() {
   // console.log(buyer, companyId);
   // console.log(vendor);
 
-  async function handleSubmit() {
+  async function handleSubmit(e) {
     setIsloading(true);
     try {
       let status = "";
@@ -242,7 +243,6 @@ function PurchaseOrder() {
         assignedPeople: peopleOfInterest.map((item) => item.id),
         poNumber: formik.values.poNumber,
         products: [...slotOfProducts],
-
         productImages: imgFormUploadData,
         status,
       };
@@ -264,117 +264,6 @@ function PurchaseOrder() {
             requestBody[key].forEach((item, index) => {
               // If the item is an object or array, you might need to stringify it before appending
               formData.append(`${key}[${index}]`, JSON.stringify(item));
-
-              //         status,
-              //       };
-              //     } else {
-              //       requestBody = {
-              //         purchaseDoc,
-              //         buyer: ids.buyerId,
-              //         vendor: ids.vendorId,
-              //         shiptoName: formik.values.shiptoName,
-              //         shiptoAdd: formik.values.shiptoAdd,
-              //         shipVia: formik.values.shipVia,
-              //         shipDate: formik.values.shipDate,
-              //         assignedPeople: peopleOfInterest.map((item) => item.id),
-              //         poNumber: formik.values.poNumber,
-              //         products: [{ ...productList, images: imagesFiles }],
-              //         status,
-              //       };
-              //     }
-
-              //     if (e.target.type === "submit") {
-              //       wyraiApi
-              //         .post("/api/purchaseOrder", requestBody)
-              //         .then((res) =>{
-              //           navigate(-1)
-
-              //           const data={
-              //             senderName:"",
-              //             text:`connection request from the ${values.email}`
-              //           }
-
-              //           socket.emit("RelationshipsText", {data});
-              //         } )
-              //         .catch((err) => console.log(err));
-              //     } else {
-              //       wyraiApi
-              //         .post(`/api/PuracheseOrderDraft/${userInformation?._id}`, requestBody)
-              //         .then((res) => navigate(-1))
-              //         .catch((err) => console.log(err));
-              //     }
-              //     // if (slotOfProducts.length > 0) {
-              //     //   requestBody = {
-              //     //     purchaseDoc,
-              //     //     buyer: ids.buyerId,
-              //     //     vendor: ids.vendorId,
-              //     //     shiptoName: formik.values.shiptoName,
-              //     //     shiptoAdd: formik.values.shiptoAdd,
-              //     //     shipVia: formik.values.shipVia,
-              //     //     shipDate: formik.values.shipDate,
-              //     //     assignedPeople: peopleOfInterest.map((item) => item.id),
-              //     //     poNumber: formik.values.poNumber,
-              //     //     products: [...slotOfProducts],
-              //     //     status,
-              //     //   };
-              //     // } else {
-              //     //   requestBody = {
-              //     //     purchaseDoc,
-              //     //     buyer: ids.buyerId,
-              //     //     vendor: ids.vendorId,
-              //     //     shiptoName: formik.values.shiptoName,
-              //     //     shiptoAdd: formik.values.shiptoAdd,
-              //     //     shipVia: formik.values.shipVia,
-              //     //     shipDate: formik.values.shipDate,
-              //     //     assignedPeople: peopleOfInterest.map((item) => item.id),
-              //     //     poNumber: formik.values.poNumber,
-              //     //     products: [{ ...productList, images: imagesFiles }],
-              //     //     status,
-              //     //   };
-              //     // }
-              //     requestBody = {
-              //       purchaseDoc,
-              //       buyer: ids.buyerId,
-              //       vendor: ids.vendorId,
-              //       shiptoName: formik.values.shiptoName,
-              //       shiptoAdd: formik.values.shiptoAdd,
-              //       shipVia: formik.values.shipVia,
-              //       shipDate: formik.values.shipDate,
-              //       assignedPeople: peopleOfInterest.map((item) => item.id),
-              //       poNumber: formik.values.poNumber,
-              //       products: [...slotOfProducts],
-              //       productImages: imgFormUploadData,
-              //       status,
-              //     };
-              //     // console.log(requestBody);
-
-              //     // uncomment below api to set submit and draft , told backend guy images files has been changed
-              //     // console.log(requestBody.pr);
-
-              //     const formData = new FormData();
-              //     const imgData = new FormData();
-
-              //     // requestBody.productImages.map((product, productIndex) => {
-              //     //   product.map((e, index) => {
-              //     //     imgData.append(
-              //     //       `productImage[${productIndex}][${index}].${e.name}`,
-              //     //       e.file
-              //     //     );
-              //     //   });
-              //     //   // product[imgIndex] = imgData;
-              //     // });
-              //     // requestBody.productImages = []
-              //     Object.keys(requestBody).forEach((key) => {
-              //       if (Array.isArray(requestBody[key])) {
-              //         // console.log(key);
-              //         if (key === "productImages") {
-              //           requestBody[key].map((product, productIndex) => {
-              //             product.map((e, index) => {
-              //               formData.append(
-              //                 `productImage[${productIndex}][${index}].${e.name}`,
-              //                 e.file
-              //               );
-
             });
           }
         } else {
@@ -385,20 +274,21 @@ function PurchaseOrder() {
       for (let pair of formData.entries()) {
         console.log(pair);
       }
+      // console.log(e.currentTarget.getAttribute("type"));
 
-      const response = await axios.post(
-        import.meta.env.VITE_BASE_URL + `/api/purchaseOrder`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      // const response = await axios.post(
+      //   import.meta.env.VITE_BASE_URL + `/api/purchaseOrder`,
+      //   formData,
+      //   {
+      //     headers: {
+      //       "Content-Type": "multipart/form-data",
+      //     },
+      //   }
+      // );
 
-      console.log(response, "PO");
+      // console.log(response, "PO");
 
-      if (e.target.type === "submit") {
+      if (e?.currentTarget?.getAttribute("type") === "submit") {
         wyraiApi
           .post("/api/purchaseOrder", formData, {
             headers: {
@@ -458,7 +348,7 @@ function PurchaseOrder() {
   const handleProductChange = (poIndex, field, value) => {
     const newPurchaseOrders = [...slotOfProducts];
     if (field === "images") {
-      console.log("images");
+      // console.log(poIndex, field);
       const img = newPurchaseOrders[poIndex][field];
       // console.log(newPurchaseOrders[poIndex][field], value, poIndex);
       newPurchaseOrders[poIndex][field] = [...value];
@@ -466,7 +356,7 @@ function PurchaseOrder() {
     } else {
       newPurchaseOrders[poIndex][field] = value;
     }
-    // console.log(newPurchaseOrders);
+
     setSlotOfProducts(newPurchaseOrders);
   };
 
@@ -484,7 +374,6 @@ function PurchaseOrder() {
       console.log(error);
     }
   };
-  // console.log(slotOfProducts);
 
   const addAssignPeople = (id, name, value) => {
     try {
@@ -498,7 +387,6 @@ function PurchaseOrder() {
       console.log(error);
     }
   };
-  // console.log(peopleOfInterest);
 
   const RemoveAssignPeople = (id) => {
     try {
@@ -507,7 +395,6 @@ function PurchaseOrder() {
       console.log(error);
     }
   };
-  // console.log(peopleOfInterest);
 
   const handleBack = () => {
     try {
@@ -551,6 +438,30 @@ function PurchaseOrder() {
   };
 
   useEffect(() => {
+    const POAIData = async () => {
+      try {
+        console.log("Hello");
+        const formData = new FormData();
+        formData.append("image_file", ApiImage);
+        const response = await axios.post(
+          "http://3.110.187.181:5000/detect",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log(response, "hfddd");
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    console.log(ApiImage, "gfffcf");
+    if (ApiImage) POAIData();
+  }, [ApiImage]);
+
+  useEffect(() => {
     // setIsPoLoading(false);
     const POAIData = async () => {
       console.log(isLoading);
@@ -561,66 +472,105 @@ function PurchaseOrder() {
         formData.append("image_file", ApiImage);
 
         axios
-          .post("http://13.127.36.67:5000/detect", formData, {
+          .post("http://13.201.97.55:5000/detect", formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
           })
           .then((res) => {
             console.log(res);
+            wyraiApi.post("/api/logsCreate", res.data);
             setAiData(res.data);
             setIsPoLoading(false);
-            // document.getElementById("bottom").scrollIntoView();
-            // setInitialValues({
-            //   poNumber: res.data.poNumber,
-            //   nameOfBuyer: res.data.nameOfBuyer,
-            //   addOfBuyer: res.data.addOfBuyer,
-            //   nameOfVendor: res.data.nameOfVendor,
-            //   addOfVendor: res.data.addOfVendor,
-            //   shiptoName: "",
-            //   shiptoAdd: "",
-            //   shipVia: "",
-            //   shipDate: selectedDate,
-            //   totalCarton: res.data.totalCarton,
-            //   inv_number: "",
-            //   assignPeople: "",
-            // });
           })
-          .catch((err) => console.log(err));
-        // if (response.status === "200") {
-        //   setIsPoLoading(false);
-        // }
-
-        // console.log(response, "hfddd");
+          .catch((err) => {
+            console.log(err);
+            setIsPoLoading(false);
+          });
       } catch (error) {
         console.log(error);
         setIsPoLoading(false);
       }
     };
-    console.log(ApiImage, "gfffcf");
+
     if (ApiImage) POAIData();
   }, [ApiImage]);
-  console.log(aiData.poNumber);
+
+  const isExistMatching = (arrayOfObjects, key, stringToCheck) => {
+    console.log(stringToCheck, arrayOfObjects);
+    let existing = null;
+    if (Array.isArray(arrayOfObjects)) {
+      existing = arrayOfObjects.find((obj) => {
+        console.log(obj);
+        return (
+          obj[key]?.replace(/\s+/g, "").toLowerCase() ===
+          stringToCheck?.replace(/\s+/g, "").toLowerCase()
+        );
+      });
+    }
+
+    // console.log(existing);
+    return existing;
+  };
 
   useEffect(() => {
     const products = aiData?.table?.products;
-    console.log(products);
+    if (aiData) {
+      // this is used to set conditioning relation if existing user in dropdown then only setValue
+      const vendorExist = isExistMatching(
+        vendor,
+        "name",
+        aiData?.nameOfVendor || aiData?.vendor
+      );
+      const buyerExist = isExistMatching(buyer, "name", aiData?.nameOfBuyer);
+      if (vendorExist !== undefined) {
+        handleDropDownSelect("nameOfVendor", "addOfVendor", vendor);
+      }
+      if (buyerExist !== undefined) {
+        handleDropDownSelect("nameOfBuyer", "addOfBuyer", buyer);
+      }
+      // if (isExistMatching(buyer, "name", aiData?.nameOfBuyer)) {
+      //   formik.setFieldValue("nameOfBuyer", aiData?.nameOfBuyer || "");
+      //   formik.setFieldValue("addOfBuyer", aiData?.addOfBuyer || "");
+      // }
+      // if (isExistMatching(vendor, "name", aiData?.nameOfVendor)) {
+      //   formik.setFieldValue("nameOfVendor", aiData?.nameOfVendor || "");
+      //   formik.setFieldValue("addOfVendor", aiData?.addOfVendor || "");
+      // }
 
-    let productsArray = [];
-    // if (Object.keys(productList).length > 0) {
-    //   productsArray = Object.keys(products).map((key) => ({
-    //     id: key,
-    //     ...products[key],
-    //   }));
-    // }
+      // formik.setFieldValue("nameOfBuyer", aiData?.nameOfBuyer || "");
+      // formik.setFieldValue("addOfBuyer", aiData?.addOfBuyer || "");
+      // formik.setFieldValue("nameOfVendor", aiData?.nameOfVendor || "");
+      // formik.setFieldValue("addOfVendor", aiData?.addOfVendor || "");
 
-    // Object.keys(aiData).map((key) => {
-    //     if(key === "table"){
+      formik.setFieldValue("poNumber", aiData?.poNumber || "");
+      formik.setFieldValue("shiptoName", aiData?.shiptoName || "");
+      formik.setFieldValue("shiptoAdd", aiData?.shiptoAdd || "");
+      formik.setFieldValue("shipVia", aiData?.shipVia || "");
 
-    //     }
-    // })
+      if (products) {
+        // setProductList( { ...productList,  },)
+        // console.log("test");
+        console.log(Object.keys(products).length);
+
+        const newProducts = Object.keys(products).map((product) => {
+          return {
+            ...intials,
+            images: intialImages,
+            styleId: products[product]?.styleId || "",
+            styleName: products[product]?.styleId || "",
+            quantity: products[product]?.quantity || "",
+            color: products[product]?.Color || "",
+          };
+        });
+        console.log(products, newProducts);
+        setSlotOfProducts(newProducts);
+      }
+    }
+
+    console.log(products, aiData);
   }, [aiData]);
-
+  // console.log(slotOfProducts);
 
   const fetchpeople = async () => {
     if (ids.buyerId.length > 0 && ids.vendorId.length > 0) {
@@ -647,19 +597,19 @@ function PurchaseOrder() {
   const ImageHandler = async (value) => {
     setApiImage(value);
   };
-  console.log(isPoLoading);
+  // console.log(isPoLoading);
 
-  const scrollToDiv = () => {
-    const container = document.getElementById("container");
-    const scrollTo = document.getElementById("scrollToDiv");
-    container.scrollTo({
-      top:
-        scrollTo.offsetTop -
-        container.clientHeight / 2 +
-        scrollTo.clientHeight / 2,
-      behavior: "smooth",
-    });
-  };
+  // const scrollToDiv = () => {
+  //   const container = document.getElementById("container");
+  //   const scrollTo = document.getElementById("scrollToDiv");
+  //   container.scrollTo({
+  //     top:
+  //       scrollTo.offsetTop -
+  //       container.clientHeight / 2 +
+  //       scrollTo.clientHeight / 2,
+  //     behavior: "smooth",
+  //   });
+  // };
 
   return (
     <>
@@ -696,13 +646,6 @@ function PurchaseOrder() {
                 method={ImageHandler}
               />
             </div>
-            {/* {purchaseDoc && (
-              <img
-                src={purchaseDoc}
-                alt="Preview"
-                className="w-full h-full  "
-              />
-            )} */}
           </div>
           <div className="h-10 w-full bg-[#F3F4F6]"></div>
           <div id="bottom" className=" ml-5 mt-5 w-1/2">
@@ -711,9 +654,8 @@ function PurchaseOrder() {
               label="PO Number"
               name="poNumber"
               type="text"
-              value={aiData.poNumber || formik.values.poNumber}
+              value={formik.values.poNumber}
               onChange={handleChange}
-              // handleClick={handleClick}
               onBlur={formik.handleBlur}
               error={formik.touched.poNumber && formik.errors.poNumber}
               placeholder={"Enter PO Number"}
@@ -728,7 +670,7 @@ function PurchaseOrder() {
                   label="Name"
                   name="nameOfBuyer"
                   type="text"
-                  value={aiData.nameOfBuyer || formik.values.nameOfBuyer}
+                  value={formik.values.nameOfBuyer}
                   onChange={handleChange}
                   handleClick={handleClick}
                   onBlur={formik.handleBlur}
@@ -744,7 +686,10 @@ function PurchaseOrder() {
                   <DropDown>
                     {buyer &&
                       buyer?.map((item, index) => {
-                        const intials = item?.name?.charAt(0).toUpperCase();
+                        const intials = item?.companyId?.name
+                          ?.charAt(0)
+                          .toUpperCase();
+                        console.log(item);
                         return (
                           <li
                             key={index}
@@ -760,7 +705,9 @@ function PurchaseOrder() {
                             <span className="w-6 h-6 bg-blue flex justify-center items-center rounded-full">
                               {intials}
                             </span>
-                            <span className="flex-1 text-xs">{item.name}</span>
+                            <span className="flex-1 text-xs">
+                              {item?.companyId?.name}
+                            </span>
                             <span className="flex gap-2 items-center">
                               <img
                                 src={gps}
@@ -783,7 +730,7 @@ function PurchaseOrder() {
                   label="Address"
                   name="addOfBuyer"
                   type="text"
-                  value={aiData.addOfBuyer || formik.values.addOfBuyer}
+                  value={formik.values.addOfBuyer}
                   onChange={handleChange}
                   handleClick={handleClick}
                   onBlur={formik.handleBlur}
@@ -802,7 +749,7 @@ function PurchaseOrder() {
                   label="Name"
                   name="nameOfVendor"
                   type="text"
-                  value={aiData.nameOfVendor || formik.values.nameOfVendor}
+                  value={formik.values.nameOfVendor}
                   onChange={handleChange}
                   handleClick={handleClick}
                   onBlur={formik.handleBlur}
@@ -861,7 +808,7 @@ function PurchaseOrder() {
                   label="Address"
                   name="addOfVendor"
                   type="text"
-                  value={aiData.addOfVendor || formik.values.addOfVendor}
+                  value={formik.values.addOfVendor}
                   onChange={handleChange}
                   handleClick={handleClick}
                   onBlur={formik.handleBlur}
@@ -882,7 +829,7 @@ function PurchaseOrder() {
                   label="Name"
                   name="shiptoName"
                   type="text"
-                  value={aiData.shiptoName || formik.values.shiptoName}
+                  value={formik.values.shiptoName}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   error={formik.touched.shiptoName && formik.errors.shiptoName}
@@ -896,7 +843,7 @@ function PurchaseOrder() {
                   label="Complete Address"
                   name="shiptoAdd"
                   type="text"
-                  value={aiData.shiptoAdd || formik.values.shiptoAdd}
+                  value={formik.values.shiptoAdd}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   error={formik.touched.shiptoAdd && formik.errors.shiptoAdd}
@@ -926,7 +873,7 @@ function PurchaseOrder() {
                   className={
                     "form-input border border-gray-400 mt-1 pl-4 py-4 pr-10  rounded-md w-full outline-none"
                   }
-                  onClickOutside={toggleCalendar} // Close the calendar when clicking outside
+                  onClickOutside={toggleCalendar}
                   open={isCalendarOpen}
                 />
                 <label
@@ -957,9 +904,6 @@ function PurchaseOrder() {
                   onChange={handleChange}
                   handleClick={handleClick}
                   onBlur={formik.handleBlur}
-                  // error={
-                  //   formik.touched.assignPeople && formik.errors.assignPeople
-                  // }
                   placeholder={""}
                   labelColor={"bg-white"}
                   disable={true}
@@ -1070,17 +1014,14 @@ function PurchaseOrder() {
             <button
               type="button"
               className="py-2 rounded-md px-11 border-2 border-[#1B9BEF] text-[#1B9BEF] font-bold "
-              onClick={() => handleSubmit()}
+              onClick={handleSubmit}
             >
               Save Draft
             </button>
             <button
               type="submit"
               className="py-2 rounded-md px-11 bg-blue font-bold text-white"
-              onClick={() => {
-                // addSlotOfProduct();
-                handleSubmit();
-              }}
+              onClick={handleSubmit}
             >
               {isLoading ? <Loader /> : `Publish`}
             </button>
@@ -1101,7 +1042,7 @@ function PurchaseOrder() {
                 <button
                   type="button"
                   className="bg-blue flex gap-2 items-center z-10 absolute right-[5vh] top-[110px] py-2 px-4 rounded text-white"
-                // onClick={() => setShowPurchaseOrder(true)}
+                  // onClick={() => setShowPurchaseOrder(true)}
                 >
                   <AiOutlineSearch className="text-white text-2xl" />
                   Preview

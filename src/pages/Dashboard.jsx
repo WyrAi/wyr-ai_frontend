@@ -24,16 +24,17 @@ const InspectionCard = () => {
 };
 
 const Dashboard = () => {
-
   const socket = initSocket();
 
-  console.log("gggggggggggggg",socket);
-
-  const { getUserInformation, companyId, userInformation,notification ,fetchNotification} = userGloabalContext();
+  const {
+    getUserInformation,
+    companyId,
+    userInformation,
+    notification,
+    fetchNotification,
+  } = userGloabalContext();
   const toast = useToast();
 
-  
-  
   const status = {
     active: { name: "Active", Current: 0, color: "#EFD780" },
     approve: { name: "Approve", Current: 0, color: "#B8B8FF" },
@@ -47,14 +48,11 @@ const Dashboard = () => {
   }, []);
 
   socket.on("getText", async (data) => {
-    window.alert(data.text)
-   fetchNotification();
+    fetchNotification();
   });
-  
+
   useEffect(() => {
-    console.log("userINformation",userInformation?.email);
     if (userInformation?.email) {
-      console.log("Notification component mounted", socket.id);
       try {
         fetchNotification();
       } catch (error) {
@@ -62,9 +60,6 @@ const Dashboard = () => {
       }
     }
   }, [userInformation]);
-  console.log("61=====>",socket.id)
-  console.log("gfkuljknlj====>",socket.id);
-
   return (
     <div className="ml-5 w-[85%] h-full box-border mt-7">
       <header className="flex justify-between mb-9">
