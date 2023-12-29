@@ -129,22 +129,21 @@ const Header = () => {
               {popup && (
                 <DropDown>
                   {notification.length > 0 &&
-                    notification?.map((item, index) => {
-                      return (
-                        <li
-                          key={index}
-                          className="py-2  gap-4 mr-2 border-b w-full"
-                        >
-                          <span
-                            className={` text-xs ${
-                              !item.seen && "font-semibold"
-                            }`}
-                          >
-                            {item.message}
-                          </span>
-                        </li>
-                      );
-                    })}
+                    notification
+                      .slice() // Create a shallow copy to avoid mutating the original array
+                      .reverse() // Reverse the array
+                      .map((item, index) => {
+                        return (
+                          <li key={index} className="py-2 gap-4 mr-2 border-b w-full">
+                            <span
+                              className={`text-xs ${!item.seen && "font-semibold"}`}
+                            >
+                              {item.message}
+                            </span>
+                          </li>
+                        );
+                      })}
+
                 </DropDown>
               )}
             </div>
