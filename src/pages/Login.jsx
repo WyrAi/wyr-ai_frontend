@@ -9,14 +9,13 @@ import { userGloabalContext } from "../UserContext";
 import { useFormik } from "formik";
 import { LoginSchema } from "../validationSchemas/loginSchema";
 
-import initSocket from "../Components/socket";
-import io from "socket.io-client";
+// import initSocket from "../Components/socket";
+
 
 const Login = () => {
-  // const [socket, setSocket] = useState("");
-  // const navigate = useNavigate();
+ 
 
-  const socket = initSocket();
+  // const socket = initSocket();
 
   const { setAuth } = useContext(AuthContext);
   const { setToken } = userGloabalContext();
@@ -116,11 +115,10 @@ const Login = () => {
             setToken(res.data.token);
             setAuth(res.data.token);
             // console.log("userInfo", values.Email); 
-            socket?.emit("newUser", values.Email);
-            socket.on("sockeid", (data) => {
-              console.log("gfkuljknlj====>", socket.id);
-              localStorage.setItem("socketId", data);
-            });
+            // socket?.emit("newUser", values.Email);
+            // socket.on("sockeid", (data) => {
+            //   localStorage.setItem("socketId", data);
+            // });
             navigate("/dashboard");
           })
           .catch((err) => {

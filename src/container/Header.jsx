@@ -35,6 +35,10 @@ const DropDown = ({ children }) => {
     }
   };
 
+  socket.on("getText", async (data) => {
+    fetchNotification();
+  });
+
   return (
     <div className="relative">
       <div className="dropdown-notch"></div>
