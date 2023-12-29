@@ -106,7 +106,7 @@ const RelationShip = () => {
               senderName:values.email,
               text:`connection request from the ${userInformation?.email}`
             }
-            socket.emit("RelationshipsText", {data}); 
+            // socket.emit("RelationshipsText", {data}); 
             setSelectRelation({ id: "" });
             fetchRelation();
           })
