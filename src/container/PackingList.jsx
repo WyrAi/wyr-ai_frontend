@@ -97,9 +97,9 @@ const PackingList = ({
   }
 
   const handleDropDownSelect = (item) => {
-    // console.log(item);
-    // handleProductChange(poIndex, productIndex, "branch", item?._id);
-    // setBranch(item?.branchName);
+    console.log(item);
+    handleProductChange(poIndex, productIndex, "branch", item?._id);
+    setBranch(item?.branchName);
   };
 
   const qcExist = userInformation?.companyId?.companyRole === "QC Agency";

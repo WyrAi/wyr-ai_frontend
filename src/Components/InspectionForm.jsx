@@ -243,6 +243,7 @@ function InspectionForm() {
         packingListFiles,
         ...ids,
       };
+      // console.log(reqbody);
       wyraiApi
         .post(`/api/PLCreate/${userInformation?._id}`, {
           ...formik.values,
@@ -258,6 +259,8 @@ function InspectionForm() {
       console.error(error);
     }
   }
+
+  // console.log(addpurchaseOrder);
 
   const DropDown = ({ children }) => {
     return (
