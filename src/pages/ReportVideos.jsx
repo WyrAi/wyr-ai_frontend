@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import FilterBlock from "../Components/FiltersBlock";
 import SortFilter from "../Components/SortFilter";
 import {
@@ -10,6 +10,7 @@ import {
 } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import Prompt from "../DasiyUIComponents/Prompt";
+import Hls from "hls.js";
 
 const filters = [
   {
@@ -88,6 +89,7 @@ const ReportVideos = () => {
   const [sortFilter, setSortFilter] = useState(sortFilter_Opt[0]);
   const [toggle, setToggle] = useState(true);
   const navigate = useNavigate();
+  const videoRef = useRef(null);
 
   function handleAddPage() {
     try {
@@ -96,6 +98,24 @@ const ReportVideos = () => {
       console.log(error);
     }
   }
+
+  useEffect(() => {
+    const initializeHLS = () => {
+      if (Hls.isSupported()) {
+        const video = videoRef.current;
+        const hls = new Hls();
+
+        hls.loadSource("http://192.168.1.19:8080/hls/abc123.m3u8");
+        hls.attachMedia(video);
+
+        hls.on(Hls.Events.MANIFEST_PARSED, function () {
+          video.play();
+        });
+      }
+    };
+
+    initializeHLS();
+  }, []);
   return (
     <main>
       <div className="flex flex-col m-5">
@@ -145,14 +165,15 @@ const ReportVideos = () => {
                 modalID={`joinLive_${index}`}
               >
                 <div className="flex justify-center">
-                  <iframe
+                  {/* <iframe
                     src="http://13.201.72.80:8080/embed/video"
                     title="Owncast"
                     height="350px"
                     width="550px"
                     referrerpolicy="origin"
                     allowfullscreen
-                  ></iframe>
+                  ></iframe> */}
+                  <video ref={videoRef} controls></video>
                 </div>
               </Prompt>
               <div className="absolute top-[85%] right-[0%] transform translate-x-[-55%] translate-y-[-30%] flex gap-2">
