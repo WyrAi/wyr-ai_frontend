@@ -55,7 +55,6 @@ const Dashboard = () => {
     console.log("userINformation",userInformation?.email);
     if (userInformation?.email) {
       console.log("Notification component mounted", socket.id);
-      
       try {
         fetchNotification();
       } catch (error) {

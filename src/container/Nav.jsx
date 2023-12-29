@@ -8,7 +8,7 @@ import React from "react";
 import socket from "../Components/socket";
 
 const Nav = () => {
-  const { userInformation, userRights } = userGloabalContext();
+  const {userInformation,userRights} = userGloabalContext();
   const navigate = useNavigate();
   const accessArray = React.useMemo(() => {
     if (userRights) {
