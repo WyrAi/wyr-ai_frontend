@@ -203,6 +203,7 @@ const Information = () => {
       setPDFStore(pdf);
 
       const { data } = await axios.get(`${baseURL}/api/VideoCheck`);
+      console.log(data);
       if (!data.status) {
         alert(
           "We are still processing the video. Please check the spellings after some time."
@@ -210,7 +211,6 @@ const Information = () => {
       }
       if (data.status && pdf) {
         setButtonStatus(true);
-      } else {
         alert("The PDF is generating.");
       }
     } catch (error) {
@@ -470,12 +470,63 @@ const Information = () => {
           >
             Download
           </button>{" "}
-          <button
-            className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white"
-            onClick={() => EmailHandleMethod()}
-          >
-            Email
-          </button>
+          {buttonStatus ? (
+            <Prompt
+              btnText={
+                <button
+                  className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white ml-5 w-[300px] h-[50px] mb-1"
+                  onClick={() => console.log("first")}
+
+                  //                   className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white "
+                  // onClick={() => PdfCreateAndVideoCheck()}
+                >
+                  Email
+                </button>
+              }
+              modalID={"sendEmail"}
+            >
+              <div className="w-[80%] mx-auto flex flex-col gap-5">
+                <h1 className="text-center text-xl font-semibold ">
+                  Send Report{" "}
+                </h1>
+                <div className="flex gap-1 items-end">
+                  <div
+                    className={`border-2 border-[#99999980]  relative p-[15px] flex flex-col rounded-lg mt-5 w-full bg-white `}
+                  >
+                    <label
+                      htmlFor={"email"}
+                      className="absolute top-[-11px] bg-white text-color px-3"
+                    >
+                      {"Email"}
+                    </label>
+                    <input
+                      type={"email"}
+                      name={"email"}
+                      id={"email"}
+                      placeholder={"Enter the Email Id"}
+                      className="border-0 outline-none placeholder-[#CCCCCC]"
+                      value={sendEmail}
+                      onChange={(e) => setSendEmail(e.target.value)}
+                      autoComplete="off"
+                    />
+                  </div>
+                  <button
+                    className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white ml-5 w-[300px] h-[50px] mb-1"
+                    onClick={() => EmailHandleMethod()}
+                  >
+                    Send
+                  </button>
+                </div>
+              </div>
+            </Prompt>
+          ) : (
+            <button
+              className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white "
+              onClick={() => PdfCreateAndVideoCheck()}
+            >
+              PDF & Video Gernate
+            </button>
+          )}
         </div>
       </div>
     </>

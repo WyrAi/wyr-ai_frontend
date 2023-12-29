@@ -8,7 +8,7 @@ import React from "react";
 import { deleteToken } from "../Utils/authUtils.js";
 
 const Nav = () => {
-  const { userInformation, userRights } = userGloabalContext();
+  const {userInformation,userRights} = userGloabalContext();
   const navigate = useNavigate();
   const accessArray = React.useMemo(() => {
     if (userRights) {
