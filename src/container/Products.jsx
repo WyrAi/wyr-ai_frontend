@@ -102,7 +102,7 @@ const Products = ({ data, handleProductChange, poIndex }) => {
     validationSchema,
   });
 
-  console.log(productList?.color);
+  // console.log(productList?.color);
   // useEffect(() => {
   //   formik.setFieldValue("styleId", productList?.styleId);
   //   formik.setFieldValue("styleName", productList?.styleName);

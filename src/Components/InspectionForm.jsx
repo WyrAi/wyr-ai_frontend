@@ -244,6 +244,7 @@ function InspectionForm() {
         packingListFiles,
         ...ids,
       };
+      console.log(reqbody);
       wyraiApi
         .post(`/api/PLCreate/${userInformation?._id}`, {
           ...formik.values,
@@ -260,50 +261,50 @@ function InspectionForm() {
     }
   }
 
-  // const [ApiImage, setApiImage] = useState();
+  const [ApiImage, setApiImage] = useState();
 
-  // useEffect(() => {
-  //   // setIsPoLoading(false);
-  //   const POAIData = async () => {
-  //     // console.log(isLoading);
-  //     // setIsPoLoading(false);
-  //     try {
-  //       console.log("Hello");
-  //       const formData = new FormData();
-  //       formData.append("image", ApiImage);
+  useEffect(() => {
+    // setIsPoLoading(false);
+    const POAIData = async () => {
+      // console.log(isLoading);
+      // setIsPoLoading(false);
+      try {
+        console.log("Hello");
+        const formData = new FormData();
+        formData.append("image", ApiImage);
 
-  //       for (let pair of formData.entries()) {
-  //         console.log(pair);
-  //       }
+        for (let pair of formData.entries()) {
+          console.log(pair);
+        }
 
-  //       axios
-  //         .post("http://15.206.153.55:5000/generate-content", formData, {
-  //           headers: {
-  //             "Content-Type": "multipart/form-data",
-  //           },
-  //         })
-  //         .then((res) => {
-  //           console.log(res);
-  //           // wyraiApi.post("/api/logsCreate", res.data);
-  //           // setAiData(res.data);
-  //           // setIsPoLoading(false);
-  //         })
-  //         .catch((err) => {
-  //           console.log(err);
-  //           // setIsPoLoading(false);
-  //         });
-  //     } catch (error) {
-  //       console.log(error);
-  //       // setIsPoLoading(false);
-  //     }
-  //   };
+        axios
+          .post("http://13.234.213.120:5000/generate-content", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((res) => {
+            console.log(res);
+            wyraiApi.post("/api/logsCreate", res.data);
+            // setAiData(res.data);
+            // setIsPoLoading(false);
+          })
+          .catch((err) => {
+            console.log(err);
+            // setIsPoLoading(false);
+          });
+      } catch (error) {
+        console.log(error);
+        // setIsPoLoading(false);
+      }
+    };
 
-  //   if (ApiImage) POAIData();
-  // }, [ApiImage]);
+    if (ApiImage) POAIData();
+  }, [ApiImage]);
 
-  // const ImageHandler = async (value) => {
-  //   setApiImage(value);
-  // };
+  const ImageHandler = async (value) => {
+    setApiImage(value);
+  };
 
   const DropDown = ({ children }) => {
     return (
@@ -337,7 +338,7 @@ function InspectionForm() {
               onDrop={setPackingListFiles}
               multiple={true}
               message={"Upload Packing List"}
-              // method={ImageHandler}
+              method={ImageHandler}
             />
           </div>
           <div className="relative">

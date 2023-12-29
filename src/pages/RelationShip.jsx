@@ -102,11 +102,11 @@ const RelationShip = () => {
           .put(`/api/approvedRelationship/${selectRelation.id}`)
           .then((res) => {
             console.log(res);
-            const data={
-              senderName:values.email,
-              text:`connection request from the ${userInformation?.email}`
-            }
-            socket.emit("RelationshipsText", {data}); 
+            const data = {
+              senderName: values.email,
+              text: `connection request from the ${userInformation?.email}`,
+            };
+            socket.emit("RelationshipsText", { data });
             setSelectRelation({ id: "" });
             fetchRelation();
           })
@@ -220,7 +220,7 @@ const RelationShip = () => {
         </div>
       </div>
       <div className=" mx-2 w-full flex-1 flex flex-col">
-        <div className="flex flex-w h-full gap-2  mt-5 flex-wrap">
+        <div className="flex flex-wrap content-start h-full gap-2  mt-5 ">
           {allRelation?.map((value, index) => {
             return (
               <div className="bg-gray-50 h-[120px] w-[295px]" key={index}>

@@ -18,7 +18,7 @@ const InspectionCard = ({ id, plDoc, buyer, status, statusLabel }) => {
   return (
     <>
       <div
-        className={`flex gap-5 w-[290px] h-full items-center  pl-2 py-3 pr-12 bg-white`}
+        className={`flex gap-5 w-[290px] h-[110px] items-center  pl-2 py-3 pr-12 bg-white`}
         style={{ borderLeft: "2px solid" + color }}
         onClick={() => {
           if (status !== "Completed") {

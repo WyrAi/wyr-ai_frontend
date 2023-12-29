@@ -613,10 +613,7 @@ function PurchaseOrder() {
 
   return (
     <>
-      <div
-        id="container"
-        className=" h-[94vh] w-[95%] pt-2 mx-auto flex flex-col"
-      >
+      <div id="container" className=" h-[94vh] w-full pt-2 mx-5 flex flex-col">
         <div className="h-[3%] mb-5">
           <button
             type="button"
@@ -628,7 +625,7 @@ function PurchaseOrder() {
         </div>
         <form
           onSubmit={formik.handleSubmit}
-          className="flex-1 flex-cols gap-10 w-full h-[45%] bg-white overflow-y-auto  "
+          className="flex-1 flex-cols gap-10 w-full h-[45%] bg-white overflow-y-auto px-5  "
         >
           <div className="  h-[500px] rounded-md  flex mb-11 ">
             <div className="relative w-full h-full ">

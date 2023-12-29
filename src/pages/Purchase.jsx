@@ -136,8 +136,8 @@ const Purchase = () => {
           />
         </div>
       </div>
-      <div className=" ml-5 w-[98%] h-[740px]  ">
-        <div className="flex flex-wrap w-full gap-6 overflow-y-auto">
+      <div className=" ml-5 w-[98%] h-full ">
+        <div className="flex flex-wrap w-full gap-6 h-[95%] overflow-y-auto">
           {filterData?.map((value, index) => {
             const { poNumber, purchaseDoc, buyer, status } = value;
             console.log(value);

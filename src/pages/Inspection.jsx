@@ -83,8 +83,8 @@ const Inspection = () => {
   console.log(plData);
 
   return (
-    <main>
-      <div className="flex flex-col m-5">
+    <main className="h-full">
+      <div className="flex flex-col h-full m-5">
         <div className="flex gap-1 items-center">
           <div className="w-full">
             <FilterBlock
@@ -109,7 +109,7 @@ const Inspection = () => {
         </div>
 
         <div className=" ml-5 w-full flex-1 flex flex-col">
-          <div className="flex flex-wrap w-full h-24 gap-6">
+          <div className="flex flex-wrap content-start w-full h-full gap-6">
             {plData?.map((value, index) => {
               const { packingListFiles, buyerId, status, _id } = value;
               return (
