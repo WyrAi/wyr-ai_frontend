@@ -75,7 +75,6 @@ const DropZone = ({
       if (setLoader) {
         setLoader(true);
       }
-      // setLoader(true);
       setFiles(acceptedFiles);
       onDropForm(acceptedFiles);
       onDropHandler(acceptedFiles);

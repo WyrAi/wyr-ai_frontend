@@ -6,8 +6,7 @@ import userGloabalContext from "../UserContext";
 import { useEffect } from "react";
 import { useState } from "react";
 import useToast from "../Contexts/ToasterContext";
-import initSocket from "../Components/socket";
-import axios from "axios";
+// import initSocket from "../Components/socket";
 
 const InspectionCard = () => {
   return (
@@ -24,14 +23,17 @@ const InspectionCard = () => {
 };
 
 const Dashboard = () => {
+  // const socket = initSocket();
 
-  const socket = initSocket();
-
-  const { getUserInformation, companyId, userInformation,notification ,fetchNotification} = userGloabalContext();
+  const {
+    getUserInformation,
+    companyId,
+    userInformation,
+    notification,
+    fetchNotification,
+  } = userGloabalContext();
   const toast = useToast();
 
-  
-  
   const status = {
     active: { name: "Active", Current: 0, color: "#EFD780" },
     approve: { name: "Approve", Current: 0, color: "#B8B8FF" },
@@ -44,12 +46,10 @@ const Dashboard = () => {
     }
   }, []);
 
-  socket.on("getText", async (data) => {
-   fetchNotification();
-  });
   
+
   useEffect(() => {
-    if (userInformation?.email) {      
+    if (userInformation?.email) {
       try {
         fetchNotification();
       } catch (error) {

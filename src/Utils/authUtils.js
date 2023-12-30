@@ -1,4 +1,4 @@
-import initSocket from "../Components/socket";
+// import initSocket from "../Components/socket";
 
 export const setAuthToken = (token) => {
   localStorage.setItem("token", token);
@@ -8,10 +8,10 @@ export const getAuthToken = () => {
 };
 
 export const deleteToken = async () => {
-  const socket = initSocket();
-  const storedSocketId = localStorage.getItem("socketId");
-  socket.emit("remove", storedSocketId);
+  // const socket = initSocket();
+  // const storedSocketId = localStorage.getItem("socketId");
+  // socket.emit("remove", storedSocketId);
   localStorage.removeItem("token");
-  localStorage.removeItem("socketId");
+  // localStorage.removeItem("socketId");
   return true;
 };
