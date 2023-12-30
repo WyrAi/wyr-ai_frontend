@@ -225,6 +225,14 @@ function InspectionForm() {
       console.error(error);
     }
   };
+
+  console.log(userInformation);
+  console.log(
+    userInformation?.role?.SelectAccess?.packingList?.some(
+      (item) => item === "Approve"
+    )
+  );
+
   async function handleSubmit() {
     try {
       let status = "";
@@ -233,9 +241,9 @@ function InspectionForm() {
           (item) => item === "Approve"
         )
       ) {
-        status = "Pending Approval";
+        status = "Approved";
       } else {
-        // status = "Pending Approval";
+        status = "Pending Approval";
       }
       const reqbody = {
         ...formik.values,

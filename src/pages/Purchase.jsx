@@ -93,7 +93,7 @@ const Purchase = () => {
   };
 
   const filterDataByStatus = (status) => {
-    const filtered = allPOrder.filter((item) => item.status === status);
+    const filtered = allPOrder?.filter((item) => item.status === status);
     setFilterData(filtered);
   };
 
