@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import sample from "../assets/Rectangle 25.png";
+import userGloabalContext from "../UserContext";
 // import {MdOutlinePlayCircle} from 'react-icons/md';
 // import {BsDownload} from 'react-icons/bs';
 
 const InspectionCard = ({ id, plDoc, buyer, status, statusLabel }) => {
+  const { userInformation } = userGloabalContext();
   const statusUi = statusLabel.find((item) => item.text === status);
   const color = statusUi?.color || "";
   // console.log(color, statusLabel);
@@ -14,14 +16,17 @@ const InspectionCard = ({ id, plDoc, buyer, status, statusLabel }) => {
       : inputString;
   }
   const navigate = useNavigate();
-  console.log(status);
+  console.log(status, userInformation);
   return (
     <>
       <div
         className={`flex gap-5 w-[290px] h-full items-center  pl-2 py-3 pr-12 bg-white`}
         style={{ borderLeft: "2px solid" + color }}
         onClick={() => {
-          if (status !== "Completed") {
+          if (
+            status !== "Completed" &&
+            userInformation?.companyId?.companyRole === "QC Agency"
+          ) {
             return navigate(`/inspection/view/${id}`);
           }
         }}

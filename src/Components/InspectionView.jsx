@@ -319,7 +319,7 @@ function InspectionView() {
             slotOfInspection: slotOfInspection,
             status,
           })
-          .then((res) => console.log(res))
+          .then((res) => handleBack())
           .catch((err) => console.log(err));
       }
 
