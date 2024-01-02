@@ -14,7 +14,6 @@ const getStoredSocketId = () => {
       tempSocket.on("connect", () => {
         const newSocketId = tempSocket.id;
         tempSocket.disconnect();
-        
         resolve(newSocketId);
       });
     });
@@ -22,13 +21,14 @@ const getStoredSocketId = () => {
 };
 
 
-const initSocket =  () => {
-  const socketId = getStoredSocketId();
+const initSocket = async () => {
+  const socketId = await getStoredSocketId();
   return io(import.meta.env.VITE_BASE_URL, {
     query: {
       socketId: socketId,
     },
   });
 };
+
 
 export default initSocket;
