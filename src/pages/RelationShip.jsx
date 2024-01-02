@@ -95,7 +95,7 @@ const RelationShip = () => {
               Relation_id:selectRelation.id,
               text:`The relation has been rejected by ${userInformation?.email}`
             }
-            socket.on("RejectAndApprove",{data})
+            socket.emit("RejectAndApprove",{data})
           })
           .catch((err) => console.log(err));
       }
@@ -114,7 +114,7 @@ const RelationShip = () => {
               Relation_id:selectRelation.id,
               text:`The relation has been approved by ${userInformation?.email}`
             }
-            socket.on("RejectAndApprove",{data})
+            socket.emit("RejectAndApprove",{data})
             setSelectRelation({ id: "" });
             fetchRelation();
           })
