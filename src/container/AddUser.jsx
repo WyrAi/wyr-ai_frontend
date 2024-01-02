@@ -131,7 +131,7 @@ const AddUser = () => {
 
   const handleSubmit = async (values) => {
     const id = userInformation?.companyId?._id;
-    console.log();
+
     console.log(userInformation);
     const branchId = branchData.find(
       (item) => item.branchName === values.addOfficeBranch

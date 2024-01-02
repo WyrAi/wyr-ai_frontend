@@ -7,60 +7,60 @@ import payment from "../noun-payment-6223435 1.svg";
 import profile from "../noun-profile-1543074.svg";
 import user from "../UserSettings.svg";
 import { LuPackageSearch } from "react-icons/lu";
-
+import { RxDashboard } from "react-icons/rx";
+import { RiUserSettingsLine } from "react-icons/ri";
+import { IoDocuments } from "react-icons/io5";
+import { HiMiniSignal } from "react-icons/hi2";
+import { FaPlay } from "react-icons/fa";
 // import {GrUserSettings} from 'react-icons';
-// import {FaHandshake} from 'react-icons/fa'
+import { FaHandshake } from "react-icons/fa";
 // import {MdDashboard} from 'react-icons/md';
 
 export const sideBarData = [
   {
-    icon: <img src={dash} className="" alt="" />,
+    icon: <img src={dash} alt="" />,
     heading: "Dashboard",
     link: "/dashboard",
     name: "dashBoard",
   },
   {
-    icon: <img src={cart} className="" alt="" />,
+    icon: <img src={cart} className="" alt="cart" />,
     heading: "Purachase Orders",
     name: "purchaseOrder",
     link: "/purchase/",
   },
   {
-    icon: (
-      <LuPackageSearch className="text-3xl text-darkGray hover:text-white" />
-    ),
+    icon: <img src={cart} alt="" />,
     heading: "Inspection",
     name: "packingList",
     link: "/inspection/",
   },
   {
-    icon: (
-      <LuPackageSearch className="text-3xl text-darkGray hover:text-white" />
-    ),
+    icon: <img src={cart} alt="" />,
     heading: "QC Inspection",
     name: "qaAssignment",
     link: "/qcInspection/",
   },
   {
-    icon: <img src={relation} className="" alt="" />,
+    icon: <img src={relation} alt="" />,
     heading: "Relationship Mgmt.",
     link: "/relationShip",
     name: "relationshipManagement",
   },
   {
-    icon: <img src={user} className="" alt="" />,
+    icon: <img src={user} alt="user" />,
     heading: "User Management",
     link: "/user",
     name: "userManagement",
   },
   {
-    icon: <img src={reports} className="" alt="" />,
+    icon: <img src={reports} alt="" />,
     heading: "Reports",
     link: "/Information_Dashboard",
     name: "reports",
   },
   {
-    icon: <img src={live} className="" alt="" />,
+    icon: <img src={live} alt="live" />,
     heading: "Live",
     link: "/ReportVideos",
     name: "liveInspection",
