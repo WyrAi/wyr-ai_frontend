@@ -46,7 +46,6 @@ const Dashboard = () => {
     }
   }, []);
 
-  
 
   useEffect(() => {
     if (userInformation?.email) {
@@ -57,6 +56,7 @@ const Dashboard = () => {
       }
     }
   }, [userInformation]);
+
   return (
     <div className="ml-5 w-[85%] h-full box-border mt-7">
       <header className="flex justify-between mb-9">
