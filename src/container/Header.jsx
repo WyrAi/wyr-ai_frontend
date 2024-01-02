@@ -37,11 +37,8 @@ const DropDown = ({ children }) => {
     }
   };
 
-  const socket = initSocket();
 
-  socket.on("getText", async (data) => {
-    fetchNotification();
-  });
+ 
 
   return (
     <div className="relative">
@@ -74,6 +71,11 @@ const Header = () => {
     screenSize,
     fetchNotification,
   } = userGloabalContext();
+
+  // const socket = initSocket();
+  // socket.on("getText", async (data) => {
+  //   fetchNotification();
+  // });
 
   console.log(
     "notification length",
