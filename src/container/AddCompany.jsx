@@ -15,10 +15,10 @@ import SuccessRelation from "./SuccessRelation";
 import axios from "axios";
 import wyraiApi from "../api/wyraiApi";
 import { closeModal } from "../DasiyUIComponents/Prompt";
-// import initSocket from "../Components/socket";
+import initSocket from "../Components/socket";
 
 const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
-  // const socket = initSocket();
+  const socket = initSocket();
   const { role, companyId, userInformation } = userGloabalContext();
   const [roles, setRoles] = React.useState([
     { id: 0, name: "Buyer", icon: Buyer, selected: false },
@@ -73,8 +73,8 @@ const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
               await fetchRelation();
               closeModal("addCompany");
               setSuccessRelation(true);
-              // socket.emit("RelationshipsText", { data });
-              // console.log("After socket document");
+              socket.emit("RelationshipsText", { data });
+              console.log("After socket document");
             })
             .catch((err) => {
               console.log(err);
