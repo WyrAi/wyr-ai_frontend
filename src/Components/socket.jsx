@@ -21,8 +21,8 @@ const getStoredSocketId = () => {
 };
 
 
-const initSocket = async () => {
-  const socketId = await getStoredSocketId();
+const initSocket =  () => {
+  const socketId = getStoredSocketId();
   return io(import.meta.env.VITE_BASE_URL, {
     query: {
       socketId: socketId,
