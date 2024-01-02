@@ -380,7 +380,7 @@ const Information = () => {
             </div>
             <div className=" w-full mt-5 h-screen md:h-full">
               {data.map((e, InfoIndex) => (
-                <div className="flex py-8 h-[500px] ">
+                <div className="flex py-8 h-[500px] " key={InfoIndex}>
                   <img
                     src={e.image}
                     alt="Product"
