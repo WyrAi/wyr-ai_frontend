@@ -16,7 +16,7 @@ import AddCompany from "../container/AddCompany";
 import wyraiApi from "../api/wyraiApi";
 import userGloabalContext from "../UserContext";
 import SuccessRelation from "../container/SuccessRelation";
-// import initSocket from "../Components/socket";
+import initSocket from "../Components/socket";
 
 const filters = [
   {
@@ -69,11 +69,11 @@ const sortFilter_Opt = [
 
 const RelationShip = () => {
 
-  // const socket = initSocket();
+  const socket = initSocket();
   const [selectedFilter, setSelectedFilter] = useState(filters[0]);
   const [sortFilter, setSortFilter] = useState(sortFilter_Opt[0]);
   const [allRelation, setAllRelation] = useState([]);
-  const { companyId } = userGloabalContext();
+  const { companyId, userInformation} = userGloabalContext();
   const [selectRelation, setSelectRelation] = useState({
     id: "",
   });
@@ -91,6 +91,11 @@ const RelationShip = () => {
             console.log(res);
             fetchRelation();
             setSelectRelation({ id: "" });
+            const data ={
+              Relation_id:selectRelation.id,
+              text:`The relation has been rejected by ${userInformation?.email}`
+            }
+            socket.on("RejectAndApprove",{data})
           })
           .catch((err) => console.log(err));
       }
@@ -105,11 +110,11 @@ const RelationShip = () => {
           .put(`/api/approvedRelationship/${selectRelation.id}`)
           .then((res) => {
             console.log(res);
-            const data={
-              senderName:values.email,
-              text:`connection request from the ${userInformation?.email}`
+            const data ={
+              Relation_id:selectRelation.id,
+              text:`The relation has been approved by ${userInformation?.email}`
             }
-            // socket.emit("RelationshipsText", {data}); 
+            socket.on("RejectAndApprove",{data})
             setSelectRelation({ id: "" });
             fetchRelation();
           })
