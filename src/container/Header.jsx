@@ -12,6 +12,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "../App.css";
 import wyraiApi from "../api/wyraiApi";
+import initSocket from "../Components/socket";
+
 // DropDown.js
 const DropDown = ({ children }) => {
   const { userInformation, fetchNotification } = userGloabalContext();
@@ -34,6 +36,8 @@ const DropDown = ({ children }) => {
       // Handle error, show error message, etc.
     }
   };
+
+  const socket = initSocket();
 
   socket.on("getText", async (data) => {
     fetchNotification();
