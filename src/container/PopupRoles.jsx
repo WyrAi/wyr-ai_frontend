@@ -68,7 +68,7 @@ const PopupRoles = (props) => {
           text:"New Role has been generated"
         }
          console.log("userRole Data",data);
-         socket.emit("RoleText",data)
+         socket.emit("RoleText/Branch",data)
         
         fetchRole();
       })
