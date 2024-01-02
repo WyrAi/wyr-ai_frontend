@@ -29,6 +29,12 @@ const PopupBranch = (props) => {
         console.log(res);
         closeAddBranchPopUp();
         getBranches();
+        const data = {
+          senderName:userInformation?.email,
+          text:`New Branch has been added by ${userInformation?.email}`
+        }
+         console.log("userRole Data",data);
+         socket.emit("RoleText/Branch",data)
       })
       .catch((err) => {
         console.log(err);

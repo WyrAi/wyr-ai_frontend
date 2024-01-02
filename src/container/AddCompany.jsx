@@ -68,7 +68,7 @@ const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
             .then(async (res) => {
               const data = {
                 senderName: values.email,
-                text: `connection request from the ${values.email}`,
+                text: `connection request from the ${userInformation?.email}`,
               };
               await fetchRelation();
               closeModal("addCompany");
