@@ -12,6 +12,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "../App.css";
 import wyraiApi from "../api/wyraiApi";
+import initSocket from "../Components/socket";
+
 // DropDown.js
 const DropDown = ({ children }) => {
   const { userInformation, fetchNotification } = userGloabalContext();
@@ -35,9 +37,8 @@ const DropDown = ({ children }) => {
     }
   };
 
-  socket.on("getText", async (data) => {
-    fetchNotification();
-  });
+
+ 
 
   return (
     <div className="relative">
@@ -70,6 +71,11 @@ const Header = () => {
     screenSize,
     fetchNotification,
   } = userGloabalContext();
+
+  // const socket = initSocket();
+  // socket.on("getText", async (data) => {
+  //   fetchNotification();
+  // });
 
   console.log(
     "notification length",

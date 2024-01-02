@@ -6,7 +6,6 @@ import userGloabalContext from "../UserContext";
 import { useEffect } from "react";
 import { useState } from "react";
 import useToast from "../Contexts/ToasterContext";
-// import initSocket from "../Components/socket";
 
 const InspectionCard = () => {
   return (
@@ -23,7 +22,6 @@ const InspectionCard = () => {
 };
 
 const Dashboard = () => {
-  // const socket = initSocket();
 
   const {
     getUserInformation,
