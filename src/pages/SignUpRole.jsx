@@ -5,10 +5,12 @@ import PopupOtp from "../container/PopupOtp";
 import { Navigate, useParams } from "react-router-dom";
 import Loader from "../Components/Loader";
 import wyraiApi from "../api/wyraiApi";
+import useToast from "../Contexts/ToasterContext";
 
 const allowedRoles = ["Buyer", "Buying Agency", "Factory", "QC Agency"];
 const SignUp = () => {
   const params = useParams();
+  const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [userdata, setUserdata] = useState(null);
   const [popup, setPopup] = useState(false);
@@ -45,7 +47,10 @@ const SignUp = () => {
         })
         .catch((err) => {
           setIsLoading(false);
-          console.log("Put toaster", err);
+          // console.log("Put toaster", err);
+          if (err.message) {
+            toast.error(`${err.message}`);
+          }
         });
     }
   };

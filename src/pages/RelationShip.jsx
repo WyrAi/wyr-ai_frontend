@@ -16,6 +16,7 @@ import AddCompany from "../container/AddCompany";
 import wyraiApi from "../api/wyraiApi";
 import userGloabalContext from "../UserContext";
 import SuccessRelation from "../container/SuccessRelation";
+import useToast from "../Contexts/ToasterContext";
 
 const filters = [
   {
@@ -74,18 +75,19 @@ const RelationShip = () => {
   const [selectRelation, setSelectRelation] = useState({
     id: "",
   });
+  const toast = useToast();
   const [sucessRelation, setSuccessRelation] = useState(false);
 
   const navigate = useNavigate();
-  console.log("selectRelation._id:", selectRelation.id);
-  console.log("selectRelation.checkRelation:", selectRelation.checkRelation);
+  // console.log("selectRelation._id:", selectRelation.id);
+  // console.log("selectRelation.checkRelation:", selectRelation.checkRelation);
   const Unregistered = async () => {
     try {
       if (selectRelation) {
         wyraiApi
           .put(`/api/rejectedRelationship/${selectRelation.id}`)
           .then((res) => {
-            console.log(res);
+            // console.log(res);
             fetchRelation();
             setSelectRelation({ id: "" });
           })
@@ -101,16 +103,22 @@ const RelationShip = () => {
         wyraiApi
           .put(`/api/approvedRelationship/${selectRelation.id}`)
           .then((res) => {
-            console.log(res);
-            const data = {
-              senderName: values.email,
-              text: `connection request from the ${userInformation?.email}`,
-            };
+            // console.log(res);
+            // const data = {
+            //   senderName: values.email,
+            //   text: `connection request from the ${userInformation?.email}`,
+            // };
             // socket.emit("RelationshipsText", {data});
             setSelectRelation({ id: "" });
+            toast.success("Relationship Established");
             fetchRelation();
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            console.log(err);
+            if (err.message) {
+              toast.error(`${err.message}`);
+            }
+          });
       }
     } catch (error) {
       console.log(error);
@@ -123,7 +131,7 @@ const RelationShip = () => {
         .get(`/api/companyRelationShip/${companyId}`)
         .then((res) => {
           const data = res.data?.AllData[0].companyRelations;
-          console.log(data);
+          // console.log(data);
           setAllRelation(data);
         })
         .catch((err) => console.log(err));
@@ -136,7 +144,7 @@ const RelationShip = () => {
   useEffect(() => {
     fetchRelation();
   }, [companyId]);
-  console.log(selectRelation.id);
+  // console.log(selectRelation.id);
 
   useEffect(() => {
     document.addEventListener("keydown", handleEscKeyPress);
@@ -152,7 +160,7 @@ const RelationShip = () => {
 
   const handleEscKeyPress = (event) => {
     if (event.key === "Escape") {
-      console.log("escape");
+      // console.log("escape");
       setSuccessRelation(false);
       // Do something when the Esc key is pressed
       // setAddBranchPopUp(false);

@@ -16,7 +16,7 @@ const InspectionCard = ({ id, plDoc, buyer, status, statusLabel }) => {
       : inputString;
   }
   const navigate = useNavigate();
-  console.log(status, userInformation);
+  // console.log(status, userInformation);
   return (
     <>
       <div

@@ -8,7 +8,7 @@ import unchecked from "../assets/unchecked.svg";
 const UserCard = ({ check, setCheck, item }) => {
   const [click, setClick] = useState(false);
   // const [photos, setPhotos] = useState([]);
-  console.log(item.name);
+  // console.log(item.name);
 
   function handleBtnCheck(e) {
     // const dataIdValue = e.currentTarget.getAttribute('data-id');

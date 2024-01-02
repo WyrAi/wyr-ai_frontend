@@ -4,15 +4,17 @@ import { useAuth } from "../Contexts/authContext";
 import { useContext } from "react";
 import wyraiApi from "../api/wyraiApi";
 import userGloabalContext from "../UserContext";
+import useToast from "../Contexts/ToasterContext";
 
 const PopupOtp = (props) => {
   const { user, role } = props;
   const [otp, setOtp] = useState(new Array(4).fill(""));
   const [counter, setCounter] = useState(30);
   const navigate = useNavigate();
-  const [isLoading,setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { setAuth } = useAuth();
   const { setToken } = userGloabalContext();
+  const toast = useToast();
 
   useEffect(() => {
     // Timer for the OTP countdown
@@ -41,7 +43,10 @@ const PopupOtp = (props) => {
         }
       })
       .catch((err) => {
-        console.log("Put toaster", err);
+        // console.log("Put toaster", err);
+        if (err.message) {
+          toast.error(`${err.message}`);
+        }
         setIsLoading(false);
       });
   };
@@ -72,7 +77,8 @@ const PopupOtp = (props) => {
       })
 
       .catch((err) => {
-        console.log("Put Toaster", err);
+        // console.log("Put Toaster", err);
+        toast.error(`${err?.message}`);
       });
   };
 

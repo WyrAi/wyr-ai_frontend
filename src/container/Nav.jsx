@@ -13,7 +13,7 @@ const Nav = () => {
   const pathName = useLocation().pathname;
   const accessArray = React.useMemo(() => {
     if (userRights) {
-      console.log(userRights);
+      // console.log(userRights);
       const array = Object.keys(userRights)?.filter(
         (e) => userRights[e].length
       );

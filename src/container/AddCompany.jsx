@@ -105,8 +105,9 @@ const AddCompany = ({ setSuccessRelation, fetchRelation }) => {
         // Update the state with the new array
         setRoles(updatedItems);
       }
+    } else {
+      setRoles(UserRolesRelation);
     }
-    setRoles(updatedItems);
   };
 
   return (

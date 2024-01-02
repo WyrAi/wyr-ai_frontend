@@ -4,12 +4,13 @@ import { useState } from "react";
 import { userGloabalContext } from "../UserContext";
 import wyraiApi from "../api/wyraiApi";
 import InputField from "./InputField";
+import useToast from "../Contexts/ToasterContext";
 
 // eslint-disable-next-line react/prop-types
 const PopupBranch = (props) => {
   const { getBranches, closeAddBranchPopUp } = props;
   const { companyId } = userGloabalContext();
-
+  const toast = useToast();
   const [branchInfo, setBranchInfo] = useState({
     location: "",
     branchName: "",
@@ -22,15 +23,19 @@ const PopupBranch = (props) => {
   };
 
   const handelBranchSubmit = () => {
-    console.log(companyId);
+    // console.log(companyId);
     wyraiApi
       .post(`/api/branch`, { branchInfo, id: companyId })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
+        toast.success("New Branch has been created");
         closeAddBranchPopUp();
         getBranches();
       })
       .catch((err) => {
+        if (err.message) {
+          toast.error(`${err.message}`);
+        }
         console.log(err);
       });
   };

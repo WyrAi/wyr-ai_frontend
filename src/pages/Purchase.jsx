@@ -79,7 +79,7 @@ const Purchase = () => {
 
   const FetchAllPOrders = async () => {
     // console.log(userInformation);
-    const id = userInformation._id;
+    const id = userInformation?._id;
 
     wyraiApi
       .get(`api/purchaseOrder/${id}`)
@@ -108,7 +108,7 @@ const Purchase = () => {
       FetchAllPOrders();
     }
   }, [sortFilter]);
-  console.log(filterData);
+  // console.log(filterData);
 
   return (
     <main className="flex flex-col h-full overflow-hidden">
@@ -137,10 +137,10 @@ const Purchase = () => {
         </div>
       </div>
       <div className=" ml-5 w-[98%] h-full  ">
-        <div className="flex flex-wrap w-full h-[82%] gap-6 overflow-y-auto">
+        <div className="flex flex-wrap w-full h-[70%] gap-6 overflow-y-auto">
           {filterData?.map((value, index) => {
             const { poNumber, purchaseDoc, buyer, status } = value;
-            console.log(value);
+            // console.log(value);
             return (
               <PoCard
                 k={index}

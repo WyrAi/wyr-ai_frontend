@@ -8,6 +8,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import gps from "../assets/ion_location-outline.svg";
 import wyraiApi from "../api/wyraiApi";
 import userGloabalContext from "../UserContext";
+import useToast from "../Contexts/ToasterContext";
 
 const RelationCard = ({
   check,
@@ -19,6 +20,7 @@ const RelationCard = ({
 }) => {
   const { companyId } = userGloabalContext();
   const [click, setClick] = useState(false);
+  const toast = useToast();
 
   // const [photos, setPhotos] = useState([]);
 
@@ -45,22 +47,28 @@ const RelationCard = ({
 
     setClick(!click);
   }
-  console.log(click);
+  // console.log(click);
 
   let checkRelation = companyId === relation.ReceiverRelationId;
-  console.log(relation._id);
-  console.log(relation.Status === "Unregistered");
+  // console.log(relation._id);
+  // console.log(relation.Status === "Unregistered");
 
   const RelationShipHandleDelete = () => {
     try {
-      console.log("GGGGGGGGGGG",relation._id)
+      // console.log("GGGGGGGGGGG",relation._id)
       wyraiApi
         .delete(`/api/deleteRelation/${relation._id}`)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
+          toast.success("Relation Removed Successfully");
           RelationMethod();
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          // console.log(err);
+          if (err.message) {
+            toast.error(`${err.message}`);
+          }
+        });
     } catch (error) {
       console.log(error);
     }
