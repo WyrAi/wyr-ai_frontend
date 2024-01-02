@@ -11,12 +11,12 @@ const getStoredSocketId = () => {
   } else {
     return new Promise((resolve) => {
       const tempSocket = io(import.meta.env.VITE_BASE_URL);
-      tempSocket.on("connect", () => {
-        const newSocketId = tempSocket.id;
-        tempSocket.disconnect();
+      // tempSocket.on("connect", () => {
+      //   const newSocketId = tempSocket.id;
+      //   tempSocket.disconnect();
         
-        resolve(newSocketId);
-      });
+        resolve(tempSocket);
+      // });
     });
   }
 };

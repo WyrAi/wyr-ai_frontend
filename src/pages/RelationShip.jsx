@@ -16,6 +16,7 @@ import AddCompany from "../container/AddCompany";
 import wyraiApi from "../api/wyraiApi";
 import userGloabalContext from "../UserContext";
 import SuccessRelation from "../container/SuccessRelation";
+// import initSocket from "../Components/socket";
 
 const filters = [
   {
@@ -67,6 +68,8 @@ const sortFilter_Opt = [
 ];
 
 const RelationShip = () => {
+
+  // const socket = initSocket();
   const [selectedFilter, setSelectedFilter] = useState(filters[0]);
   const [sortFilter, setSortFilter] = useState(sortFilter_Opt[0]);
   const [allRelation, setAllRelation] = useState([]);

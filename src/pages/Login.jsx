@@ -9,13 +9,10 @@ import { userGloabalContext } from "../UserContext";
 import { useFormik } from "formik";
 import { LoginSchema } from "../validationSchemas/loginSchema";
 
-// import initSocket from "../Components/socket";
-
+import initSocket from "../Components/socket";
 
 const Login = () => {
- 
-
-  // const socket = initSocket();
+  const socket = initSocket();
 
   const { setAuth } = useContext(AuthContext);
   const { setToken } = userGloabalContext();
@@ -114,11 +111,11 @@ const Login = () => {
             // console.log("got token");
             setToken(res.data.token);
             setAuth(res.data.token);
-            // console.log("userInfo", values.Email); 
-            // socket?.emit("newUser", values.Email);
-            // socket.on("sockeid", (data) => {
-            //   localStorage.setItem("socketId", data);
-            // });
+            console.log("userInfo", values.Email);
+            socket?.emit("newUser", values.Email);
+            socket.on("sockeid", (data) => {
+              localStorage.setItem("socketId", data);
+            });
             navigate("/dashboard");
           })
           .catch((err) => {

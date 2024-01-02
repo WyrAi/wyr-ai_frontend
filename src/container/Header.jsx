@@ -72,10 +72,10 @@ const Header = () => {
     fetchNotification,
   } = userGloabalContext();
 
-  // const socket = initSocket();
-  // socket.on("getText", async (data) => {
-  //   fetchNotification();
-  // });
+  const socket = initSocket();
+  socket.on("getText", async (data) => {
+    fetchNotification();
+  });
 
   console.log(
     "notification length",
