@@ -30,13 +30,13 @@ export const sideBarData = [
     link: "/purchase/",
   },
   {
-    icon: <img src={cart} alt="" />,
+    icon: <LuPackageSearch className="text-3xl text-[#777777]" />,
     heading: "Inspection",
     name: "packingList",
     link: "/inspection/",
   },
   {
-    icon: <img src={cart} alt="" />,
+    icon: <LuPackageSearch className="text-3xl text-[#777777]" />,
     heading: "QC Inspection",
     name: "qaAssignment",
     link: "/qcInspection/",
