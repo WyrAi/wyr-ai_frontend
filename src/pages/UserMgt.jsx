@@ -111,6 +111,8 @@ const UserMgt = () => {
 
     window.addEventListener("click", handleClickOutside);
 
+    setCheckedItems([]);
+
     // Cleanup: remove event listener when the component unmounts
     return () => {
       document.removeEventListener("keydown", handleEscKeyPress);
