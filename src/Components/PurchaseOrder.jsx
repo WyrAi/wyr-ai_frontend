@@ -1062,27 +1062,29 @@ function PurchaseOrder() {
               Preview
             </button>
           )} */}
-          <div className="">
-            <Prompt
-              btnText={
-                <button
-                  type="button"
-                  className="bg-blue flex gap-2 items-center z-10 absolute right-[5vh] top-[110px] py-2 px-4 rounded text-white"
-                  // onClick={() => setShowPurchaseOrder(true)}
-                >
-                  <AiOutlineSearch className="text-white text-2xl" />
-                  Preview
-                </button>
-              }
-              modalID={"preview"}
-            >
-              <Preview
-                photos={purchaseDoc}
-                check={showPurchaseOrder}
-                onChange={setShowPurchaseOrder}
-              />
-            </Prompt>
-          </div>
+          {purchaseDoc && (
+            <div className="">
+              <Prompt
+                btnText={
+                  <button
+                    type="button"
+                    className="bg-blue flex gap-2 items-center z-10 absolute right-[5vh] top-[110px] py-2 px-4 rounded text-white"
+                    // onClick={() => setShowPurchaseOrder(true)}
+                  >
+                    <AiOutlineSearch className="text-white text-2xl" />
+                    Preview
+                  </button>
+                }
+                modalID={"preview"}
+              >
+                <Preview
+                  photos={purchaseDoc}
+                  check={showPurchaseOrder}
+                  onChange={setShowPurchaseOrder}
+                />
+              </Prompt>
+            </div>
+          )}
         </form>
       </div>
 
