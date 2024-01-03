@@ -9,70 +9,72 @@ import user from "../UserSettings.svg";
 import { LuPackageSearch } from "react-icons/lu";
 import { RxDashboard } from "react-icons/rx";
 import { RiUserSettingsLine } from "react-icons/ri";
-import { IoDocuments } from "react-icons/io5";
-import { HiMiniSignal } from "react-icons/hi2";
-import { FaPlay } from "react-icons/fa";
-// import {GrUserSettings} from 'react-icons';
-import { FaHandshake } from "react-icons/fa";
+import { PiHandshake } from "react-icons/pi";
+import { IoDocumentsOutline } from "react-icons/io5";
+import { LuWallet } from "react-icons/lu";
+import { RiLiveLine } from "react-icons/ri";
+import { FaRegUser } from "react-icons/fa";
+import { GrUserSettings } from "react-icons/gr";
+import { IoReceiptOutline } from "react-icons/io5";
 // import {MdDashboard} from 'react-icons/md';
 
 export const sideBarData = [
   {
-    icon: <img src={dash} alt="" />,
+    icon: <RxDashboard className="text-[28px] " />,
     heading: "Dashboard",
     link: "/dashboard",
     name: "dashBoard",
   },
   {
-    icon: <img src={cart} className="" alt="cart" />,
+    icon: <IoReceiptOutline className="text-3xl " />,
     heading: "Purachase Orders",
     name: "purchaseOrder",
     link: "/purchase/",
   },
   {
-    icon: <LuPackageSearch className="text-3xl text-[#777777]" />,
+    icon: <LuPackageSearch className="text-[28px] " />,
     heading: "Inspection",
     name: "packingList",
     link: "/inspection/",
   },
   {
-    icon: <LuPackageSearch className="text-3xl text-[#777777]" />,
+    icon: <LuPackageSearch className="text-[28px] " />,
     heading: "QC Inspection",
     name: "qaAssignment",
     link: "/qcInspection/",
   },
   {
-    icon: <img src={relation} alt="" />,
+    icon: <PiHandshake className="text-3xl " />,
     heading: "Relationship Mgmt.",
     link: "/relationShip",
     name: "relationshipManagement",
   },
   {
-    icon: <img src={user} alt="user" />,
+    icon: <GrUserSettings className="text-[28px] " />,
     heading: "User Management",
     link: "/user",
     name: "userManagement",
   },
   {
-    icon: <img src={reports} alt="" />,
+    icon: <IoDocumentsOutline className="text-3xl " />,
     heading: "Reports",
     link: "/Information_Dashboard",
     name: "reports",
   },
   {
-    icon: <img src={live} alt="live" />,
+    icon: <RiLiveLine className="text-[28px]  " />,
     heading: "Live",
     link: "/ReportVideos",
     name: "liveInspection",
   },
   {
-    icon: <img src={payment} className="" alt="" />,
+    icon: <LuWallet className="text-[28px] " />,
     heading: "Payments",
     link: "#",
     name: "inspectionWallet",
   },
   {
-    icon: <img src={profile} className="" alt="" />,
+    icon: <FaRegUser className="text-[28px] " />,
     heading: "Profile",
     link: "#",
     name: "profile",
