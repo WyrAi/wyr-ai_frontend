@@ -107,10 +107,10 @@ const ReportVideos = () => {
         const hls = new Hls();
 
         // hls.loadSource("http://192.168.1.19:8080/hls/abc123.m3u8");
-        // hls.loadSource("https://wyrai.in:8080/hls/abc123.m3u8");
-        hls.loadSource(
-          "https://live-par-1-abr-cdn.livepush.io/live/bigbuckbunnyclip/index.m3u8"
-        );
+        hls.loadSource("http://wyrai.in:8080/hls/abc123.m3u8");
+        // hls.loadSource(
+        //   "https://live-par-1-abr-cdn.livepush.io/live/bigbuckbunnyclip/index.m3u8"
+        // );
         hls.attachMedia(video);
 
         hls.on(Hls.Events.MANIFEST_PARSED, function () {
