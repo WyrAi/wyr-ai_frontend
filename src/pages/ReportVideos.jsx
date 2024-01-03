@@ -105,7 +105,8 @@ const ReportVideos = () => {
         const video = videoRef.current;
         const hls = new Hls();
 
-        hls.loadSource("http://192.168.1.19:8080/hls/abc123.m3u8");
+        // hls.loadSource("http://192.168.1.19:8080/hls/abc123.m3u8");
+        hls.loadSource("http://wyrai.in:8080/hls/abc123.m3u8");
         hls.attachMedia(video);
 
         hls.on(Hls.Events.MANIFEST_PARSED, function () {
@@ -165,14 +166,14 @@ const ReportVideos = () => {
                 modalID={`joinLive_${index}`}
               >
                 <div className="flex justify-center">
-                  <iframe
+{/*                   <iframe
                     src="http://13.201.72.80:8080/embed/video"
                     title="Owncast"
                     height="350px"
                     width="550px"
                     referrerpolicy="origin"
                     allowfullscreen
-                  ></iframe>
+                  ></iframe> */}
                   <video ref={videoRef} controls></video>
                 </div>
               </Prompt>
