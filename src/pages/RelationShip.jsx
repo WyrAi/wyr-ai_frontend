@@ -73,7 +73,7 @@ const RelationShip = () => {
   const [selectedFilter, setSelectedFilter] = useState(filters[0]);
   const [sortFilter, setSortFilter] = useState(sortFilter_Opt[0]);
   const [allRelation, setAllRelation] = useState([]);
-  const { companyId, userInformation} = userGloabalContext();
+  const { companyId, userInformation,fetchNotification } = userGloabalContext();
   const [selectRelation, setSelectRelation] = useState({
     id: "",
   });
@@ -95,7 +95,8 @@ const RelationShip = () => {
               Relation_id:selectRelation.id,
               text:`The relation has been rejected by ${userInformation?.email}`
             }
-            socket.emit("RejectAndApprove",{data})
+            socket.emit("Reject/Approve/Delete",{data})
+            fetchNotification()
           })
           .catch((err) => console.log(err));
       }
@@ -114,8 +115,9 @@ const RelationShip = () => {
               Relation_id:selectRelation.id,
               text:`The relation has been approved by ${userInformation?.email}`
             }
-            socket.emit("RejectAndApprove",{data})
+            socket.emit("Reject/Approve/Delete",{data})
             setSelectRelation({ id: "" });
+            fetchNotification();
             fetchRelation();
           })
           .catch((err) => console.log(err));
