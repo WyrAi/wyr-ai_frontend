@@ -107,7 +107,10 @@ const ReportVideos = () => {
         const hls = new Hls();
 
         // hls.loadSource("http://192.168.1.19:8080/hls/abc123.m3u8");
-        hls.loadSource("https://wyrai.in:8080/hls/abc123.m3u8");
+        // hls.loadSource("https://wyrai.in:8080/hls/abc123.m3u8");
+        hls.loadSource(
+          "https://live-par-1-abr-cdn.livepush.io/live/bigbuckbunnyclip/index.m3u8"
+        );
         hls.attachMedia(video);
 
         hls.on(Hls.Events.MANIFEST_PARSED, function () {
@@ -167,7 +170,7 @@ const ReportVideos = () => {
                 modalID={`joinLive_${index}`}
               >
                 <div className="flex justify-center">
-                  <iframe
+                  {/* <iframe
                     src="https://live-par-1-abr-cdn.livepush.io/live/bigbuckbunnyclip/index.m3u8"
 
                     title="Owncast"
@@ -175,8 +178,8 @@ const ReportVideos = () => {
                     width="550px"
                     referrerpolicy="origin"
                     allowfullscreen
-                  ></iframe>
-                  {/* <video ref={videoRef} controls></video> */}
+                  ></iframe> */}
+                  <video ref={videoRef} controls></video>
                 </div>
               </Prompt>
               <div className="absolute top-[85%] right-[0%] transform translate-x-[-55%] translate-y-[-30%] flex gap-2">
