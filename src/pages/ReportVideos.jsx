@@ -76,11 +76,11 @@ const LiveInsepections = [
     poNumber: "S12344321",
     factoryName: "Devi Design Pvt. Ltd",
   },
-  {
-    image: "./QCVideoImage.png",
-    poNumber: "S12344321",
-    factoryName: "Devi Design Pvt. Ltd",
-  },
+  // {
+  //   image: "./QCVideoImage.png",
+  //   poNumber: "S12344321",
+  //   factoryName: "Devi Design Pvt. Ltd",
+  // },
 ];
 
 const ReportVideos = () => {

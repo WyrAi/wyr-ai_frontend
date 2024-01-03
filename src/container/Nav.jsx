@@ -54,7 +54,11 @@ const Nav = () => {
                       isActive && "bg-blue text-white"
                     } flex items-center gap-3 py-3 h-14 w-[80%] hover:bg-blue hover:text-white rounded-xl pl-7 mx-5 `}
                   >
-                    {item.icon}
+                    <span
+                      className={`${isActive ? "text-white" : "text-darkGray"}`}
+                    >
+                      {item.icon}
+                    </span>
                     <span className="max-lg:hidden">{item.heading}</span>
                   </Link>
                 );
