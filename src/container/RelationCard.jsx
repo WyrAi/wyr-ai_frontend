@@ -17,7 +17,7 @@ const RelationCard = ({
   selectRelationmethod,
   RelationMethod,
 }) => {
-  const { companyId } = userGloabalContext();
+  const { companyId, userInformation} = userGloabalContext();
   const [click, setClick] = useState(false);
 
   // const [photos, setPhotos] = useState([]);
@@ -53,12 +53,19 @@ const RelationCard = ({
 
   const RelationShipHandleDelete = () => {
     try {
-      console.log("GGGGGGGGGGG",relation._id)
       wyraiApi
+      
         .delete(`/api/deleteRelation/${relation._id}`)
         .then((res) => {
           console.log(res);
+          const data ={
+            Relation_id:relation.id,
+            text:`The relation has been Deleted by ${userInformation?.email}`
+          }
+          socket.emit("Reject/Approve/Delete",{data})
+          fetchNotification()
           RelationMethod();
+
         })
         .catch((err) => console.log(err));
     } catch (error) {
