@@ -8,6 +8,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import gps from "../assets/ion_location-outline.svg";
 import wyraiApi from "../api/wyraiApi";
 import userGloabalContext from "../UserContext";
+import initSocket from "../Components/socket";
 
 const RelationCard = ({
   check,
@@ -17,8 +18,9 @@ const RelationCard = ({
   selectRelationmethod,
   RelationMethod,
 }) => {
-  const { companyId, userInformation} = userGloabalContext();
+  const { companyId, userInformation,fetchNotification} = userGloabalContext();
   const [click, setClick] = useState(false);
+  const socket=initSocket();
 
   // const [photos, setPhotos] = useState([]);
 
@@ -53,21 +55,21 @@ const RelationCard = ({
 
   const RelationShipHandleDelete = () => {
     try {
-      wyraiApi
-      
-        .delete(`/api/deleteRelation/${relation._id}`)
-        .then((res) => {
-          console.log(res);
-          const data ={
-            Relation_id:relation.id,
-            text:`The relation has been Deleted by ${userInformation?.email}`
-          }
-          socket.emit("Reject/Approve/Delete",{data})
-          fetchNotification()
-          RelationMethod();
+      //  wyraiApi
+      //   .delete(`/api/deleteRelation/${relation._id}`)
+      //   .then((res) => {
+      //     console.log(res);
+      //     fetchNotification();
+      //     RelationMethod();
 
-        })
-        .catch((err) => console.log(err));
+      //   })
+      //   .catch((err) => console.log(err));
+     // console.log('67========>',relation._id);
+      const data ={
+        Relation_id:relation._id,
+        text:`The relation has been Deleted by ${userInformation?.email}`
+      }
+      socket.emit("DeleteRelation",{data});
     } catch (error) {
       console.log(error);
     }
