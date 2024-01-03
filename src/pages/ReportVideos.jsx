@@ -103,7 +103,7 @@ const ReportVideos = () => {
   useEffect(() => {
     const initializeHLS = () => {
       if (Hls.isSupported()) {
-        const video = videoRef;
+        const video = videoRef.current;
         const hls = new Hls();
 
         // hls.loadSource("http://192.168.1.19:8080/hls/abc123.m3u8");
