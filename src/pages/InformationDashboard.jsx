@@ -9,10 +9,14 @@ const InformationDashboard = () => {
   const [lodaer, setLoader] = useState();
 
   const ReportGernater = () => {
-    wyraiApi.get("api/ReportImageCreate").then((res) => {
+    wyraiApi
+      .get("api/CreateDataSet")
+      .then((res) => {
         if (res) {
           setLoader(false);
           navigate("/Information");
+        } else {
+          alert("Something Went Wrong");
         }
       })
       .catch((err) => {
