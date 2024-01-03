@@ -43,7 +43,7 @@ const CommentBox = ({
     try {
       if (values.editingId) {
         //this is for editing comments
-        console.log(values);
+        // console.log(values);
 
         const updatedComments = [...comments];
         updatedComments[values.editingId] = values.comment;
@@ -96,12 +96,12 @@ const CommentBox = ({
     //   ...prevState,
     //   comments: updatedComments,
     // }));
-    console.log(commentId);
+    // console.log(commentId);
     const filteredComments = commentsData.filter((_, i) => {
-      console.log(i, commentId);
+      // console.log(i, commentId);
       return i !== commentId;
     });
-    console.log(filteredComments);
+    // console.log(filteredComments);
     setCommentsData(filteredComments);
   };
 
@@ -114,7 +114,7 @@ const CommentBox = ({
   useEffect(() => {
     comments = commentsData;
     handleProductChange(poIndex, "comments", commentsData);
-    console.log(comments);
+    // console.log(comments);
   }, [commentsData]);
 
   // console.log(comments);

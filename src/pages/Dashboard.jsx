@@ -6,6 +6,7 @@ import userGloabalContext from "../UserContext";
 import { useEffect } from "react";
 import { useState } from "react";
 import useToast from "../Contexts/ToasterContext";
+import { useNavigate } from "react-router-dom";
 // import initSocket from "../Components/socket";
 
 const InspectionCard = () => {
@@ -24,6 +25,7 @@ const InspectionCard = () => {
 
 const Dashboard = () => {
   // const socket = initSocket();
+  const navigate = useNavigate();
 
   const {
     getUserInformation,
@@ -46,8 +48,6 @@ const Dashboard = () => {
     }
   }, []);
 
-  
-
   useEffect(() => {
     if (userInformation?.email) {
       try {
@@ -69,7 +69,8 @@ const Dashboard = () => {
         <button
           className="py-2 px-4 bg-blue rounded-md font-semibold text-base text-white"
           onClick={() => {
-            toast.error("Write function for purchase order");
+            // toast.error("Write function for purchase order");
+            // navigate("/purchase/add");
           }}
         >
           Create A Purchase Order

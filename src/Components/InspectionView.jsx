@@ -177,7 +177,7 @@ function InspectionView() {
     const clearedData = Object.fromEntries(
       Object.keys(data).map((key) => [key, ""])
     );
-    console.log(clearedData);
+    // console.log(clearedData);
     setData(clearedData);
   };
 
@@ -234,7 +234,7 @@ function InspectionView() {
     setPackingListFiles(plData?.packingListFiles);
   }, [plData]);
 
-  console.log(plData);
+  // console.log(plData);
   // console.log(addpurchaseOrder);
 
   const handleDropDownSelect = (name, address, item) => {
@@ -319,7 +319,7 @@ function InspectionView() {
             slotOfInspection: slotOfInspection,
             status,
           })
-          .then((res) => console.log(res))
+          .then((res) => handleBack())
           .catch((err) => console.log(err));
       }
 
@@ -336,7 +336,7 @@ function InspectionView() {
       //   })
       //   .then((res) => navigate(-1))
       //   .catch((err) => console.log(err));
-      console.log(reqbody);
+      // console.log(reqbody);
     } catch (error) {
       console.error(error);
     }

@@ -10,8 +10,9 @@ import { useNavigate } from "react-router-dom";
 import companyDetailsValidationSchema from "../validationSchemas/companyDetailsSchema";
 import wyraiApi from "../api/wyraiApi";
 import { userGloabalContext } from "../UserContext";
+import useToast from "../Contexts/ToasterContext";
 
-const CompanyDetailsForm = () => {
+const CompanyDetails = () => {
   const { companyId } = userGloabalContext();
   // Placeholder function for form submission
   const params = useParams();
@@ -19,6 +20,7 @@ const CompanyDetailsForm = () => {
   const [companyImage, setCompanyImage] = useState(null);
   const [fileUpload, setFileUpload] = useState([]);
   const [docPopup, setDocPopup] = useState(false);
+  const toast = useToast();
 
   const navigate = useNavigate();
 
@@ -65,10 +67,14 @@ const CompanyDetailsForm = () => {
       wyraiApi
         .post(`/api/companydetails`, requestBody)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           navigate("/dashboard");
         })
-        .catch(console.log);
+        .catch((err) => {
+          if (err.message) {
+            toast.error(`${err.message}`);
+          }
+        });
     } catch (error) {
       console.log(error);
     }
@@ -227,4 +233,4 @@ const CompanyDetailsForm = () => {
   );
 };
 
-export default CompanyDetailsForm;
+export default CompanyDetails;

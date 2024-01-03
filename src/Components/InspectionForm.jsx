@@ -24,6 +24,7 @@ import InputField from "../container/InputField";
 import wyraiApi from "../api/wyraiApi";
 import gps from "../assets/ion_location-outline.svg";
 import axios from "axios";
+import useToast from "../Contexts/ToasterContext";
 
 /**
  * A form component for inspection data.
@@ -33,6 +34,7 @@ import axios from "axios";
 
 function InspectionForm() {
   const { startTime, companyId, userInformation } = userGloabalContext();
+  const toast = useToast();
   const [userRelations, setUserRelations] = useState("");
   const [qcUser, setQcUsers] = useState([]);
   const navigate = useNavigate();
@@ -225,6 +227,14 @@ function InspectionForm() {
       console.error(error);
     }
   };
+
+  // console.log(userInformation);
+  // console.log(
+  //   userInformation?.role?.SelectAccess?.packingList?.some(
+  //     (item) => item === "Approve"
+  //   )
+  // );
+
   async function handleSubmit() {
     try {
       let status = "";
@@ -233,9 +243,9 @@ function InspectionForm() {
           (item) => item === "Approve"
         )
       ) {
-        status = "Pending Approval";
+        status = "Approved";
       } else {
-        // status = "Pending Approval";
+        status = "Pending Approval";
       }
       const reqbody = {
         ...formik.values,
@@ -244,6 +254,7 @@ function InspectionForm() {
         packingListFiles,
         ...ids,
       };
+      // console.log(reqbody);
       wyraiApi
         .post(`/api/PLCreate/${userInformation?._id}`, {
           ...formik.values,
@@ -253,8 +264,15 @@ function InspectionForm() {
           ...ids,
           status,
         })
-        .then((res) => navigate(-1))
-        .catch((err) => console.log(err));
+        .then((res) => {
+          toast.success("Packing List Created");
+          navigate(-1);
+        })
+        .catch((err) => {
+          if (err.message) {
+            toast.error(`${err.message}`);
+          }
+        });
     } catch (error) {
       console.error(error);
     }

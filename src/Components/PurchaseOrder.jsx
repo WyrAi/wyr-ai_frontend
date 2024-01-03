@@ -28,6 +28,7 @@ import Prompt from "../DasiyUIComponents/Prompt";
 import Loader from "../Components/Loader";
 // import PoLoader from "./PoLoader";
 import PoLoading from "./PoLoading";
+import useToast from "../Contexts/ToasterContext";
 
 // import DropdownSelect from '../container/DropdownSelect';
 
@@ -59,6 +60,8 @@ function PurchaseOrder() {
   const [isLoading, setIsloading] = useState(false);
   const [isPoLoading, setIsPoLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [saveDraft, setSaveDraft] = useState(false);
+  const toast = useToast();
 
   const [initialValues, setInitialValues] = useState({
     poNumber: "",
@@ -76,13 +79,13 @@ function PurchaseOrder() {
   });
 
   const [aiData, setAiData] = useState({});
-  console.log(isPoLoading);
+  // console.log(isPoLoading);
 
   const [peopleOfInterest, setPeopelOfInterest] = useState([
     { id: userInformation?._id, name: userInformation?.name },
   ]);
 
-  console.log("peopleOfInterest", ...peopleOfInterest);
+  // console.log("peopleOfInterest", ...peopleOfInterest);
   const allIds = peopleOfInterest.map((item) => item.id);
   const [ids, setIds] = useState({
     buyerId: "",
@@ -154,9 +157,9 @@ function PurchaseOrder() {
     aql: "",
     comments: [], //this can have many comments so, when sent as Array of comments
   };
-  console.log(aiData.poNumber);
+  // console.log(aiData.poNumber);
 
-  console.log("Initial Values: ", initialValues); // Check if this outputs the expected values
+  // console.log("Initial Values: ", initialValues); // Check if this outputs the expected values
 
   const formik = useFormik({
     initialValues,
@@ -217,21 +220,6 @@ function PurchaseOrder() {
         status = "Pending Approval";
       }
 
-      //   async function handleSubmit(e) {
-      //     let status = "";
-      //     if (
-      //       userInformation?.role?.SelectAccess?.purchaseOrder?.some(
-      //         (item) => item === "Approve"
-      //       )
-      //     ) {
-      //       status = "Published";
-      //     } else {
-      //       status = "Pending Approval";
-      //     }
-      //     // console.log(slotOfProducts.length);
-      //     let requestBody = {};
-      //     if (slotOfProducts.length > 0) {
-      //       requestBody = {
       const requestBody = {
         purchaseDoc,
         buyer: ids.buyerId,
@@ -271,49 +259,87 @@ function PurchaseOrder() {
         }
       });
 
-      for (let pair of formData.entries()) {
-        console.log(pair);
-      }
+      // for (let pair of formData.entries()) {
+      //   console.log(pair);
+      // }
       // console.log(e.currentTarget.getAttribute("type"));
 
-      // const response = await axios.post(
-      //   import.meta.env.VITE_BASE_URL + `/api/purchaseOrder`,
-      //   formData,
-      //   {
-      //     headers: {
-      //       "Content-Type": "multipart/form-data",
-      //     },
-      //   }
-      // );
-
-      // console.log(response, "PO");
-
-      if (e?.currentTarget?.getAttribute("type") === "submit") {
-        wyraiApi
-          .post("/api/purchaseOrder", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then((res) => {
-            navigate(-1);
-            setIsloading(false);
-          })
-          .catch((err) => console.log(err));
-      } else {
-        wyraiApi
-          .post(`/api/PuracheseOrderDraft/${userInformation?._id}`, requestBody)
-          .then((res) => {
-            navigate(-1);
-            setIsloading(false);
-          })
-          .catch((err) => console.log(err));
-      }
+      wyraiApi
+        .post("/api/purchaseOrder", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          navigate(-1);
+          toast.success("Purchase Order Created");
+          setIsloading(false);
+        })
+        .catch((err) => {
+          if (err.message) {
+            toast.error(`${err.message}`);
+          }
+          setIsloading(false);
+          // console.log(err);
+        });
     } catch (error) {
       setIsloading(false);
       console.log(error);
     }
   }
+  const handleSaveDraft = () => {
+    try {
+      let status = "";
+      if (
+        userInformation?.role?.SelectAccess?.purchaseOrder?.some(
+          (item) => item === "Approve"
+        )
+      ) {
+        status = "Published";
+      } else {
+        status = "Pending Approval";
+      }
+
+      const requestBody = {
+        purchaseDoc,
+        buyer: ids.buyerId,
+        vendor: ids.vendorId,
+        shiptoName: formik.values.shiptoName,
+        shiptoAdd: formik.values.shiptoAdd,
+        shipVia: formik.values.shipVia,
+        shipDate: formik.values.shipDate,
+        assignedPeople: peopleOfInterest.map((item) => item.id),
+        poNumber: formik.values.poNumber,
+        products: [...slotOfProducts],
+        productImages: imgFormUploadData,
+        status,
+      };
+      console.log(requestBody);
+      wyraiApi
+        .post(`/api/PuracheseOrderDraft/${userInformation?._id}`, requestBody)
+        .then((res) => {
+          navigate(-1);
+          setIsloading(false);
+          toast.success("Saved as Draft");
+        })
+        .catch((err) => {
+          if (err.message) {
+            toast.error(`${err.message}`);
+          }
+          setIsloading(false);
+          // console.log(err);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (saveDraft) {
+      handleSaveDraft();
+      setSaveDraft(false);
+    }
+  }, [saveDraft]);
 
   // useEffect(() => {
   //   const allFieldsFilled = Object.values(productList).every(
@@ -440,7 +466,7 @@ function PurchaseOrder() {
   useEffect(() => {
     const POAIData = async () => {
       try {
-        console.log("Hello");
+        // console.log("Hello");
         const formData = new FormData();
         formData.append("image_file", ApiImage);
         const response = await axios.post(
@@ -452,22 +478,22 @@ function PurchaseOrder() {
             },
           }
         );
-        console.log(response, "hfddd");
+        // console.log(response, "hfddd");
       } catch (error) {
         console.log(error);
       }
     };
-    console.log(ApiImage, "gfffcf");
+    // console.log(ApiImage, "gfffcf");
     if (ApiImage) POAIData();
   }, [ApiImage]);
 
   useEffect(() => {
     // setIsPoLoading(false);
     const POAIData = async () => {
-      console.log(isLoading);
+      // console.log(isLoading);
       // setIsPoLoading(false);
       try {
-        console.log("Hello");
+        // console.log("Hello");
         const formData = new FormData();
         formData.append("image_file", ApiImage);
 
@@ -478,7 +504,7 @@ function PurchaseOrder() {
             },
           })
           .then((res) => {
-            console.log(res);
+            // console.log(res);
             wyraiApi.post("/api/logsCreate", res.data);
             setAiData(res.data);
             setIsPoLoading(false);
@@ -497,11 +523,11 @@ function PurchaseOrder() {
   }, [ApiImage]);
 
   const isExistMatching = (arrayOfObjects, key, stringToCheck) => {
-    console.log(stringToCheck, arrayOfObjects);
+    // console.log(stringToCheck, arrayOfObjects);
     let existing = null;
     if (Array.isArray(arrayOfObjects)) {
       existing = arrayOfObjects.find((obj) => {
-        console.log(obj);
+        // console.log(obj);
         return (
           obj[key]?.replace(/\s+/g, "").toLowerCase() ===
           stringToCheck?.replace(/\s+/g, "").toLowerCase()
@@ -551,7 +577,7 @@ function PurchaseOrder() {
       if (products) {
         // setProductList( { ...productList,  },)
         // console.log("test");
-        console.log(Object.keys(products).length);
+        // console.log(Object.keys(products).length);
 
         const newProducts = Object.keys(products).map((product) => {
           return {
@@ -563,12 +589,12 @@ function PurchaseOrder() {
             color: products[product]?.Color || "",
           };
         });
-        console.log(products, newProducts);
+        // console.log(products, newProducts);
         setSlotOfProducts(newProducts);
       }
     }
 
-    console.log(products, aiData);
+    // console.log(products, aiData);
   }, [aiData]);
   // console.log(slotOfProducts);
 
@@ -689,7 +715,7 @@ function PurchaseOrder() {
                         const intials = item?.companyId?.name
                           ?.charAt(0)
                           .toUpperCase();
-                        console.log(item);
+                        // console.log(item);
                         return (
                           <li
                             key={index}
@@ -1014,7 +1040,7 @@ function PurchaseOrder() {
             <button
               type="button"
               className="py-2 rounded-md px-11 border-2 border-[#1B9BEF] text-[#1B9BEF] font-bold "
-              onClick={handleSubmit}
+              onClick={() => setSaveDraft(true)}
             >
               Save Draft
             </button>
@@ -1036,27 +1062,29 @@ function PurchaseOrder() {
               Preview
             </button>
           )} */}
-          <div className="">
-            <Prompt
-              btnText={
-                <button
-                  type="button"
-                  className="bg-blue flex gap-2 items-center z-10 absolute right-[5vh] top-[110px] py-2 px-4 rounded text-white"
-                  // onClick={() => setShowPurchaseOrder(true)}
-                >
-                  <AiOutlineSearch className="text-white text-2xl" />
-                  Preview
-                </button>
-              }
-              modalID={"preview"}
-            >
-              <Preview
-                photos={purchaseDoc}
-                check={showPurchaseOrder}
-                onChange={setShowPurchaseOrder}
-              />
-            </Prompt>
-          </div>
+          {purchaseDoc && (
+            <div className="">
+              <Prompt
+                btnText={
+                  <button
+                    type="button"
+                    className="bg-blue flex gap-2 items-center z-10 absolute right-[5vh] top-[110px] py-2 px-4 rounded text-white"
+                    // onClick={() => setShowPurchaseOrder(true)}
+                  >
+                    <AiOutlineSearch className="text-white text-2xl" />
+                    Preview
+                  </button>
+                }
+                modalID={"preview"}
+              >
+                <Preview
+                  photos={purchaseDoc}
+                  check={showPurchaseOrder}
+                  onChange={setShowPurchaseOrder}
+                />
+              </Prompt>
+            </div>
+          )}
         </form>
       </div>
 

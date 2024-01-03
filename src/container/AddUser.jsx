@@ -12,6 +12,8 @@ import PopupBranch from "./PopupBranch";
 import { Link, useNavigate } from "react-router-dom";
 import { userGloabalContext } from "../UserContext";
 import DropdownSelectRole from "./DropdownSelectRole";
+import useToast from "../Contexts/ToasterContext";
+import wyraiApi from "../api/wyraiApi";
 
 const AddUser = () => {
   // Assuming you want to store the form data in a state
@@ -32,9 +34,10 @@ const AddUser = () => {
   } = userGloabalContext();
   const navigate = useNavigate();
 
-  const [photos, setPhotos] = useState(null);
+  const [photos, setPhotos] = useState(null || formData.profile_photo);
   const [popupRole, setPopupRole] = useState(false);
   const [addBranchPopUp, setAddBranchPopUp] = useState(false);
+  const toast = useToast();
 
   const handleEscKeyPress = (event) => {
     if (event.key === "Escape") {
@@ -131,8 +134,8 @@ const AddUser = () => {
 
   const handleSubmit = async (values) => {
     const id = userInformation?.companyId?._id;
-    console.log();
-    console.log(userInformation);
+
+    // console.log(userInformation);
     const branchId = branchData.find(
       (item) => item.branchName === values.addOfficeBranch
     )._id;
@@ -158,24 +161,40 @@ const AddUser = () => {
     if (isEditMode) {
       // /api/registerEmployee
       const id = editData[0]?._id;
-      const resp = await fetch(
-        `http://localhost:5000/api/updateEmploye/${id}`,
-        {
-          method: "Put",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(values),
-        }
-      );
-      if (resp.ok) {
-        fetchData();
-        setIsEditMode(!isEditMode);
-        clearFieldData();
-        navigate("/user");
-      }
+
+      wyraiApi
+        .put(`api/updateEmploye/${id}`, JSON.stringify(values))
+        .then((res) => {
+          fetchData();
+          setIsEditMode(!isEditMode);
+          clearFieldData();
+          toast.success("User updated successfully");
+          navigate("/user");
+        })
+        .catch((err) => {
+          if (err.message) {
+            toast.error(`${err.message}`);
+          }
+        });
+      // const resp = await fetch(
+      //   `http://localhost:5000/api/updateEmploye/${id}`,
+      //   {
+      //     method: "Put",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify(values),
+      //   }
+      // );
+      // if (resp.ok) {
+      //   fetchData();
+      //   setIsEditMode(!isEditMode);
+      //   clearFieldData();
+      //   navigate("/user");
+      // }
     } else {
       const token = localStorage.getItem("token");
+
       const resp = await fetch(
         import.meta.env.VITE_BASE_URL + "/api/registerEmployee",
         {
@@ -196,7 +215,34 @@ const AddUser = () => {
       if (resp.ok) {
         fetchData();
         navigate("/user");
+        toast.success("User created successfully");
+      } else {
+        const data = await resp.json();
+        if (data.message) {
+          toast.error(`${data.message}`);
+        }
       }
+      // wyraiApi
+      //   .post(
+      //     "/api/registerEmployee",
+      //     JSON.stringify({
+      //       ...values,
+      //       role: roleId,
+      //       officeBranch: branchId,
+      //       profileImage: photos,
+      //       companyId: id,
+      //     })
+      //   )
+      //   .then((res) => {
+      //     fetchData();
+      //     navigate("/user");
+      //     toast.success("User created successfully");
+      //   })
+      //   .catch((err) => {
+      //     if (err.message) {
+      //       toast.error(`${err.message}`);
+      //     }
+      //   });
     }
 
     // // // /api/registerEmployee
@@ -205,7 +251,6 @@ const AddUser = () => {
 
     // console.log(formData, photos); // photos is object check the files provided get neccessary items according to you
   };
-
   return (
     <div className=" rounded mb-4 flex flex-col w-[80%] h-full ml-5 mr-1 bg-gray-100 overflow-hidden">
       <div className="flex gap-1 mb-3 ">
@@ -224,7 +269,7 @@ const AddUser = () => {
             />
             <div className="w-56 h-56 rounded-full">
               <img
-                src={photos?.[0] || profile}
+                src={`${photos}` || photos?.[0] || profile}
                 className="w-full h-full object-cover rounded-full"
                 alt=""
               />

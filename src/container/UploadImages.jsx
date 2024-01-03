@@ -72,7 +72,7 @@ const UploadImages = ({
   });
 
   const handleSubmit = () => {
-    console.log("changes hits");
+    // console.log("changes hits");
     if (files?.length > 0) {
       handleProductChange(poIndex, "images", files);
     }
@@ -220,7 +220,10 @@ const UploadImages = ({
         <div className="flex-1 grid grid-cols md:grid-cols-4 gap-5 overflow-y-auto  ">
           {zones.map((zone, index) => {
             return (
-              <div className=" relative flex flex-col items-center h-full w-full">
+              <div
+                key={index}
+                className=" relative flex flex-col items-center h-full w-full"
+              >
                 <span className="font-medium mb-2">{zone.name}</span>
                 <div className="flex-1">
                   <DropZone
