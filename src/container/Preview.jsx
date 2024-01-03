@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 const Preview = ({ photos, check, onChange }) => {
-  console.log(check, photos?.name);
+  // console.log(check, photos?.name);
   return (
     <>
       {photos && (

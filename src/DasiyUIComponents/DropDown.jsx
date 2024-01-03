@@ -2,7 +2,7 @@ import React from "react";
 
 const DropDown = () => {
   function toggleDropdown() {
-    console.log(test);
+    // console.log(test);
     var dropdownContent = document.getElementById("dropdownContent");
     if (dropdownContent.classList.contains("hidden")) {
       dropdownContent.classList.remove("hidden");

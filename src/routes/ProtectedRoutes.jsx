@@ -32,7 +32,7 @@ const IsRouteAllowed = (props) => {
 
 const ProtectedRoutes = () => {
   const { userRights } = userGloabalContext();
-  console.log(userRights);
+  // console.log(userRights);
 
   return (
     <Routes>

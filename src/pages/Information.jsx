@@ -27,7 +27,7 @@ const Information = () => {
   const InformationGet = async () => {
     try {
       const { data } = await axios.get(`${baseURL}/api/AllInformationGet`);
-      console.log(data);
+      // console.log(data);
       if (data) setData(data.Response);
     } catch (error) {
       console.log(error);
@@ -194,7 +194,7 @@ const Information = () => {
   const PdfCreateAndVideoCheck = async () => {
     try {
       const pdf = await downloadPDF();
-      console.log(pdf);
+      // console.log(pdf);
       if (!pdf) {
         alert("PDF generation failed.");
         return;
@@ -203,7 +203,7 @@ const Information = () => {
       setPDFStore(pdf);
 
       const { data } = await axios.get(`${baseURL}/api/VideoCheck`);
-      console.log(data);
+      // console.log(data);
       if (!data.status) {
         alert(
           "We are still processing the video. Please check the spellings after some time."
@@ -261,7 +261,7 @@ const Information = () => {
               btnText={
                 <button
                   className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white ml-5 w-[300px] h-[50px] mb-1"
-                  onClick={() => console.log("first")}
+                  onClick={() => {}}
 
                   //                   className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white "
                   // onClick={() => PdfCreateAndVideoCheck()}
@@ -380,7 +380,7 @@ const Information = () => {
             </div>
             <div className=" w-full mt-5 h-screen md:h-full">
               {data.map((e, InfoIndex) => (
-                <div className="flex py-8 h-[500px] " key={InfoIndex}>
+                <div className="flex py-8 h-[500px] ">
                   <img
                     src={e.image}
                     alt="Product"
@@ -475,7 +475,7 @@ const Information = () => {
               btnText={
                 <button
                   className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white ml-5 w-[300px] h-[50px] mb-1"
-                  onClick={() => console.log("first")}
+                  onClick={() => {}}
 
                   //                   className="bg-[#1e96fc] rounded-md px-4 py-2 font-medium text-lg text-white "
                   // onClick={() => PdfCreateAndVideoCheck()}

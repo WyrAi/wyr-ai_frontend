@@ -39,7 +39,7 @@ const Toast = (props) => {
 const ToastsContainer = (props) => {
   const { toasts } = props;
   return (
-    <div className="toast">
+    <div className="toast z-50">
       {toasts.map((toast) => (
         <Toast key={toast.id} {...toast} />
       ))}

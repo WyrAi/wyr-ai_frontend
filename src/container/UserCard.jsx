@@ -8,7 +8,7 @@ import unchecked from "../assets/unchecked.svg";
 const UserCard = ({ check, setCheck, item }) => {
   const [click, setClick] = useState(false);
   // const [photos, setPhotos] = useState([]);
-  console.log(item.name);
+  // console.log(item.name);
 
   function handleBtnCheck(e) {
     // const dataIdValue = e.currentTarget.getAttribute('data-id');
@@ -25,7 +25,7 @@ const UserCard = ({ check, setCheck, item }) => {
   // console.log(click);
 
   return (
-    <div className="w-[220px] h-[150px] rounded overflow-hidden shadow-lg bg-white  flex flex-col items-center">
+    <div className="w-[220px] h-[110px] rounded overflow-hidden shadow-lg bg-white  ">
       <div className="flex justify-between w-full pt-1 pl-1  ">
         {/* <input
 					type="checkbox"

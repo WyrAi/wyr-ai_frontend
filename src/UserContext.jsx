@@ -70,6 +70,7 @@ export const UserContextProvider = ({ children }) => {
     phone: "",
     role: "",
     officeBranch: "",
+    profile_photo: "",
   });
 
   const clearFieldData = () => {
@@ -91,7 +92,7 @@ export const UserContextProvider = ({ children }) => {
           console.log(err);
         });
     } else {
-      console.log("--noCompanyId--", companyId, userInformation);
+      // console.log("--noCompanyId--", companyId, userInformation);
     }
   }
 
@@ -122,26 +123,28 @@ export const UserContextProvider = ({ children }) => {
     }
   };
 
-  // const edit = (e) => {
-  //   const id = e[0];
-  //   userData.forEach((item) => {
-  //     if (item._id == id) {
-  //       console.log(item);
-  //       setEditData([item]);
-  //       setFormData({
-  //         name: item.name,
-  //         email: item.email,
-  //         employeeID: item.employeeID,
-  //         addOfficeBranch: item.addOfficeBranch,
-  //         phone: item.phone,
-  //         assignRole: item.assignRole,
-  //       });
-  //       setCheckedItems([]);
-  //       setIsEditMode(!isEditMode);
-  //       navigate("/add");
-  //     }
-  //   });
-  // };
+  const edit = (e) => {
+    const id = e[0];
+
+    userData.forEach((item) => {
+      if (item._id == id) {
+        // console.log(item);
+        setEditData([item]);
+        setFormData({
+          name: item.name,
+          email: item.email,
+          employeeID: item.employeeID,
+          addOfficeBranch: item.addOfficeBranch,
+          phone: item.phone,
+          assignRole: item.assignRole,
+          profile_photo: item.profileImage,
+        });
+        setCheckedItems([]);
+        setIsEditMode(!isEditMode);
+        navigate("/user/add");
+      }
+    });
+  };
 
   // PurchaseOrder
 
@@ -227,7 +230,7 @@ export const UserContextProvider = ({ children }) => {
           setScreenSize,
           setImgFormUploadData,
           setActiveMenu,
-
+          edit,
           notification,
           fetchNotification,
           setNotifications,

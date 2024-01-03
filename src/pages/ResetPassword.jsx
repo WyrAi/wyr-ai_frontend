@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Loader from "../Components/Loader";
+import useToast from "../Contexts/ToasterContext";
 
 const FormData = [
   {
@@ -30,6 +31,7 @@ const ResetPassword = () => {
   });
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const toast = useToast();
 
   const { values, handleBlur, handleChange, handleSubmit, errors, touched } =
     useFormik({
@@ -44,11 +46,16 @@ const ResetPassword = () => {
           })
           .then((res) => {
             if (res.status === 200) {
-              alert("Password reset successfully");
+              // alert("Password reset successfully");
+              toast.success("Password reset successfully");
               navigate("/login");
             }
           })
           .catch((err) => {
+            if (err.message) {
+              toast.error(`${err.message}`);
+            }
+
             console.log(err);
           });
       },

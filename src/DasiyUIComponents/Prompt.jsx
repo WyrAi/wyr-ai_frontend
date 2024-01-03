@@ -26,6 +26,7 @@ const Prompt = ({ children, btnText, modalID, btnClasses, isDisabled }) => {
               className="btn btn-sm btn-circle absolute right-2 top-2"
               onClick={() => closeModal(modalID)}
             >
+              X
             </button>
             {children}
           </form>
