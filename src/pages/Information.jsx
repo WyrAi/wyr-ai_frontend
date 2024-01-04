@@ -387,7 +387,7 @@ const Information = () => {
                       src={e.image}
                       alt="Product"
                       width={"700px"}
-                      height={"700px"}
+                      height={"500px"}
                       className="border xl:w-[650px] xl:h-[650px] md:w-[650px] md:h-[650px]"
                     />
                     <img
