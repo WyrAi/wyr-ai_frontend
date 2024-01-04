@@ -386,14 +386,14 @@ const Information = () => {
                     <img
                       src={e.image}
                       alt="Product"
-                      width={"700px"}
-                      height={"500px"}
-                      className="border xl:w-[650px] xl:h-[450px] md:w-[650px] md:h-[350px]"
+                      width={"800px"}
+                      height={"450px"}
+                      className="border xl:w-[800px] xl:h-[450px] md:w-[800px] md:h-[450px] "
                     />
                     <img
                       src={image}
                       alt=""
-                      className="absolute top-0 left-0 z-5 xl:w-[650px] xl:h-[450px] md:w-[650px] md:h-[350px]"
+                      className="absolute top-0 left-0 z-5 xl:w-[800px] xl:h-[450px] md:w-[800px] md:h-[450px] "
                     />
                   </div>
 
