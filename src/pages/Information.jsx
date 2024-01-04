@@ -393,7 +393,7 @@ const Information = () => {
                     <img
                       src={image}
                       alt=""
-                      className="absolute top-0 left-0 z-5"
+                      className="absolute top-0 left-0 z-5 xl:w-[550px] xl:h-[450px] md:w-[550px] md:h-[350px]"
                     />
                   </div>
 
