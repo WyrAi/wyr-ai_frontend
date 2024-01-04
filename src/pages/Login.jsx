@@ -8,18 +8,16 @@ import { AuthContext } from "../Contexts/authContext";
 import { userGloabalContext } from "../UserContext";
 import { useFormik } from "formik";
 import { LoginSchema } from "../validationSchemas/loginSchema";
+import useToast from "../Contexts/ToasterContext";
 
-import initSocket from "../Components/socket";
-import io from "socket.io-client";
+// import initSocket from "../Components/socket";
 
 const Login = () => {
-  // const [socket, setSocket] = useState("");
-  // const navigate = useNavigate();
-
-  const socket = initSocket();
+  // const socket = initSocket();
 
   const { setAuth } = useContext(AuthContext);
   const { setToken } = userGloabalContext();
+  const toast = useToast();
   const navigate = useNavigate();
 
   const [initialValues] = useState({
@@ -115,16 +113,19 @@ const Login = () => {
             // console.log("got token");
             setToken(res.data.token);
             setAuth(res.data.token);
-            // console.log("userInfo", values.Email); 
-            socket?.emit("newUser", values.Email);
-            socket.on("sockeid", (data) => {
-              console.log("gfkuljknlj====>", socket.id);
-              localStorage.setItem("socketId", data);
-            });
+            // console.log("userInfo", values.Email);
+            // socket?.emit("newUser", values.Email);
+            // socket.on("sockeid", (data) => {
+            //   localStorage.setItem("socketId", data);
+            // });
             navigate("/dashboard");
           })
           .catch((err) => {
-            console.log(err);
+            if (err.message) {
+              toast.error(`${err.message}`);
+            }
+
+            // console.log(err);
           });
       },
     });
@@ -141,7 +142,7 @@ const Login = () => {
       if (res.status === 200) {
         alert(res.data.message);
       }
-      console.log(res);
+      // console.log(res);
     } catch (error) {
       console.log(error);
     }

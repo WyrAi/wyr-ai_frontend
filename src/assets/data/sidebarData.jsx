@@ -14,12 +14,13 @@ import { IoDocumentsOutline } from "react-icons/io5";
 import { LuWallet } from "react-icons/lu";
 import { RiLiveLine } from "react-icons/ri";
 import { FaRegUser } from "react-icons/fa";
+import { GrUserSettings } from "react-icons/gr";
 import { IoReceiptOutline } from "react-icons/io5";
 // import {MdDashboard} from 'react-icons/md';
 
 export const sideBarData = [
   {
-    icon: <RxDashboard className="text-3xl  " />,
+    icon: <RxDashboard className="text-[28px] " />,
     heading: "Dashboard",
     link: "/dashboard",
     name: "dashBoard",
@@ -31,13 +32,13 @@ export const sideBarData = [
     link: "/purchase/",
   },
   {
-    icon: <LuPackageSearch className="text-3xl " />,
+    icon: <LuPackageSearch className="text-[28px] " />,
     heading: "Inspection",
     name: "packingList",
     link: "/inspection/",
   },
   {
-    icon: <LuPackageSearch className="text-3xl " />,
+    icon: <LuPackageSearch className="text-[28px] " />,
     heading: "QC Inspection",
     name: "qaAssignment",
     link: "/qcInspection/",
@@ -49,7 +50,7 @@ export const sideBarData = [
     name: "relationshipManagement",
   },
   {
-    icon: <RiUserSettingsLine className="text-3xl " />,
+    icon: <GrUserSettings className="text-[28px] " />,
     heading: "User Management",
     link: "/user",
     name: "userManagement",
@@ -61,19 +62,19 @@ export const sideBarData = [
     name: "reports",
   },
   {
-    icon: <RiLiveLine className="text-3xl  " />,
+    icon: <RiLiveLine className="text-[28px]  " />,
     heading: "Live",
     link: "/ReportVideos",
     name: "liveInspection",
   },
   {
-    icon: <LuWallet className="text-3xl " />,
+    icon: <LuWallet className="text-[28px] " />,
     heading: "Payments",
     link: "#",
     name: "inspectionWallet",
   },
   {
-    icon: <FaRegUser className="text-3xl " />,
+    icon: <FaRegUser className="text-[28px] " />,
     heading: "Profile",
     link: "#",
     name: "profile",

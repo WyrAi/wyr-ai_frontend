@@ -1,38 +1,37 @@
-import { useState } from 'react';
-import InputField from './InputField';
-import TextBox from './TextBox';
-import Checkbox from './Checkbox';
+import { useState } from "react";
+import InputField from "./InputField";
+import TextBox from "./TextBox";
+import Checkbox from "./Checkbox";
 // import {useNavigate} from 'react-router-dom';
-import { userGloabalContext } from '../UserContext';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import AccessManagement from './AccessManagement';
-import wyraiApi from '../api/wyraiApi';
-import { useNavigate } from 'react-router-dom';
-import { Socket } from 'engine.io-client';
-import initSocket from '../Components/socket';
+import { userGloabalContext } from "../UserContext";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import AccessManagement from "./AccessManagement";
+import wyraiApi from "../api/wyraiApi";
+import { useNavigate } from "react-router-dom";
+import useToast from "../Contexts/ToasterContext";
+// import { Socket } from 'engine.io-client';
+// import initSocket from '../Components/socket';
 
 const PopupRoles = (props) => {
-
-
-
-  const socket = initSocket();
+  // const socket = initSocket();
   const { setPopupRole } = props;
-          const { fetchRole, userInformation ,companyId} = userGloabalContext();
-          console.log("22=======>",userInformation?.email)
+  const { fetchRole, userInformation, companyId } = userGloabalContext();
+  // console.log("22=======>",userInformation?.email)
   const navigate = useNavigate();
+  const toast = useToast();
 
   // const companyId = userInformation.companyId._id;
 
   const [accessGranted, setAccessGranted] = useState(null);
 
   const roleSchema = Yup.object().shape({
-    role: Yup.string().required('Name is Role required '),
-    description: Yup.string().required('Description is required'),
+    role: Yup.string().required("Name is Role required "),
+    description: Yup.string().required("Description is required"),
   });
   const initialValues = {
-    role: '',
-    description: '',
+    role: "",
+    description: "",
   };
 
   const formik = useFormik({
@@ -49,11 +48,11 @@ const PopupRoles = (props) => {
       })
       .reduce((a, b) => ({ ...a, ...b }), {});
 
-    console.log({
-      ...formik.values,
-      companyId,
-      SelectAccess: grantedPermissions,
-    });
+    // console.log({
+    //   ...formik.values,
+    //   companyId,
+    //   SelectAccess: grantedPermissions,
+    // });
     wyraiApi
       .post(`/api/roles`, {
         ...formik.values,
@@ -62,17 +61,20 @@ const PopupRoles = (props) => {
       })
       .then((res) => {
         setPopupRole(false);
-      
+        toast.success("New Role has been created");
         const data = {
-          senderName:userInformation?.email,
-          text:"New Role has been generated"
-        }
-         console.log("userRole Data",data);
-         socket.emit("RoleText",data)
-        
+          senderName: userInformation?.email,
+          text: "New Role has been generated",
+        };
+        //  console.log("userRole Data",data);
+        //  socket.emit("RoleText",data)
+
         fetchRole();
       })
       .catch((err) => {
+        if (err.message) {
+          toast.error(`${err.message}`);
+        }
         console.log(err);
       });
   };
@@ -92,16 +94,16 @@ const PopupRoles = (props) => {
               value={formik.values.role}
               onChange={formik.handleChange}
               error={formik.touched.role && formik.errors.role}
-              placeholder={'Name of the Role'}
-              labelColor={'bg-white'}
+              placeholder={"Name of the Role"}
+              labelColor={"bg-white"}
             />
 
             <div className=" w-[92.5%]">
               <TextBox
                 className="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:border-blue-500"
-                name={'description'}
+                name={"description"}
                 setChange={formik.handleChange}
-                title={'Description'}
+                title={"Description"}
                 value={formik.values.description}
                 // onChange={formik.handleChange}
                 error={formik.touched.description && formik.errors.description}

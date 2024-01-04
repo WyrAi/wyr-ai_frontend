@@ -44,11 +44,11 @@ const Layout = () => {
           }`}
         >
           <div className=" flex flex-col h-full">
-            <div className="flex-none">
+            <div className="flex-none h-24">
               <Header />
             </div>
 
-            <div className=" flex-1 border-l-[1px] border-gray-300">
+            <div className=" flex-1 border-l-[1px] border-gray-300 pt-5">
               <Outlet />
             </div>
           </div>

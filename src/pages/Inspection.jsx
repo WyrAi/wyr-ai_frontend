@@ -62,9 +62,10 @@ const Inspection = () => {
   const [selectedFilter, setSelectedFilter] = useState(filters[0]);
   const [sortFilter, setSortFilter] = useState(sortFilter_Opt[0]);
   const [plData, setPlData] = useState([]);
+  const [filterData, setFilterData] = useState([]);
   const navigate = useNavigate();
   const { userInformation } = userGloabalContext();
-  console.log(userInformation);
+  // console.log(userInformation);
 
   function handleAddPage() {
     try {
@@ -74,13 +75,35 @@ const Inspection = () => {
     }
   }
 
+  const filterDataByStatus = (status) => {
+    const filtered = plData?.filter((item) => item.status === status);
+    setFilterData(filtered);
+  };
+
   useEffect(() => {
+    if (sortFilter.text !== "All") {
+      filterDataByStatus(sortFilter.text);
+    } else {
+      fetchAllPlData();
+      setFilterData(plData);
+    }
+  }, [sortFilter]);
+
+  const fetchAllPlData = () => {
     wyraiApi
       .get(`/api/PlDisplay/${userInformation?._id}`)
       .then((res) => setPlData(res.data.Response.plList));
+  };
+
+  useEffect(() => {
+    setFilterData(plData);
+  }, [plData]);
+
+  useEffect(() => {
+    fetchAllPlData();
   }, []);
 
-  console.log(plData);
+  // console.log(filterData);
 
   return (
     <main className="h-full">
@@ -109,8 +132,13 @@ const Inspection = () => {
         </div>
 
         <div className=" ml-5 w-full flex-1 flex flex-col">
+<<<<<<< HEAD
           <div className="flex flex-wrap content-start w-full h-full gap-6">
             {plData?.map((value, index) => {
+=======
+          <div className="flex flex-wrap w-full h-24 gap-6">
+            {filterData?.map((value, index) => {
+>>>>>>> origin/master
               const { packingListFiles, buyerId, status, _id } = value;
               return (
                 <InspectionCard

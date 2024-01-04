@@ -7,8 +7,6 @@ export function openModal(modalID) {
   document.getElementById(modalID).showModal();
 }
 
-// GIVE IT A UNIQUE MODAL ID AND A BUTTON TEXT AND IT WILL OPEN THE MODAL WHEN CLICKED
-
 const Prompt = ({ children, btnText, modalID, btnClasses, isDisabled }) => {
   return (
     <div>
@@ -28,7 +26,7 @@ const Prompt = ({ children, btnText, modalID, btnClasses, isDisabled }) => {
               className="btn btn-sm btn-circle absolute right-2 top-2"
               onClick={() => closeModal(modalID)}
             >
-              ✕
+              X
             </button>
             {children}
           </form>

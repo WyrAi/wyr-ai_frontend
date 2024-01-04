@@ -97,7 +97,11 @@ const PackingList = ({
   }
 
   const handleDropDownSelect = (item) => {
+<<<<<<< HEAD
     console.log(item);
+=======
+    // console.log(item);
+>>>>>>> origin/master
     handleProductChange(poIndex, productIndex, "branch", item?._id);
     setBranch(item?.branchName);
   };

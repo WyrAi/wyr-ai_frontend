@@ -62,7 +62,7 @@ const QcInspection = () => {
   const [plData, setPlData] = useState([]);
   const navigate = useNavigate();
   const { userInformation } = userGloabalContext();
-  console.log(userInformation?._id);
+  // console.log(userInformation?._id);
 
   function handleAddPage() {
     try {
@@ -80,7 +80,7 @@ const QcInspection = () => {
     }
   }, [userInformation?._id]);
 
-  console.log(plData);
+  // console.log(plData);
 
   return (
     <main>

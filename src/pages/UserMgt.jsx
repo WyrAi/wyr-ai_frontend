@@ -40,7 +40,7 @@ const UserMgt = () => {
   const [selectedBranch, setSelectedBranch] = useState(null);
 
   const handleDelete = async () => {
-    console.log(checkedItems);
+    // console.log(checkedItems);
     // const resp = await fetch(
     //   import.meta.env.VITE_BASE_URL + "/api/deleteEmploye",
     //   {
@@ -61,11 +61,15 @@ const UserMgt = () => {
         },
       })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
+        toast.success("User Removed");
         fetchData();
       })
       .catch((err) => {
-        console.log(err);
+        if (err.message) {
+          toast.error(`${err.message}`);
+        }
+        // console.log(err);
       });
   };
   useEffect(() => {
@@ -75,7 +79,7 @@ const UserMgt = () => {
   const handleBranchClick = async (id) => {
     // setSelectedBranch(selectedBranch);
     // id = userInformation.UserInfo.
-    console.log(id);
+    // console.log(id);
     const { data } = await axios(
       import.meta.env.VITE_BASE_URL + `/api/getAllEmployessWithBranch/${id}`
     );
@@ -128,6 +132,9 @@ const UserMgt = () => {
         setBranchData(res.data);
       })
       .catch((err) => {
+        if (err.message) {
+          toast.error(`${err.message}`);
+        }
         console.log(err);
       });
   };
@@ -142,7 +149,7 @@ const UserMgt = () => {
     }
   }, [companyId]);
 
-  console.log(filteredUsers);
+  // console.log(filteredUsers);
 
   return (
     <>

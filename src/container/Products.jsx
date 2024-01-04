@@ -19,7 +19,7 @@ import UploadImages from "./UploadImages";
 const Products = ({ data, handleProductChange, poIndex }) => {
   const { images, ...restData } = data;
   const productList = restData;
-  console.log(images, productList, data, poIndex);
+  // console.log(images, productList, data, poIndex);
   const [collapse, setCollapse] = useState(false);
   const [togglePopup, setTogglePopup] = useState(false);
   const { popUpload, setPopUpload, imagesFiles, setImagesFiles } =

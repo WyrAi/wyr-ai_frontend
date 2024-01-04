@@ -12,11 +12,9 @@ const Nav = () => {
     userGloabalContext();
   const navigate = useNavigate();
   const pathName = useLocation().pathname;
-  // console.log(route);
-
   const accessArray = React.useMemo(() => {
     if (userRights) {
-      console.log(userRights);
+      // console.log(userRights);
       const array = Object.keys(userRights)?.filter(
         (e) => userRights[e].length
       );
@@ -46,25 +44,17 @@ const Nav = () => {
               const isActive =
                 (pathName.includes(item.link) && item.link.length > 1) ||
                 pathName === item.link;
-              console.log(isActive);
               if (accessArray.includes(item.name)) {
                 return (
                   <Link
                     to={item.link}
                     key={index}
-                    onClick={() => setActiveMenu(false)}
                     className={`${
                       isActive && "bg-blue text-white"
                     } flex items-center gap-3 py-3 h-14 w-[80%] hover:bg-blue hover:text-white rounded-xl pl-7 mx-5 `}
                   >
-                    <span
-                      className={`${isActive ? "text-white" : "text-darkGray"}`}
-                    >
-                      {item.icon}
-                    </span>
-                    <span className={`${!activeMenu && "max-md:hidden"}`}>
-                      {item.heading}
-                    </span>
+                    <span className="">{item.icon}</span>
+                    <span className="max-lg:hidden">{item.heading}</span>
                   </Link>
                 );
               }

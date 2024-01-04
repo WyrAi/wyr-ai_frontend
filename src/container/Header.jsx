@@ -18,22 +18,25 @@ const DropDown = ({ children }) => {
 
   const handleAllRead = () => {
     try {
-      console.log("the log of update");
+      // console.log("the log of update");
       wyraiApi
         .post("/api/updatenotifactionstatus", {
           receiverid: userInformation?.email,
         })
-        .then(
-          (res) => {console.log(res)
-          console.log("the log of update in response")
-          fetchNotification()}
-          )
+        .then((res) => {
+          // console.log("the log of update in response")
+          fetchNotification();
+        })
         .catch((err) => console.log(err));
     } catch (error) {
       console.error("Error updating seen status:", error);
       // Handle error, show error message, etc.
     }
   };
+
+  // socket.on("getText", async (data) => {
+  //   fetchNotification();
+  // });
 
   return (
     <div className="relative">
@@ -67,10 +70,10 @@ const Header = () => {
     fetchNotification,
   } = userGloabalContext();
 
-  console.log(
-    "notification length",
-    notification.filter((notification) => notification.seen === true).length
-  );
+  // console.log(
+  //   "notification length",
+  //   notification.filter((notification) => notification.seen === true).length
+  // );
 
   const [popup, setPopup] = useState(false);
 
@@ -129,22 +132,25 @@ const Header = () => {
               {popup && (
                 <DropDown>
                   {notification.length > 0 &&
-                    notification?.map((item, index) => {
-                      return (
-                        <li
-                          key={index}
-                          className="py-2  gap-4 mr-2 border-b w-full"
-                        >
-                          <span
-                            className={` text-xs ${
-                              !item.seen && "font-semibold"
-                            }`}
+                    notification
+                      .slice() // Create a shallow copy to avoid mutating the original array
+                      .reverse() // Reverse the array
+                      .map((item, index) => {
+                        return (
+                          <li
+                            key={index}
+                            className="py-2 gap-4 mr-2 border-b w-full"
                           >
-                            {item.message}
-                          </span>
-                        </li>
-                      );
-                    })}
+                            <span
+                              className={`text-xs ${
+                                !item.seen && "font-semibold"
+                              }`}
+                            >
+                              {item.message}
+                            </span>
+                          </li>
+                        );
+                      })}
                 </DropDown>
               )}
             </div>
