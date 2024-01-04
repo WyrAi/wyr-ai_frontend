@@ -77,11 +77,11 @@ const LiveInsepections = [
     poNumber: "S12344321",
     factoryName: "Devi Design Pvt. Ltd",
   },
-  {
-    image: "./QCVideoImage.png",
-    poNumber: "S12344321",
-    factoryName: "Devi Design Pvt. Ltd",
-  },
+  // {
+  //   image: "./QCVideoImage.png",
+  //   poNumber: "S12344321",
+  //   factoryName: "Devi Design Pvt. Ltd",
+  // },
 ];
 
 const ReportVideos = () => {
@@ -90,6 +90,7 @@ const ReportVideos = () => {
   const [toggle, setToggle] = useState(true);
   const navigate = useNavigate();
   const videoRef = useRef(null);
+  // const [videoRef, setVideoRef] = useState(null);
 
   function handleAddPage() {
     try {
@@ -107,6 +108,9 @@ const ReportVideos = () => {
 
         // hls.loadSource("http://192.168.1.19:8080/hls/abc123.m3u8");
         hls.loadSource("http://wyrai.in:8080/hls/abc123.m3u8");
+        // hls.loadSource(
+        //   "https://live-par-1-abr-cdn.livepush.io/live/bigbuckbunnyclip/index.m3u8"
+        // );
         hls.attachMedia(video);
 
         hls.on(Hls.Events.MANIFEST_PARSED, function () {
@@ -166,8 +170,9 @@ const ReportVideos = () => {
                 modalID={`joinLive_${index}`}
               >
                 <div className="flex justify-center">
-{/*                   <iframe
-                    src="http://13.201.72.80:8080/embed/video"
+                  {/* <iframe
+                    src="https://live-par-1-abr-cdn.livepush.io/live/bigbuckbunnyclip/index.m3u8"
+
                     title="Owncast"
                     height="350px"
                     width="550px"
