@@ -11,7 +11,7 @@ import { RxCrossCircled } from "react-icons/rx";
 import { useFormik } from "formik";
 import InputField from "../container/InputField";
 import Prompt from "../DasiyUIComponents/Prompt";
-import image from "../assets/image.png";
+import image from "../assets/img2024.png";
 
 const Information = () => {
   const [data, setData] = React.useState([]);
@@ -386,14 +386,14 @@ const Information = () => {
                     <img
                       src={e.image}
                       alt="Product"
-                      width={"500px"}
-                      height={"500px"}
-                      className="border xl:w-[550px] xl:h-[450px] md:w-[550px] md:h-[350px]"
+                      width={"700px"}
+                      height={"700px"}
+                      className="border xl:w-[650px] xl:h-[650px] md:w-[650px] md:h-[650px]"
                     />
                     <img
                       src={image}
                       alt=""
-                      className="absolute top-0 left-0 z-5 xl:w-[550px] xl:h-[450px] md:w-[550px] md:h-[350px]"
+                      className="absolute top-0 left-0 z-5 xl:w-[650px] xl:h-[650px] md:w-[650px] md:h-[650px]"
                     />
                   </div>
 
