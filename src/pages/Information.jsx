@@ -11,6 +11,7 @@ import { RxCrossCircled } from "react-icons/rx";
 import { useFormik } from "formik";
 import InputField from "../container/InputField";
 import Prompt from "../DasiyUIComponents/Prompt";
+import image from "../assets/image.png";
 
 const Information = () => {
   const [data, setData] = React.useState([]);
@@ -381,13 +382,21 @@ const Information = () => {
             <div className=" w-full mt-5 h-screen md:h-full">
               {data.map((e, InfoIndex) => (
                 <div className="flex py-8 h-[500px] ">
-                  <img
-                    src={e.image}
-                    alt="Product"
-                    width={"500px"}
-                    height={"500px"}
-                    className="border xl:w-[450px] xl:h-[450px] md:w-[350px] md:h-[350px]"
-                  />
+                  <div className="relative ">
+                    <img
+                      src={e.image}
+                      alt="Product"
+                      width={"500px"}
+                      height={"500px"}
+                      className="border xl:w-[550px] xl:h-[450px] md:w-[550px] md:h-[350px]"
+                    />
+                    <img
+                      src={image}
+                      alt=""
+                      className="absolute top-0 left-0 z-5"
+                    />
+                  </div>
+
                   <div className="p-5 w-full flex-1 flex justify-between gap-5">
                     <div className="flex flex-col justify-between w-full">
                       <ul className="w-full h-[45%]  md:h-[70%] overflow-auto">
@@ -487,7 +496,7 @@ const Information = () => {
             >
               <div className="w-[80%] mx-auto flex flex-col gap-5">
                 <h1 className="text-center text-xl font-semibold ">
-                  Send Report{" "}
+                  Send Report
                 </h1>
                 <div className="flex gap-1 items-end">
                   <div
