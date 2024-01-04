@@ -4,12 +4,14 @@ import { useState } from "react";
 import { userGloabalContext } from "../UserContext";
 import wyraiApi from "../api/wyraiApi";
 import InputField from "./InputField";
+import initSocket from "../Components/socket";
 
 // eslint-disable-next-line react/prop-types
 const PopupBranch = (props) => {
   const { getBranches, closeAddBranchPopUp } = props;
-  const { companyId } = userGloabalContext();
+  const { companyId ,userInformation} = userGloabalContext();
 
+  const socket = initSocket()
   const [branchInfo, setBranchInfo] = useState({
     location: "",
     branchName: "",

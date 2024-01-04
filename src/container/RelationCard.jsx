@@ -70,6 +70,7 @@ const RelationCard = ({
         text:`The relation has been Deleted by ${userInformation?.email}`
       }
       socket.emit("DeleteRelation",{data});
+      fetchNotification()
     } catch (error) {
       console.log(error);
     }

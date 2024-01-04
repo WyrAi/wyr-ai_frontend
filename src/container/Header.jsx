@@ -18,7 +18,6 @@ import initSocket from "../Components/socket";
 const DropDown = ({ children }) => {
   const { userInformation, fetchNotification } = userGloabalContext();
 
-  console.log("children",children)
   const handleAllRead = () => {
     try {
       console.log("the log of update");
@@ -29,7 +28,7 @@ const DropDown = ({ children }) => {
         .then(
           (res) => {console.log(res)
           console.log("the log of update in response")
-          fetchNotification()}
+          fetchNotification()} 
           )
         .catch((err) => console.log(err));
     } catch (error) {
@@ -44,23 +43,24 @@ const DropDown = ({ children }) => {
   return (
     <div className="relative">
       <div className="dropdown-notch"></div>
-      <div className="absolute top-2 right-[-10px] mt-3 w-[26rem] h-[22rem] bg-white rounded-xl shadow-2xl border z-50">
-        <div className="flex justify-between items-center px-4 py-2">
-          <h2 className="text-lg text-gray-700">Notification</h2>
+      <div className="absolute top-2 right-[-10px] mt-3 w-96 bg-white rounded-xl shadow-2xl border z-50">
+        <div className="flex justify-between items-center px-4 py-2 ">
+          <h2 className="text-lg  text-gray-700 ">Notification</h2>
           <button
-            className="text-md text-blue-600 text-blue underline underline-offset-1"
+            className="text-md text-blue-600  text-blue underline underline-offset-1"
             onClick={handleAllRead}
           >
             Mark All As Read
           </button>
         </div>
-        <ul className="overflow-y-auto max-h-72 px-4 example flex flex-col justify-center items-center">
+        <ul className="overflow-y-auto max-h-56 px-4 example">
           {children === false ? (
-            <p className="text-center text-gray-500 mt-28">No notifications</p>
+            <p className="text-center text-gray-500 mt-5">No notifications</p>   
           ) : (
             children
           )}
         </ul>
+        
       </div>
     </div>
   );
