@@ -13,6 +13,7 @@ import axios from "axios";
 import "../App.css";
 import wyraiApi from "../api/wyraiApi";
 import initSocket from "../Components/socket";
+import moment from "moment";
 
 // DropDown.js
 const DropDown = ({ children }) => {
@@ -25,11 +26,11 @@ const DropDown = ({ children }) => {
         .post("/api/updatenotifactionstatus", {
           receiverid: userInformation?.email,
         })
-        .then(
-          (res) => {console.log(res)
-          console.log("the log of update in response")
-          fetchNotification()} 
-          )
+        .then((res) => {
+          console.log(res);
+          console.log("the log of update in response");
+          fetchNotification();
+        })
         .catch((err) => console.log(err));
     } catch (error) {
       console.error("Error updating seen status:", error);
@@ -37,13 +38,10 @@ const DropDown = ({ children }) => {
     }
   };
 
-
- 
-
   return (
     <div className="relative">
       <div className="dropdown-notch"></div>
-      <div className="absolute top-2 right-[-10px] mt-3 w-96 bg-white rounded-xl shadow-2xl border z-50">
+      <div className="absolute top-2 right-[-10px] mt-3 w-[320px] h-[350px] flex flex-col bg-white rounded-xl shadow-2xl border z-50">
         <div className="flex justify-between items-center px-4 py-2 ">
           <h2 className="text-lg  text-gray-700 ">Notification</h2>
           <button
@@ -53,14 +51,13 @@ const DropDown = ({ children }) => {
             Mark All As Read
           </button>
         </div>
-        <ul className="overflow-y-auto max-h-56 px-4 example">
+        <ul className="overflow-y-auto  px-4 example">
           {children === false ? (
-            <p className="text-center text-gray-500 mt-5">No notifications</p>   
+            <p className="text-center text-gray-500 mt-5">No notifications</p>
           ) : (
             children
           )}
         </ul>
-        
       </div>
     </div>
   );
@@ -80,11 +77,6 @@ const Header = () => {
   socket.on("getText", async (data) => {
     fetchNotification();
   });
-
-  console.log(
-    "notification length",
-    notification.filter((notification) => notification.seen === true).length
-  );
 
   const [popup, setPopup] = useState(false);
 
@@ -144,20 +136,29 @@ const Header = () => {
                 <DropDown>
                   {notification.length > 0 &&
                     notification
-                      .slice() // Create a shallow copy to avoid mutating the original array
-                      .reverse() // Reverse the array
+                      .slice()
+                      .reverse()
                       .map((item, index) => {
+                        const date = new Date(item.createdAt);
+                        // Format the date and time
+                        const formattedDate = date.toLocaleString();
                         return (
-                          <li key={index} className="py-2 gap-4 mr-2 border-b w-full">
+                          <li
+                            key={index}
+                            className="py-2 gap-4 mr-2 border-b w-full"
+                          >
                             <span
-                              className={`text-xs ${!item.seen && "font-semibold"}`}
+                              className={`text-xs ${
+                                !item.seen && "font-semibold"
+                              }`}
                             >
                               {item.message}
+                              <br />
+                              {formattedDate}
                             </span>
                           </li>
                         );
                       })}
-
                 </DropDown>
               )}
             </div>
