@@ -388,12 +388,12 @@ const Information = () => {
                       alt="Product"
                       width={"700px"}
                       height={"500px"}
-                      className="border xl:w-[650px] xl:h-[650px] md:w-[650px] md:h-[650px]"
+                      className="border xl:w-[650px] xl:h-[450px] md:w-[650px] md:h-[350px]"
                     />
                     <img
                       src={image}
                       alt=""
-                      className="absolute top-0 left-0 z-5 xl:w-[650px] xl:h-[650px] md:w-[650px] md:h-[650px]"
+                      className="absolute top-0 left-0 z-5 xl:w-[650px] xl:h-[450px] md:w-[650px] md:h-[350px]"
                     />
                   </div>
 
