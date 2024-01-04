@@ -48,7 +48,7 @@ const Layout = () => {
               <Header />
             </div>
 
-            <div className=" flex-1 border-l-[1px] border-gray-300 pt-5">
+            <div className=" flex-1 border-l-[1px] border-gray-300 pt-5 overflow-hidden">
               <Outlet />
             </div>
           </div>

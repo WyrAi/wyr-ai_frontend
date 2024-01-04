@@ -8,7 +8,8 @@ import React from "react";
 import { deleteToken } from "../Utils/authUtils.js";
 
 const Nav = () => {
-  const { userInformation, userRights } = userGloabalContext();
+  const { userInformation, userRights, setActiveMenu, activeMenu } =
+    userGloabalContext();
   const navigate = useNavigate();
   const pathName = useLocation().pathname;
   const accessArray = React.useMemo(() => {
@@ -28,6 +29,7 @@ const Nav = () => {
     const res = await deleteToken();
     if (res) navigate("/login");
   };
+  console.log(activeMenu);
 
   return (
     <>

@@ -111,7 +111,7 @@ const Purchase = () => {
   // console.log(filterData);
 
   return (
-    <main className="flex flex-col h-full overflow-hidden">
+    <main className="flex flex-col h-[98%] ">
       <div className="flex flex-col m-5">
         <div className="flex gap-1 items-center">
           <div className="w-full">
@@ -136,8 +136,8 @@ const Purchase = () => {
           />
         </div>
       </div>
-      <div className=" ml-5 w-[98%] h-full  ">
-        <div className="flex flex-wrap w-full h-[70%] gap-6 overflow-y-auto">
+      <div className=" ml-5 w-[98%] min-h-[75%] overflow-hidden   ">
+        <div className="flex flex-wrap w-full h-full gap-6 overflow-y-auto box-border">
           {filterData?.map((value, index) => {
             const { poNumber, purchaseDoc, buyer, status } = value;
             // console.log(value);

@@ -206,7 +206,7 @@ function PurchaseOrder() {
   // console.log(buyer, companyId);
   // console.log(vendor);
 
-  async function handleSubmit(e) {
+  const handleSubmit = (e) => {
     setIsloading(true);
     try {
       let status = "";
@@ -258,6 +258,7 @@ function PurchaseOrder() {
           formData.append(key, requestBody[key]);
         }
       });
+      console.log(requestBody);
 
       // for (let pair of formData.entries()) {
       //   console.log(pair);
@@ -286,7 +287,7 @@ function PurchaseOrder() {
       setIsloading(false);
       console.log(error);
     }
-  }
+  };
   const handleSaveDraft = () => {
     try {
       let status = "";
@@ -1047,7 +1048,7 @@ function PurchaseOrder() {
             <button
               type="submit"
               className="py-2 rounded-md px-11 bg-blue font-bold text-white"
-              onClick={handleSubmit}
+              // onClick={() => handleSubmit()}
             >
               {isLoading ? <Loader /> : `Publish`}
             </button>
