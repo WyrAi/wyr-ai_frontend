@@ -40,7 +40,7 @@ const Layout = () => {
         )}
         <div
           className={` relative h-full w-full ${
-            activeMenu ? " md:ml-[20vw]" : "flex-2"
+            activeMenu ? "ml-[100vw] md:ml-[20vw]" : "flex-1"
           }`}
         >
           <div className=" flex flex-col h-full">

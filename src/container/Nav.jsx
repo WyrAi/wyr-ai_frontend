@@ -8,7 +8,8 @@ import React from "react";
 import { deleteToken } from "../Utils/authUtils.js";
 
 const Nav = () => {
-  const { userInformation, userRights } = userGloabalContext();
+  const { userInformation, userRights, setActiveMenu, activeMenu } =
+    userGloabalContext();
   const navigate = useNavigate();
   const pathName = useLocation().pathname;
   // console.log(route);
@@ -30,6 +31,7 @@ const Nav = () => {
     const res = await deleteToken();
     if (res) navigate("/login");
   };
+  console.log(activeMenu);
 
   return (
     <>
@@ -50,6 +52,7 @@ const Nav = () => {
                   <Link
                     to={item.link}
                     key={index}
+                    onClick={() => setActiveMenu(false)}
                     className={`${
                       isActive && "bg-blue text-white"
                     } flex items-center gap-3 py-3 h-14 w-[80%] hover:bg-blue hover:text-white rounded-xl pl-7 mx-5 `}
@@ -59,7 +62,9 @@ const Nav = () => {
                     >
                       {item.icon}
                     </span>
-                    <span className="max-lg:hidden">{item.heading}</span>
+                    <span className={`${!activeMenu && "max-md:hidden"}`}>
+                      {item.heading}
+                    </span>
                   </Link>
                 );
               }
