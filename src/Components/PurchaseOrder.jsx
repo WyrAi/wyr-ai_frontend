@@ -642,7 +642,7 @@ function PurchaseOrder() {
     <>
       <div
         id="container"
-        className=" h-[94vh] w-[95%] pt-2 mx-auto flex flex-col"
+        className=" h-[98%] w-[95%] pt-2 mx-auto flex flex-col"
       >
         <div className="h-[3%] mb-5">
           <button

@@ -51,7 +51,7 @@ const Nav = () => {
                     key={index}
                     className={`${
                       isActive && "bg-blue text-white"
-                    } flex items-center max-lg:justify-center gap-3  lg:pl-5 md:h-14 lg:h-10 xl:h-11 w-[50%] lg:w-[80%] hover:bg-blue hover:text-white rounded-xl  mx-5 `}
+                    } flex items-center max-lg:justify-center gap-3  lg:pl-5 md:h-14 lg:h-11 w-[50%] lg:w-[80%] hover:bg-blue hover:text-white rounded-xl  mx-5 `}
                   >
                     <span className="">{item.icon}</span>
                     <span className="max-lg:hidden text-sm lg:text-base   ">
