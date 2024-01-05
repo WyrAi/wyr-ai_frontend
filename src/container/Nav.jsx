@@ -33,13 +33,13 @@ const Nav = () => {
 
   return (
     <>
-      <div className="h-screen flex flex-col justify-start  items-center bg-white overflow-hidden ">
-        <div className="flex flex-col gap-10 pt-8 justify-start h-full w-full   ">
+      <div className="h-full flex flex-col justify-start  items-center bg-white overflow-hidden ">
+        <div className="flex flex-col md:gap-10 md:pt-8 lg:gap-4 lg:pt-2 justify-start h-full w-full   ">
           <Link to="/user" className="w-full flex justify-center">
-            <img src={logo} alt="" className="w-[200px]" />
+            <img src={logo} alt="" className="max-md:w-[80px] md:w-[180px] " />
           </Link>
 
-          <div className=" flex flex-col items-center gap-5 w-full box-border">
+          <div className=" flex flex-col items-center gap-5 w-full box-border pt-5">
             {sideBarData?.map((item, index) => {
               const isActive =
                 (pathName.includes(item.link) && item.link.length > 1) ||
@@ -51,10 +51,12 @@ const Nav = () => {
                     key={index}
                     className={`${
                       isActive && "bg-blue text-white"
-                    } flex items-center gap-3 py-3 h-14 w-[80%] hover:bg-blue hover:text-white rounded-xl pl-7 mx-5 `}
+                    } flex items-center max-lg:justify-center gap-3  lg:pl-5 md:h-14 lg:h-10 xl:h-11 w-[50%] lg:w-[80%] hover:bg-blue hover:text-white rounded-xl  mx-5 `}
                   >
                     <span className="">{item.icon}</span>
-                    <span className="max-lg:hidden">{item.heading}</span>
+                    <span className="max-lg:hidden text-sm lg:text-base   ">
+                      {item.heading}
+                    </span>
                   </Link>
                 );
               }
@@ -71,7 +73,6 @@ const Nav = () => {
           </div>
         </div>
       </div>
-      //
     </>
   );
 };
