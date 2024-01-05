@@ -58,10 +58,10 @@ const Dashboard = () => {
     }
   }, [userInformation]);
   return (
-    <div className="ml-5 w-[85%] h-full box-border mt-7">
-      <header className="flex justify-between mb-9">
+    <div className="mx-5 w-[85%] h-full flex flex-col box-border overflow-y-auto">
+      <header className="flex justify-between mb-5">
         <div className="flex-col gap-1">
-          <h1 className="text-2xl font-semibold">
+          <h1 className="max-md:text-2xl md:text-xl font-semibold">
             Hey, {userInformation?.name}
           </h1>
           <p className="text-sm font-medium">{userInformation?.role?.name}</p>
@@ -81,7 +81,7 @@ const Dashboard = () => {
         <DashboardNotification />
       </div>
 
-      <div className="grid grid-cols-[30%_68%] gap-[2%] w-full ">
+      <div className="flex-1 grid grid-cols-[30%_68%] gap-[2%] w-full overflow-y-auto ">
         <div className="shadow-md bg-white p-2">
           <h1 className="m-2 text-md font-medium">PO Status</h1>
           <div className="grid grid-cols-2 gap-5 mb-2">
@@ -97,14 +97,14 @@ const Dashboard = () => {
                 <span className="text-base font-medium text-black">
                   {status[item].name}
                 </span>
-                <span className="text-5xl font-medium">{0}</span>
+                <span className="text-3xl xl:text-5xl font-medium">{0}</span>
               </div>
             ))}
           </div>
         </div>
-        <div className="bg-white">
+        <div className="bg-white ">
           <h1 className="m-2 text-md font-medium mb-2">Recent Inspection</h1>
-          <div className="flex flex-col">
+          <div className="flex flex-col overflow-y-auto">
             <InspectionCard />
             <InspectionCard />
             <InspectionCard />
