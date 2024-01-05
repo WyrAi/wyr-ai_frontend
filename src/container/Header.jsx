@@ -79,7 +79,7 @@ const Header = () => {
 
   return (
     <header className="bg-white h-full mb-5 ">
-      <div className="grid grid-cols-[1fr_1fr] items-start pt-6 pb-4 md:justify-start md:space-x-10  px-6">
+      <div className="grid grid-cols-[1fr_1fr] items-start max-md:pt-6 md:py-4 md:justify-start md:space-x-10  px-6">
         <div className="w-full flex gap-5 items-start">
           {screenSize <= 768 && (
             <AiOutlineMenu
@@ -98,7 +98,7 @@ const Header = () => {
               <input
                 id="search"
                 name="search"
-                className="block w-full pl-10 pr-4 py-4 border rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="block w-full pl-10 pr-4 py-4 md:py-2 border rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 placeholder="Tap to Search"
                 type="search"
               />

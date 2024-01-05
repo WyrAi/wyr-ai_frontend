@@ -44,7 +44,7 @@ const Layout = () => {
           }`}
         >
           <div className=" flex flex-col h-full">
-            <div className="flex-none h-24">
+            <div className="flex-none h-24 md:h-[10%]">
               <Header />
             </div>
 

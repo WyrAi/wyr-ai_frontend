@@ -39,7 +39,7 @@ const Nav = () => {
             <img src={logo} alt="" className="max-md:w-[80px] md:w-[180px] " />
           </Link>
 
-          <div className=" flex flex-col items-center gap-5 w-full box-border pt-5">
+          <div className=" flex flex-col items-center gap-3 w-full box-border pt-2">
             {sideBarData?.map((item, index) => {
               const isActive =
                 (pathName.includes(item.link) && item.link.length > 1) ||
@@ -51,10 +51,11 @@ const Nav = () => {
                     key={index}
                     className={`${
                       isActive && "bg-blue text-white"
-                    } flex items-center max-lg:justify-center gap-3  lg:pl-5 md:h-14 lg:h-11 w-[50%] lg:w-[80%] hover:bg-blue hover:text-white rounded-xl  mx-5 `}
+                    } flex items-center max-lg:justify-center gap-3  lg:pl-5 md:h-14 lg:h-9 xl:h-10
+                     w-[50%] lg:w-[80%] hover:bg-blue hover:text-white rounded-xl  mx-5 `}
                   >
                     <span className="">{item.icon}</span>
-                    <span className="max-lg:hidden text-sm lg:text-base   ">
+                    <span className="max-lg:hidden text-xs lg:text-sm   ">
                       {item.heading}
                     </span>
                   </Link>
