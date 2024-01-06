@@ -80,11 +80,18 @@ const PopupRoles = (props) => {
   };
   return (
     <>
-      <div className=" fixed inset-0 bg-[#00000080] h-screen w-screen ">
+      <div className=" fixed inset-0 bg-[#00000080] h-screen w-screen flex items-center justify-center ">
         <form
           onSubmit={formik.handleSubmit}
-          className="w-1/2 h-[95vh] m-auto p-4 rounded-3xl bg-white flex flex-col justify-between items-center "
+          className=" relative w-1/2 max-h-[95%] p-4 rounded-3xl bg-white flex flex-col justify-between items-center "
         >
+          <button
+            type="button"
+            className="btn btn-sm btn-circle absolute right-2 top-2"
+            onClick={() => setPopupRole(false)}
+          >
+            X
+          </button>
           <h1 className="text-2xl mt-4 mb-6">Create Role</h1>
           <div className="w-full flex flex-col gap-5  ">
             <InputField

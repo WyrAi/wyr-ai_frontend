@@ -2,7 +2,7 @@ import image from "../assets/live.png";
 
 const PoMessage = () => {
   return (
-    <div className="flex max-md:h-[100px]  md:h-[80px] justify-between px-2 max-md:py-7 py-5 bg-white shadow-md mb-5">
+    <div className="flex  justify-between px-2 max-md:py-7 py-5 bg-white shadow-md ">
       <div className="flex flex-col   gap-2	">
         <span className="text-xs font-medium ">
           {"Rohit Singh"} has created the Purchase Order for {"XYZ"} Factory
@@ -23,9 +23,9 @@ const PoMessage = () => {
 
 const LiveInspection = () => {
   return (
-    <div className="flex justify-between p-2 bg-white shadow-md mb-5">
+    <div className="flex justify-between p-2 bg-white shadow-md ">
       <div className="flex gap-5">
-        <img src={image} alt="" />
+        <img src={image} alt="" height={80} width={150} />
         <div className="flex flex-col justify-center gap-2">
           <span className="text-xs font-medium ">
             {"Rohit Singh"} has created the Purchase Order for {"XYZ"} Factory
@@ -45,7 +45,7 @@ const LiveInspection = () => {
 
 const DashboardNotification = () => {
   return (
-    <div>
+    <div className="h-full flex flex-col gap-2">
       <PoMessage />
       <LiveInspection />
     </div>

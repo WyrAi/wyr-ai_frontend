@@ -41,10 +41,17 @@ const PopupBranch = (props) => {
   };
   return (
     <>
-      <div className=" fixed inset-0 bg-[#00000080] h-screen w-screen pt-[100px]">
-        <div className="w-1/2 h-[624px] m-auto  rounded-3xl gap-8 bg-white flex flex-col justify-start  ">
+      <div className=" fixed inset-0 bg-[#00000080] h-screen w-screen flex items-center justify-center">
+        <div className="relative w-1/2 h-[90%] m-auto  rounded-3xl gap-6 bg-white flex flex-col justify-start  ">
           <h1 className="text-2xl mt-4 mb-6 text-center">Add Branch</h1>
-          <div className="w-4/5 mx-auto">
+          <div className="w-4/5 mx-auto ">
+            <button
+              type="button"
+              className="btn btn-sm btn-circle absolute right-2 top-2"
+              onClick={() => closeAddBranchPopUp()}
+            >
+              X
+            </button>
             <InputField
               label="Branch Name"
               name="branchName"

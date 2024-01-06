@@ -1069,7 +1069,7 @@ function PurchaseOrder() {
                 btnText={
                   <button
                     type="button"
-                    className="bg-blue flex gap-2 items-center z-10 absolute right-[5vh] top-[110px] py-2 px-4 rounded text-white"
+                    className="bg-blue flex gap-2 items-center z-10 absolute right-[2vw] top-[13%] py-2 px-4 rounded text-white"
                     // onClick={() => setShowPurchaseOrder(true)}
                   >
                     <AiOutlineSearch className="text-white text-2xl" />
